@@ -1,0 +1,97 @@
+/* ---------- tema principal: fonte tipo Palatino (como os slides de referência) ---------- */
+:root {
+	--r-main-font: "Palatino Linotype", "Book Antiqua", Palatino, "TeX Gyre Pagella", "URW Palladio L", serif;
+	--r-heading-font: "Palatino Linotype", "Book Antiqua", Palatino, "TeX Gyre Pagella", "URW Palladio L", serif;
+	--r-heading-font-weight: 600;
+}
+
+.reveal { font-size: 30px; }
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 { text-transform: none; }
+.reveal .slides section { height: 100%; }
+
+/* slides de problemas e resumo: fonte sem serifa */
+.reveal section.sans {
+	--r-heading-font: "Source Sans Pro", Helvetica, sans-serif;
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+}
+
+/* ---------- capa ---------- */
+.reveal .capa { display: flex !important; flex-direction: column; align-items: center; justify-content: flex-start;
+	height: 100%; padding-top: 70px; }
+.reveal .capa img.logo { width: 160px; height: 160px; margin: 0 0 40px; border-radius: 50%; }
+.reveal .capa h1 { color: #111; font-size: 3.2em; margin: 0 0 24px; }
+.reveal .capa .subtitulo { font-size: 1.5em; color: #333; margin: 0; }
+.reveal .capa .subtitulo2 { font-size: 0.95em; color: #64748b; margin: 10px 0 0; letter-spacing: 0.04em; }
+
+/* ---------- índices ---------- */
+.reveal .indice { text-align: left; margin: 30px auto 0; width: 1100px; font-size: 1.15em; line-height: 1.7; }
+.reveal .indice .topico { border-left: 5px solid #1d4ed8; padding: 4px 0 4px 24px; margin-bottom: 28px; }
+.reveal .indice .nome-topico { margin: 0; font-size: 1.25em; font-weight: 600; color: #111; }
+.reveal .indice .links-topico { margin: 4px 0 16px; }
+.reveal .indice ul, .reveal .indice ol { display: block; margin-left: 1.4em; }
+
+/* ---------- slide de problema / resumo ---------- */
+.reveal h4 { margin: 0 0 16px; color: #1d4ed8; text-align: left; }
+
+.reveal a.voltar {
+	position: absolute; top: 0; right: 0; font-size: 0.55em; color: #64748b;
+}
+
+.problema {
+	display: grid;
+	grid-template-columns: 36% 1fr;
+	gap: 32px;
+	height: 800px;
+	text-align: left;
+}
+
+.enunciado { font-size: 0.85em; line-height: 1.45; }
+.enunciado p { margin: 0 0 18px; }
+.enunciado .alinea { color: #db2777; font-weight: 700; margin-right: 6px; }
+
+/* resumo: mesma fonte, um pouco maior */
+.resumo .enunciado { font-size: 0.97em; }
+.resumo .enunciado ul { display: block; margin: 0 0 18px 1.2em; }
+.resumo .formula { text-align: center; font-size: 1.1em; }
+.resumo .destaque { border: 2px solid #1d4ed8; border-radius: 10px; padding: 10px; background: #eff6ff; }
+
+.animacao { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.animacao .tela canvas { border: 1px solid #cbd5e1; border-radius: 8px; display: block; }
+
+/* ---------- controlos p5 ---------- */
+.controlos {
+	width: 100%; display: flex; flex-wrap: wrap; gap: 10px 14px;
+	align-items: center; justify-content: center; font-size: 0.6em;
+}
+.controlos .grupo { display: flex; align-items: center; gap: 8px; }
+.controlos input[type=range] { width: 380px; accent-color: #1d4ed8; }
+.controlos button {
+	font: inherit; font-weight: 600; padding: 5px 14px; border-radius: 6px; border: none;
+	background: #1d4ed8; color: white; cursor: pointer;
+}
+.controlos button.atalho { background: #e0e7ff; color: #312e81; }
+.controlos button:hover { filter: brightness(1.1); }
+.controlos label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.controlos .quebra { flex-basis: 100%; height: 0; }
+.enunciado p.sub { margin: -8px 0 14px 1.6em; }
+.enunciado .katex { white-space: nowrap; }
+
+/* ---------- ajuda na capa ---------- */
+.reveal .capa table.ajuda { margin: 50px auto 0; font-size: 0.62em; color: #475569; border-collapse: collapse; }
+.reveal .capa table.ajuda td { border: none; padding: 6px 14px; text-align: left; }
+.reveal .capa table.ajuda td:nth-child(odd) { text-align: right; white-space: nowrap; color: #1d4ed8; }
+.reveal .capa table.ajuda td:nth-child(3) { padding-left: 60px; }
+.reveal kbd { font-family: inherit; font-size: 0.9em; padding: 1px 8px; border: 1px solid #94a3b8;
+	border-bottom-width: 3px; border-radius: 5px; background: #f8fafc; color: #1e293b; }
+.reveal .capa .pequeno { font-size: 0.5em; color: #64748b; margin-top: 24px; }
+
+/* ---------- problema com várias alíneas num slide cada ---------- */
+.enunciado ul.condicoes { list-style: none; margin: 0 0 18px; padding: 0; display: block; }
+.enunciado ul.condicoes li { margin: 8px 0; padding: 6px 10px; border-radius: 8px; }
+.enunciado ul.condicoes li.outra { opacity: 0.35; }
+.enunciado ul.condicoes li.atual { background: #eff6ff; border-left: 4px solid #1d4ed8; }
+.enunciado .ideia { font-size: 0.9em; color: #334155; }
+.enunciado .dica { font-size: 0.75em; color: #64748b; }
+.enunciado .verde { color: #16a34a; } .enunciado .vermelho { color: #dc2626; }
+.enunciado ul.dados { display: block; margin: 0 0 18px 1.2em; }
+.enunciado ul.dados li { margin: 4px 0; }

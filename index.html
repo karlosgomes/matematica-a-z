@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="pt">
+<head>
+	<meta charset="utf-8">
+	<title>Matemática A...Z — Ver para compreender</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js-plugins@4.6.0/chalkboard/style.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js-plugins@4.6.0/customcontrols/style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<link rel="stylesheet" href="css/estilo.css">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<!-- ============ CAPA ============ -->
+			<section class="capa">
+				<img class="logo" src="img/logo.png" alt="Logotipo CG">
+				<h1>Matemática A...Z</h1>
+				<p class="subtitulo">Ver para compreender</p>
+				<p class="subtitulo2">Problemas selecionados</p>
+				<table class="ajuda">
+					<tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>navegar entre slides</td>
+						<td><kbd>Esc</kbd></td><td>ver todos os slides</td></tr>
+					<tr><td><kbd>F</kbd></td><td>ecrã inteiro</td>
+						<td><kbd>C</kbd> <i class="fa-solid fa-pen"></i></td><td>caneta sobre o slide</td></tr>
+					<tr><td><kbd>B</kbd> <i class="fa-solid fa-chalkboard"></i></td><td>quadro branco</td>
+						<td><kbd>Del</kbd> <i class="fa-solid fa-eraser"></i></td><td>apagar desenhos do slide</td></tr>
+				</table>
+				<p class="pequeno">Os botões no canto inferior esquerdo fazem o mesmo.
+					Com a caneta ou o quadro abertos, clique direito escolhe a cor.</p>
+			</section>
+
+			<!-- ============ ÍNDICE DE TÓPICOS ============ -->
+			<section id="indice">
+				<h3>Índice</h3>
+				<div class="indice">
+					<div class="topico">
+						<p class="nome-topico">Trigonometria</p>
+						<p class="links-topico">
+							<a href="#/trig-circulo">Resumo</a> ·
+							<a href="#/trig-problemas">Problemas</a>
+						</p>
+					</div>
+					<!-- novo tópico:
+					<div class="topico">
+						<p class="nome-topico">...</p>
+						<p class="links-topico"><a href="#/xxx-resumo">Resumo</a> · <a href="#/xxx-problemas">Problemas</a></p>
+					</div> -->
+				</div>
+			</section>
+
+			<!-- =====================================================
+			     TRIGONOMETRIA
+			     ===================================================== -->
+
+			<!-- ============ RESUMO 1: CÍRCULO TRIGONOMÉTRICO ============ -->
+			<section id="trig-circulo" class="sans resumo" data-sketch="trig-circulo">
+				<a class="voltar" href="#/indice">↩ índice</a>
+				<h4>Trigonometria · Resumo — Círculo trigonométrico</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Circunferência de centro na origem e raio $1$.</p>
+						<p>O lado extremidade do ângulo $\alpha$ interseta a circunferência no ponto $P$:</p>
+						<p class="formula">$P(\color{#1d4ed8}{\cos\alpha},\ \color{#dc2626}{\sin\alpha})$</p>
+						<ul>
+							<li>$\color{#1d4ed8}{\cos\alpha}$ é a <b>abcissa</b> de $P$</li>
+							<li>$\color{#dc2626}{\sin\alpha}$ é a <b>ordenada</b> de $P$</li>
+						</ul>
+						<p>A reta $OP$ interseta a reta $x = 1$ no ponto $T$:</p>
+						<p class="formula">$T(1,\ \color{#059669}{\tan\alpha})$</p>
+						<p class="formula">$\color{#059669}{\tan\alpha} = \dfrac{\sin\alpha}{\cos\alpha},\quad \cos\alpha \neq 0$</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ============ RESUMO 2: FÓRMULA FUNDAMENTAL ============ -->
+			<section id="trig-fundamental" class="sans resumo" data-sketch="trig-fundamental">
+				<a class="voltar" href="#/indice">↩ índice</a>
+				<h4>Trigonometria · Resumo — Fórmula fundamental da trigonometria</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>O triângulo de vértices $O$, $(\cos\alpha, 0)$ e $P$ é retângulo, com catetos
+							$|\cos\alpha|$ e $|\sin\alpha|$ e hipotenusa $1$.</p>
+						<p>Pelo Teorema de Pitágoras:</p>
+						<p class="formula destaque">$\sin^2\alpha + \cos^2\alpha = 1$</p>
+						<p>Dividindo ambos os membros por $\cos^2\alpha$ $(\cos\alpha \neq 0)$:</p>
+						<p class="formula">$1 + \tan^2\alpha = \dfrac{1}{\cos^2\alpha}$</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ------------ Problemas (lista) ------------ -->
+			<section id="trig-problemas">
+				<a class="voltar" href="#/indice">↩ índice</a>
+				<h3>Trigonometria — Problemas</h3>
+				<div class="indice">
+					<p class="links-topico"><a href="#/trig-circulo">Ver o resumo teórico</a></p>
+					<ol>
+						<li><a href="#/trig-p1">Quadrado inscrito num quadrado — área em função de $\alpha$</a></li>
+						<li><a href="#/trig-p2">Triângulo no círculo trigonométrico — área e distância $\overline{AP}$</a></li>
+						<li>Condições com parâmetro $k$ —
+							<a href="#/trig-p3a">3.1</a> · <a href="#/trig-p3b">3.2</a> ·
+							<a href="#/trig-p3c">3.3</a> · <a href="#/trig-p3d">3.4</a></li>
+						<li><a href="#/trig-p4">Triângulo isósceles num quadrado — $\overline{PM}$ em função de $\alpha$</a></li>
+						<li><a href="#/trig-p5">Área de um losango em função de $\alpha$</a></li>
+						<!-- <li><a href="#/trig-p6">...</a></li> -->
+					</ol>
+				</div>
+			</section>
+
+			<!-- ------------ Problema 1 ------------ -->
+			<section id="trig-p1" class="sans" data-sketch="trig-p1">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 1 — Quadrado inscrito num quadrado</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Observa a figura na qual os vértices do quadrado $[EFGH]$, de $5$ cm de lado,
+							são pontos dos lados do quadrado $[ABCD]$.</p>
+						<p><span class="alinea">1.1.</span> Mostra que a área do quadrado $[ABCD]$ é dada,
+							em função de $\alpha$, por
+							$$A(\alpha) = 25 + 50\cos\alpha \times \sin\alpha$$</p>
+						<p><span class="alinea">1.2.</span> Calcula $A(0)$ e faz a interpretação geométrica
+							do valor encontrado.</p>
+						<p><span class="alinea">1.3.</span> Considera $\tan\alpha = \dfrac{3}{4}$ e determina
+							a área do quadrado $[ABCD]$.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ------------ Problema 2 ------------ -->
+			<section id="trig-p2" class="sans" data-sketch="trig-p2">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 2 — Triângulo no círculo trigonométrico</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Na figura, em referencial o.n. $Oxy$, estão representados o círculo trigonométrico
+							e um triângulo, $[OPA]$. O ponto $P$ pertence à circunferência trigonométrica,
+							sendo $0^\circ &lt; \theta &lt; 180^\circ$.</p>
+						<p><span class="alinea">2.1.</span> Considera $\theta = 30^\circ$.</p>
+						<p class="sub"><span class="alinea">a)</span> Indica as coordenadas do ponto $P$
+							e calcula o valor da área do triângulo.</p>
+						<p class="sub"><span class="alinea">b)</span> Identifica as coordenadas de um ponto $R$
+							da circunferência, distinto de $P$, tal que os triângulos $[AOR]$ e $[AOP]$
+							tenham a mesma área.</p>
+						<p><span class="alinea">2.2.</span> Seja $d = \overline{AP}$.</p>
+						<p class="sub"><span class="alinea">a)</span> Mostra que $d^2 = 2 + 2\cos\theta$.</p>
+						<p class="sub"><span class="alinea">b)</span> Determina o valor de $\tan\theta$
+							no caso de $d = 1{,}2$.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ------------ Problema 3.1 ------------ -->
+			<section id="trig-p3a" class="sans" data-sketch="trig-p3a">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 3.1 — Condições com parâmetro $k$</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Determina para que valores de $k$ se verifica cada uma das seguintes condições:</p>
+						<ul class="condicoes">
+							<li class="atual"><span class="alinea">3.1.</span> $\sin\alpha = \dfrac{k-1}{2} \ \wedge\ \cos\alpha = k+1$</li>
+							<li class="outra"><span class="alinea">3.2.</span> $\sin\beta = 1-\dfrac{k}{2} \ \wedge\ -45^\circ < \beta \leqslant 180^\circ$</li>
+							<li class="outra"><span class="alinea">3.3.</span> $\cos x = k^2-3 \ \wedge\ 0^\circ \leqslant x \leqslant 90^\circ$</li>
+							<li class="outra"><span class="alinea">3.4.</span> $\tan x = k-2k^2 \ \wedge\ 180^\circ \leqslant x < 270^\circ$</li>
+						</ul>
+						<p class="ideia"><b>Ideia:</b> O ponto $Q(k+1,\ \tfrac{k-1}{2})$ tem de ser um ponto da circunferência trigonométrica.</p>
+						<p class="dica">Move $k$ e observa o eixo de $k$ em baixo:
+							<span class="verde">●</span> há solução, <span class="vermelho">●</span> não há.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ------------ Problema 3.2 ------------ -->
+			<section id="trig-p3b" class="sans" data-sketch="trig-p3b">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 3.2 — Condições com parâmetro $k$</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Determina para que valores de $k$ se verifica cada uma das seguintes condições:</p>
+						<ul class="condicoes">
+							<li class="outra"><span class="alinea">3.1.</span> $\sin\alpha = \dfrac{k-1}{2} \ \wedge\ \cos\alpha = k+1$</li>
+							<li class="atual"><span class="alinea">3.2.</span> $\sin\beta = 1-\dfrac{k}{2} \ \wedge\ -45^\circ < \beta \leqslant 180^\circ$</li>
+							<li class="outra"><span class="alinea">3.3.</span> $\cos x = k^2-3 \ \wedge\ 0^\circ \leqslant x \leqslant 90^\circ$</li>
+							<li class="outra"><span class="alinea">3.4.</span> $\tan x = k-2k^2 \ \wedge\ 180^\circ \leqslant x < 270^\circ$</li>
+						</ul>
+						<p class="ideia"><b>Ideia:</b> A reta $y = 1-\frac{k}{2}$ tem de intersetar o arco que corresponde ao intervalo de $\beta$.</p>
+						<p class="dica">Move $k$ e observa o eixo de $k$ em baixo:
+							<span class="verde">●</span> há solução, <span class="vermelho">●</span> não há.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ------------ Problema 3.3 ------------ -->
+			<section id="trig-p3c" class="sans" data-sketch="trig-p3c">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 3.3 — Condições com parâmetro $k$</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Determina para que valores de $k$ se verifica cada uma das seguintes condições:</p>
+						<ul class="condicoes">
+							<li class="outra"><span class="alinea">3.1.</span> $\sin\alpha = \dfrac{k-1}{2} \ \wedge\ \cos\alpha = k+1$</li>
+							<li class="outra"><span class="alinea">3.2.</span> $\sin\beta = 1-\dfrac{k}{2} \ \wedge\ -45^\circ < \beta \leqslant 180^\circ$</li>
+							<li class="atual"><span class="alinea">3.3.</span> $\cos x = k^2-3 \ \wedge\ 0^\circ \leqslant x \leqslant 90^\circ$</li>
+							<li class="outra"><span class="alinea">3.4.</span> $\tan x = k-2k^2 \ \wedge\ 180^\circ \leqslant x < 270^\circ$</li>
+						</ul>
+						<p class="ideia"><b>Ideia:</b> A reta $x = k^2-3$ tem de intersetar o arco do 1.º quadrante.</p>
+						<p class="dica">Move $k$ e observa o eixo de $k$ em baixo:
+							<span class="verde">●</span> há solução, <span class="vermelho">●</span> não há.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ------------ Problema 3.4 ------------ -->
+			<section id="trig-p3d" class="sans" data-sketch="trig-p3d">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 3.4 — Condições com parâmetro $k$</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Determina para que valores de $k$ se verifica cada uma das seguintes condições:</p>
+						<ul class="condicoes">
+							<li class="outra"><span class="alinea">3.1.</span> $\sin\alpha = \dfrac{k-1}{2} \ \wedge\ \cos\alpha = k+1$</li>
+							<li class="outra"><span class="alinea">3.2.</span> $\sin\beta = 1-\dfrac{k}{2} \ \wedge\ -45^\circ < \beta \leqslant 180^\circ$</li>
+							<li class="outra"><span class="alinea">3.3.</span> $\cos x = k^2-3 \ \wedge\ 0^\circ \leqslant x \leqslant 90^\circ$</li>
+							<li class="atual"><span class="alinea">3.4.</span> $\tan x = k-2k^2 \ \wedge\ 180^\circ \leqslant x < 270^\circ$</li>
+						</ul>
+						<p class="ideia"><b>Ideia:</b> O ponto $T(1,\ k-2k^2)$ da reta $x=1$ tem de corresponder a um ponto do arco do 3.º quadrante.</p>
+						<p class="dica">Move $k$ e observa o eixo de $k$ em baixo:
+							<span class="verde">●</span> há solução, <span class="vermelho">●</span> não há.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ------------ Problema 4 ------------ -->
+			<section id="trig-p4" class="sans" data-sketch="trig-p4">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 4 — Triângulo isósceles num quadrado</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Na figura estão representados um quadrado, $[ABCD]$, e um triângulo isósceles, $[ABP]$.</p>
+						<p>Fixada uma unidade de comprimento, sabe-se que:</p>
+						<ul class="dados">
+							<li>o perímetro do quadrado é igual a $20$;</li>
+							<li>$\overline{AP} = \overline{BP}$;</li>
+							<li>$C\hat{B}P = \alpha$;</li>
+							<li>$M$ é o ponto médio de $[CD]$.</li>
+						</ul>
+						<p><span class="alinea">4.1.</span> Determina $\overline{PM}$ se $\alpha = 30^\circ$.</p>
+						<p><span class="alinea">4.2.</span> Mostra que $\overline{PM} = 5 - \dfrac{5}{2\tan\alpha}$
+							e indica o intervalo de variação de $\alpha$.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ------------ Problema 5 ------------ -->
+			<section id="trig-p5" class="sans" data-sketch="trig-p5">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 5 — Área de um losango</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Na figura está representado um losango $[PQRS]$, cujo lado mede $5$ unidades de comprimento.</p>
+						<p>Seja $\alpha$ a amplitude de um dos seus ângulos internos não obtusos, tal que
+							$0^\circ < \alpha \leqslant 90^\circ$.</p>
+						<p><span class="alinea">5.1.</span> Mostra que a área do losango é dada pela expressão:
+							$$A(\alpha) = 50\sin\left(\frac{\alpha}{2}\right)\cos\left(\frac{\alpha}{2}\right)$$</p>
+						<p><span class="alinea">5.2.</span> Calcula $A(90^\circ)$ e interpreta, geometricamente,
+							o valor encontrado.</p>
+						<p><span class="alinea">5.3.</span> Considera $\tan\alpha = \sqrt{3}$ e determina, neste caso,
+							o valor exato da medida da área do losango $[PQRS]$.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Novo problema: copiar o bloco <section> acima, mudar id/data-sketch (trig-p2, ...),
+			     criar sketches/trigonometria/pN.js e acrescentar a linha em #trig-problemas. -->
+
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins@4.6.0/chalkboard/plugin.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins@4.6.0/customcontrols/plugin.js"></script>
+
+	<script src="js/main.js"></script>
+	<!-- sketches: resumo + um ficheiro por problema -->
+	<script src="sketches/trigonometria/resumo.js"></script>
+	<script src="sketches/trigonometria/p1.js"></script>
+	<script src="sketches/trigonometria/p2.js"></script>
+	<script src="sketches/trigonometria/p3.js"></script>
+	<script src="sketches/trigonometria/p4.js"></script>
+	<script src="sketches/trigonometria/p5.js"></script>
+
+	<script>
+		Reveal.initialize({
+			hash: true,
+			width: 1600,
+			height: 900,
+			margin: 0.03,
+			center: false,
+			transition: 'slide',
+			chalkboard: {
+				theme: 'whiteboard',
+				boardmarkerWidth: 4,
+				toggleChalkboardButton: false,   // usamos os botões personalizados
+				toggleNotesButton: false
+			},
+			customcontrols: {
+				controls: [
+					{ icon: '<i class="fa-solid fa-list"></i>', title: 'Índice', action: "Reveal.slide(1)" },
+					{ icon: '<i class="fa-solid fa-table-cells"></i>', title: 'Todos os slides (Esc)', action: 'Reveal.toggleOverview();' },
+					{ icon: '<i class="fa-solid fa-pen"></i>', title: 'Caneta sobre o slide (C)', action: 'RevealChalkboard.toggleNotesCanvas()' },
+					{ icon: '<i class="fa-solid fa-chalkboard"></i>', title: 'Quadro (B)', action: 'RevealChalkboard.toggleChalkboard()' },
+					{ icon: '<i class="fa-solid fa-eraser"></i>', title: 'Apagar desenhos (Del)', action: 'RevealChalkboard.clear()' },
+					{ icon: '<i class="fa-solid fa-expand"></i>', title: 'Ecrã inteiro (F)', action: 'document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()' }
+				]
+			},
+			plugins: [RevealMath.KaTeX, RevealChalkboard, RevealCustomControls]
+		}).then(iniciarSketches);
+	</script>
+</body>
+</html>
