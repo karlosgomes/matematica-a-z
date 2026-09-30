@@ -40,3 +40,9 @@ Apresentação Reveal.js com problemas de Matemática A (secundário, currículo
 ## Verificação
 Screenshot headless por slide:
 `google-chrome --headless=new --window-size=1600,900 --virtual-time-budget=6000 --screenshot=out.png "file://$PWD/index.html#/trig-p1"`
+
+## Publicação
+- Repositório público: https://github.com/karlosgomes/matematica-a-z (ramo `main`).
+- GitHub Pages (a partir de `main`, raiz): https://karlosgomes.github.io/matematica-a-z/ — links diretos por slide, ex. `#/trig-p4`.
+- Publicar = `git commit` + `git push`; o site atualiza em ~1 min. Pedir confirmação ao utilizador antes de fazer push.
+- Enunciados transcritos de manual escolar: o utilizador foi alertado para questões de direitos de autor.
