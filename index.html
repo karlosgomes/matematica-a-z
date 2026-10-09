@@ -117,7 +117,8 @@
 						<li><a href="#/trig-p4">Triângulo isósceles num quadrado — $\overline{PM}$ em função de $\alpha$</a></li>
 						<li><a href="#/trig-p5">Área de um losango em função de $\alpha$</a></li>
 						<li><a href="#/trig-p6">A cicloide — roda que rola sem deslizar</a></li>
-						<!-- <li><a href="#/trig-p7">...</a></li> -->
+						<li><a href="#/trig-p7">O holofote da torre de vigia — $d = 30\tan\left(\frac{\pi t}{3}\right)$</a></li>
+						<!-- <li><a href="#/trig-p8">...</a></li> -->
 					</ol>
 				</div>
 			</section>
@@ -342,6 +343,32 @@
 				</div>
 			</section>
 
+			<!-- ------------ Problema 7 ------------ -->
+			<section id="trig-p7" class="sans" data-sketch="trig-p7">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 7 — O holofote da torre de vigia</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>A torre de vigia de uma prisão está a $30$ metros do muro mais próximo. A figura mostra a
+							situação vista de cima. O holofote $L$, no topo da torre, roda no sentido contrário ao dos
+							ponteiros do relógio, dando uma volta completa a cada seis segundos, e projeta um feixe de luz
+							que se desloca ao longo do muro.</p>
+						<p>Seja $N$ o ponto do muro mais próximo do holofote, $M$ a mancha de luz, $d$ a distância de
+							$N$ a $M$ e $t$ o tempo, em segundos, desde a última vez que $M$ passou por $N$.</p>
+						<p><span class="alinea">7.1.</span> Determina $d$ para $t = 0{,}00$, $t = 0{,}30$, $t = 0{,}75$
+							e $t = 1{,}49$.</p>
+						<p><span class="alinea">7.2.</span> As variáveis $d$ e $t$ estão relacionadas linearmente?
+							Qual é o aspeto do gráfico desta relação?</p>
+						<p><span class="alinea">7.3.</span> Porque é que «distância» não é a palavra adequada para
+							descrever a situação no instante $t = 5$?</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
 			<!-- Novo problema: copiar o bloco <section> acima, mudar id/data-sketch (trig-p2, ...),
 			     criar sketches/trigonometria/pN.js e acrescentar a linha em #trig-problemas. -->
 
@@ -364,6 +391,7 @@
 	<script src="sketches/trigonometria/p4.js"></script>
 	<script src="sketches/trigonometria/p5.js"></script>
 	<script src="sketches/trigonometria/p6.js"></script>
+	<script src="sketches/trigonometria/p7.js"></script>
 
 	<script>
 		Reveal.initialize({
