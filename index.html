@@ -118,7 +118,8 @@
 						<li><a href="#/trig-p5">Área de um losango em função de $\alpha$</a></li>
 						<li><a href="#/trig-p6">A cicloide — roda que rola sem deslizar</a></li>
 						<li><a href="#/trig-p7">O holofote da torre de vigia — $d = 30\tan\left(\frac{\pi t}{3}\right)$</a></li>
-						<!-- <li><a href="#/trig-p8">...</a></li> -->
+						<li><a href="#/trig-p8">Os parâmetros $k$ e $a$ — gráfico de $y = k + a\cos x$</a></li>
+						<!-- <li><a href="#/trig-p9">...</a></li> -->
 					</ol>
 				</div>
 			</section>
@@ -369,6 +370,30 @@
 				</div>
 			</section>
 
+			<!-- ------------ Problema 8 ------------ -->
+			<section id="trig-p8" class="sans" data-sketch="trig-p8">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 8 — Os parâmetros $k$ e $a$</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Na figura está representada, a cinzento, parte do gráfico de uma função definida por uma
+							expressão da forma $y = k + a\cos x$, com $a$ e $k$ números reais e $x$ em graus.</p>
+						<p><span class="alinea">8.1.</span> Determina valores plausíveis para os coeficientes $a$ e $k$.</p>
+						<p><span class="alinea">8.2.</span> Explica de que forma estes números influenciam o aspeto
+							do gráfico.</p>
+						<p class="ideia"><b>Ideia:</b> O máximo e o mínimo de $y = k + a\cos x$ são $k + |a|$ e $k - |a|$:
+							$k$ é a linha média e $|a|$ é a amplitude.</p>
+						<p class="dica">Move $a$ e $k$ até a curva azul coincidir com a da figura.
+							Apoio: app <a href="https://karlosgomes.github.io/apps-matematica/parametros-k-a/#cos"
+							target="_blank">Parâmetros k e a</a>.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
 			<!-- Novo problema: copiar o bloco <section> acima, mudar id/data-sketch (trig-p2, ...),
 			     criar sketches/trigonometria/pN.js e acrescentar a linha em #trig-problemas. -->
 
@@ -392,6 +417,7 @@
 	<script src="sketches/trigonometria/p5.js"></script>
 	<script src="sketches/trigonometria/p6.js"></script>
 	<script src="sketches/trigonometria/p7.js"></script>
+	<script src="sketches/trigonometria/p8.js"></script>
 
 	<script>
 		Reveal.initialize({
