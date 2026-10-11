@@ -119,7 +119,8 @@
 						<li><a href="#/trig-p6">A cicloide — roda que rola sem deslizar</a></li>
 						<li><a href="#/trig-p7">O holofote da torre de vigia — $d = 30\tan\left(\frac{\pi t}{3}\right)$</a></li>
 						<li><a href="#/trig-p8">Os parâmetros $k$ e $a$ — gráfico de $y = k + a\cos x$</a></li>
-						<!-- <li><a href="#/trig-p9">...</a></li> -->
+						<li><a href="#/trig-p9">O limite de $\frac{\sin\theta}{\theta}$ — áreas enquadradas no círculo trigonométrico</a></li>
+						<!-- <li><a href="#/trig-p10">...</a></li> -->
 					</ol>
 				</div>
 			</section>
@@ -394,6 +395,31 @@
 				</div>
 			</section>
 
+			<!-- ------------ Problema 9 ------------ -->
+			<section id="trig-p9" class="sans" data-sketch="trig-p9">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 9 — O limite de $\sin\theta / \theta$</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>$P$ pertence à circunferência trigonométrica de centro $E$, $N = (1, 0)$, $\theta = P\hat{E}N$ (em radianos,
+							$0 &lt; \theta &lt; \frac{\pi}{2}$), $T$ é a projeção de $P$ em $Ox$ e $D \in \dot{E}P$ está na
+							tangente à circunferência em $N$.</p>
+						<p><span class="alinea">9.1.</span> Escreve as coordenadas de $P$ e de $D$ em função de $\theta$.</p>
+						<p><span class="alinea">9.2.</span> Determina as áreas de $[PET]$, de $[DEN]$ e do setor $PEN$.</p>
+						<p><span class="alinea">9.3.</span> Ordena essas áreas, usando o símbolo $&lt;$.</p>
+						<p><span class="alinea">9.4.</span> Explica por que razão
+							$\cos\theta &lt; \frac{\theta}{\sin\theta} &lt; \frac{1}{\cos\theta}$.</p>
+						<p><span class="alinea">9.5.</span> Calcula o limite do menor e do maior membro quando
+							$\theta \to 0$. O que concluis sobre $\lim\limits_{\theta\to0}\frac{\sin\theta}{\theta}$?
+							(<em>Teorema das funções enquadradas</em>)</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
 			<!-- Novo problema: copiar o bloco <section> acima, mudar id/data-sketch (trig-p2, ...),
 			     criar sketches/trigonometria/pN.js e acrescentar a linha em #trig-problemas. -->
 
@@ -418,6 +444,7 @@
 	<script src="sketches/trigonometria/p6.js"></script>
 	<script src="sketches/trigonometria/p7.js"></script>
 	<script src="sketches/trigonometria/p8.js"></script>
+	<script src="sketches/trigonometria/p9.js"></script>
 
 	<script>
 		Reveal.initialize({
