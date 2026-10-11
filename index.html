@@ -102,6 +102,35 @@
 				</div>
 			</section>
 
+			<!-- ============ RESUMO 3: REDUÇÃO AO 1.º QUADRANTE ============ -->
+			<section id="trig-reducao" class="sans resumo" data-sketch="trig-reducao">
+				<a class="voltar" href="#/indice">↩ índice</a>
+				<h4>Trigonometria · Resumo — Redução ao 1.º quadrante</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>O triângulo $[OTP]$, com $\color{#1d4ed8}{\overline{OT} = \cos\alpha}$ e
+							$\color{#dc2626}{\overline{TP} = \sin\alpha}$, é transformado numa rotação, numa simetria
+							central ou numa reflexão. Os catetos dão as coordenadas de $P'$.</p>
+						<table class="reducao">
+							<tr><th>$\beta$</th><th>$\sin\beta$</th><th>$\cos\beta$</th><th>$\tan\beta$</th></tr>
+							<tr data-k="a"><td>$\frac{\pi}{2} - \alpha$</td><td>$\cos\alpha$</td><td>$\sin\alpha$</td><td>$\frac{1}{\tan\alpha}$</td></tr>
+							<tr data-k="b"><td>$\frac{\pi}{2} + \alpha$</td><td>$\cos\alpha$</td><td>$-\sin\alpha$</td><td>$-\frac{1}{\tan\alpha}$</td></tr>
+							<tr data-k="c"><td>$\pi - \alpha$</td><td>$\sin\alpha$</td><td>$-\cos\alpha$</td><td>$-\tan\alpha$</td></tr>
+							<tr data-k="d"><td>$\pi + \alpha$</td><td>$-\sin\alpha$</td><td>$-\cos\alpha$</td><td>$\tan\alpha$</td></tr>
+							<tr data-k="e"><td>$-\alpha$</td><td>$-\sin\alpha$</td><td>$\cos\alpha$</td><td>$-\tan\alpha$</td></tr>
+						</table>
+						<p class="ideia"><b>Regra:</b> com $\pi \pm \alpha$ e $-\alpha$ mantém-se a razão; com
+							$\frac{\pi}{2} \pm \alpha$ troca-se seno com cosseno. O sinal é o da razão de $\beta$ no seu quadrante.</p>
+						<p class="dica">Apoio: app <a href="https://karlosgomes.github.io/apps-matematica/reducao-primeiro-quadrante/"
+							target="_blank">Redução ao 1.º quadrante</a>.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
 			<!-- ------------ Problemas (lista) ------------ -->
 			<section id="trig-problemas">
 				<a class="voltar" href="#/indice">↩ índice</a>
@@ -436,6 +465,7 @@
 	<script src="js/main.js"></script>
 	<!-- sketches: resumo + um ficheiro por problema -->
 	<script src="sketches/trigonometria/resumo.js"></script>
+	<script src="sketches/trigonometria/reducao.js"></script>
 	<script src="sketches/trigonometria/p1.js"></script>
 	<script src="sketches/trigonometria/p2.js"></script>
 	<script src="sketches/trigonometria/p3.js"></script>

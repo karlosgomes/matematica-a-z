@@ -95,3 +95,11 @@
 .enunciado .verde { color: #16a34a; } .enunciado .vermelho { color: #dc2626; }
 .enunciado ul.dados { display: block; margin: 0 0 18px 1.2em; }
 .enunciado ul.dados li { margin: 4px 0; }
+
+/* ---------- resumo: tabela da redução ao 1.º quadrante ---------- */
+.enunciado table.reducao { border-collapse: collapse; margin: 0 auto 18px; font-size: 0.82em; }
+.enunciado table.reducao th, .enunciado table.reducao td { border: none; border-bottom: 1px solid #e2e8f0;
+	padding: 5px 12px; text-align: center; }
+.enunciado table.reducao th { color: #1d4ed8; border-bottom: 2px solid #94a3b8; }
+.enunciado table.reducao tr.atual td { background: #fff7ed; }
+.enunciado table.reducao tr.atual td:first-child { box-shadow: inset 4px 0 #ea580c; }
