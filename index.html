@@ -36,14 +36,13 @@
 			<li><a href="https://x.com/carlosgomesxx1" aria-label="twitter"><i class="bi bi-twitter-x"></i></a></li>
 		</ul>
 	</nav>
+	<!-- faixa da capa: fora do .reveal para não ser escalada (mesmo tamanho que no weblog) -->
+	<div class="faixa-capa"><h1>Matemática A...Z</h1></div>
 	<div class="reveal">
 		<div class="slides">
 
 			<!-- ============ CAPA ============ -->
 			<section class="capa">
-				<div class="banda">
-					<h1>Matemática A...Z</h1>
-				</div>
 				<p class="subtitulo2">Problemas selecionados</p>
 				<table class="ajuda">
 					<tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>navegar entre slides</td>
@@ -525,10 +524,22 @@
 			plugins: [RevealMath.KaTeX, RevealChalkboard, RevealCustomControls]
 		}).then(iniciarSketches);
 
+		// faixa da capa: só visível no 1.º slide; o conteúdo da capa começa abaixo dela
+		function atualizarCapa() {
+			const naCapa = Reveal.getIndices().h === 0 && !Reveal.isOverview();
+			document.documentElement.classList.toggle('na-capa', naCapa);
+			const capa = Reveal.getSlide(0);
+			capa.style.paddingTop = '0px';
+			const folga = document.querySelector('.faixa-capa').getBoundingClientRect().bottom - capa.getBoundingClientRect().top;
+			capa.style.paddingTop = Math.max(0, folga / Reveal.getScale() + 50) + 'px';
+		}
+		['ready', 'slidechanged', 'resize', 'overviewshown', 'overviewhidden'].forEach(e => Reveal.on(e, atualizarCapa));
+
 		// ecrã inteiro: esconder o menu do weblog e dar o espaço todo aos slides
 		document.addEventListener('fullscreenchange', () => {
 			document.documentElement.classList.toggle('ecra-inteiro', !!document.fullscreenElement);
 			Reveal.layout();
+			atualizarCapa();
 		});
 	</script>
 </body>

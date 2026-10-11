@@ -8,9 +8,9 @@ Apresentação Reveal.js com problemas de Matemática A (secundário, currículo
 - Sem build: abrir `index.html` no browser.
 
 ## Estrutura dos slides (ordem em `index.html`)
-1. **Capa** — faixa escura `.banda` (#170C3A, como as páginas do weblog) com o título "Matemática A...Z" a branco (fonte Jost, 1.7em, tamanho próximo dos títulos do weblog); por baixo, "Problemas selecionados" (mesmo tamanho do h3 "Índice") e a tabela `.ajuda` com os atalhos de teclado.
+1. **Capa** — a faixa escura com o título "Matemática A...Z" é `div.faixa-capa`, **fora do `.reveal`** (para não ser escalada): mesmas medidas do weblog (Jost 600 34px, faixa 126px, alinhada como a coluna do weblog) e só visível no 1.º slide (classe `na-capa` no `<html>`, função `atualizarCapa()` que também ajusta o `padding-top` da capa). No slide: "Problemas selecionados" (2.2em) e a tabela `.ajuda` com os atalhos de teclado.
 
-**Menu do weblog** (`nav.barra-weblog`, fora do `.reveal`): barra fixa no topo igual à do weblog (logótipo, Início, Artigos, Reflexões/Problemas, Software, Apps de Matemática, Matemática A...Z ativo, ícones). O `.reveal` começa abaixo dela (`--barra: 56px`); em ecrã inteiro a barra esconde-se (classe `ecra-inteiro` no `<html>`). Se o menu do weblog mudar, atualizar aqui à mão.
+**Menu do weblog** (`nav.barra-weblog`, fora do `.reveal`): barra fixa no topo igual à do weblog (logótipo, Início, Artigos, Reflexões/Problemas, Software, Apps de Matemática, Matemática A...Z ativo, ícones). O `.reveal` começa abaixo dela (`--barra: 62px`, como no weblog); em ecrã inteiro a barra esconde-se (classe `ecra-inteiro` no `<html>`). Se o menu do weblog mudar, atualizar aqui à mão.
 2. **Índice** (`#indice`) — um bloco `.topico` por tópico, com links **Resumo · Problemas**.
 3. Por tópico (ex.: Trigonometria, prefixo `trig-`):
    - slides de resumo teórico (`trig-circulo`, `trig-fundamental`, `trig-reducao`) — enunciado/teoria à esquerda, animação à direita (a redução ao 1.º quadrante tem a tabela à esquerda, com a linha do ângulo escolhido destacada pelo sketch `sketches/trigonometria/reducao.js`);

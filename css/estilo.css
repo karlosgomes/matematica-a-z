@@ -1,6 +1,6 @@
 /* ---------- tema principal: fonte tipo Palatino (como os slides de referência) ---------- */
 /* ---------- menu do weblog (cores e fonte de https://karlosgomes.github.io/weblog/) ---------- */
-:root { --barra: 56px; }
+:root { --barra: 62px; }
 .barra-weblog { position: fixed; top: 0; left: 0; right: 0; height: var(--barra); z-index: 100; box-sizing: border-box;
 	display: flex; align-items: center; gap: 8px; padding: 0 1.5em; background: #170C3A; font: 17px/1.5 "Jost", system-ui, sans-serif; }
 .barra-weblog ul { display: flex; align-items: center; list-style: none; margin: 0; padding: 0; }
@@ -41,11 +41,14 @@
 
 /* ---------- capa: faixa escura como as páginas do weblog ---------- */
 .reveal .capa { display: flex !important; flex-direction: column; align-items: center; justify-content: flex-start; height: 100%; }
-.reveal .capa .banda { align-self: stretch; background: #170C3A; padding: 45px 0 40px; margin-bottom: 50px; text-align: left;
-	box-shadow: 0 0 0 300vmax #170C3A; clip-path: inset(-300vmax -300vmax 0 -300vmax); }  /* prolonga a faixa até às margens e ao menu */
-.reveal.overview .capa .banda { box-shadow: none; clip-path: none; }
-.reveal .capa h1 { color: #fff; font-family: "Jost", sans-serif; font-weight: 600; font-size: 1.7em; margin: 0; }
-.reveal .capa .subtitulo2 { font-size: var(--r-heading3-size); color: #64748b; margin: 10px 0 0; letter-spacing: 0.04em; }  /* = h3 do Índice */
+/* faixa fora do .reveal, com as medidas do weblog: título Jost 34px/600, faixa com 126px */
+.faixa-capa { position: fixed; top: var(--barra); left: 0; right: 0; z-index: 50; box-sizing: border-box; height: 126px;
+	display: flex; align-items: center; background: #170C3A; padding: 0 max(1.5em, calc((100% - 1060px) / 2));
+	opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; }
+.faixa-capa h1 { margin: 0; color: #fff; font: 600 34px/1.2 "Jost", system-ui, sans-serif; }
+.na-capa .faixa-capa { opacity: 1; visibility: visible; }
+.ecra-inteiro .faixa-capa { top: 0; }
+.reveal .capa .subtitulo2 { font-size: 2.2em; color: #64748b; margin: 0; letter-spacing: 0.04em; }
 
 /* ---------- índices ---------- */
 .reveal .indice { text-align: left; margin: 30px auto 0; width: 1100px; font-size: 1.15em; line-height: 1.7; }
