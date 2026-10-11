@@ -41,7 +41,7 @@ SKETCHES['trig-p7'] = function (p, controlos) {
 			btPlay.html(aAnimar ? '⏸ Pausa' : '▶ Rodar');
 		});
 		UT.quebra(p, controlos);
-		[['t = 0', 0], ['t = 0,30', 0.3], ['t = 0,75', 0.75], ['t = 1,49', 1.49], ['t = 5', 5]]
+		[['t = 0', 0], ['t = 0,3', 0.3], ['t = 0,75', 0.75], ['t = 1,5', 1.5], ['t = 5', 5], ['t = 6', 6]]
 			.forEach(([txt, v]) => UT.botao(p, controlos, txt, () => { parar(); definir(v); }, 'atalho'));
 		UT.quebra(p, controlos);
 		cxTri = UT.caixa(p, controlos, 'Triângulo [LNM]', true);
@@ -225,10 +225,11 @@ SKETCHES['trig-p7'] = function (p, controlos) {
 		p.textStyle(p.NORMAL); p.fill(...COR.ang);
 		p.text(`θ = πt/3 ≈ ${UT.fmt(p.degrees(th), 1)}°`, x + 150, 26);
 		p.fill(...COR.tan); p.textStyle(p.BOLD);
-		const dtxt = Math.abs(d) > 1e5 ? '±∞' : UT.fmt(d, 2).replace('-', '−');
-		p.text(`d = 30 tan(πt/3) ≈ ${dtxt}`, x, 58);
+		const paralelo = Math.abs(Math.cos(th)) < 1e-9;
+		p.text(paralelo ? 'd = 30 tan(πt/3) não está definida' : `d = 30 tan(πt/3) ≈ ${UT.fmt(d, 2).replace('-', '−')}`, x, 58);
 		p.textStyle(p.NORMAL); p.textSize(17); p.fill(100, 116, 139);
-		const nota = !temMancha(t) ? 'sem mancha no muro (o feixe aponta para longe do muro)'
+		const nota = paralelo ? 'o feixe é paralelo ao muro (assíntota do gráfico)'
+			: !temMancha(t) ? 'sem mancha no muro (o feixe aponta para longe do muro)'
 			: d < -1e-6 ? `d < 0: M está do outro lado de N, a ${UT.fmt(-d, 2)} m de N`
 				: `M está a ${UT.fmt(d, 2)} m de N`;
 		p.text(nota, x, 90);
