@@ -8,7 +8,7 @@ Apresentação Reveal.js com problemas de Matemática A (secundário, currículo
 - Sem build: abrir `index.html` no browser.
 
 ## Estrutura dos slides (ordem em `index.html`)
-1. **Capa** — faixa escura `.banda` (#170C3A, como as páginas do weblog) com o título "Matemática A...Z" a branco e o subtítulo "Ver para compreender" a laranja (fonte Jost); por baixo, "Problemas selecionados" e a tabela `.ajuda` com os atalhos de teclado.
+1. **Capa** — faixa escura `.banda` (#170C3A, como as páginas do weblog) com o título "Matemática A...Z" a branco (fonte Jost, 1.7em, tamanho próximo dos títulos do weblog); por baixo, "Problemas selecionados" (mesmo tamanho do h3 "Índice") e a tabela `.ajuda` com os atalhos de teclado.
 
 **Menu do weblog** (`nav.barra-weblog`, fora do `.reveal`): barra fixa no topo igual à do weblog (logótipo, Início, Artigos, Reflexões/Problemas, Software, Apps de Matemática, Matemática A...Z ativo, ícones). O `.reveal` começa abaixo dela (`--barra: 56px`); em ecrã inteiro a barra esconde-se (classe `ecra-inteiro` no `<html>`). Se o menu do weblog mudar, atualizar aqui à mão.
 2. **Índice** (`#indice`) — um bloco `.topico` por tópico, com links **Resumo · Problemas**.
