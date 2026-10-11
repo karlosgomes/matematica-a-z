@@ -5,7 +5,7 @@
    ===================================================================== */
 SKETCHES['trig-p7'] = function (p, controlos) {
 	const W = 940, H = 560;
-	const DIST = 30, PER = 6;
+	const DIST = 30, PER = 6, TMAX = 12;            // TMAX: duas voltas
 	const theta = t => Math.PI * t / 3;
 	const dist = t => DIST * Math.tan(theta(t));
 	const temMancha = t => Math.cos(theta(t)) > 1e-9;       // o feixe aponta para o muro
@@ -26,17 +26,17 @@ SKETCHES['trig-p7'] = function (p, controlos) {
 
 	const FX = x => FIG.lx + x * FIG.s;             // x em metros a partir de L
 	const FY = y => FIG.ny - y * FIG.s;             // y em metros a partir de N
-	const GX = v => p.map(v, 0, PER, GR.x0, GR.x1);
+	const GX = v => p.map(v, 0, TMAX, GR.x0, GR.x1);
 	const GY = v => GR.yc - v * (GR.yc - GR.y0) / GR.dmax;
 
 	p.setup = function () {
 		p.createCanvas(W, H);
 		p.textFont('Source Sans Pro');
 
-		sl = UT.slider(p, controlos, 't', 0, PER, t, 0.01);
+		sl = UT.slider(p, controlos, 't', 0, TMAX, t, 0.01);
 		sl.input(() => { parar(); definir(sl.value()); });
 		btPlay = UT.botao(p, controlos, '▶ Rodar', () => {
-			if (!aAnimar && t >= PER - 1e-6) definir(0);
+			if (!aAnimar && t >= TMAX - 1e-6) definir(0);
 			aAnimar = !aAnimar;
 			btPlay.html(aAnimar ? '⏸ Pausa' : '▶ Rodar');
 		});
@@ -54,7 +54,7 @@ SKETCHES['trig-p7'] = function (p, controlos) {
 	function parar() { aAnimar = false; btPlay.html('▶ Rodar'); }
 	function arred(v) { return Math.round(v * 100) / 100; }
 	function definir(v) {
-		t = p.constrain(v, 0, PER);
+		t = p.constrain(v, 0, TMAX);
 		sl.value(t);
 		rasto.add(arred(t));
 	}
@@ -62,7 +62,7 @@ SKETCHES['trig-p7'] = function (p, controlos) {
 	p.draw = function () {
 		if (aAnimar) {
 			let n = t + 0.5 * p.deltaTime / 1000;   // meia velocidade real, para se ver bem
-			if (n >= PER) { n = PER; parar(); }
+			if (n >= TMAX) { n = TMAX; parar(); }
 			definir(n);
 		}
 		p.background(255);
@@ -170,31 +170,31 @@ SKETCHES['trig-p7'] = function (p, controlos) {
 	/* ---------------- gráfico d(t) ---------------- */
 	function grafico() {
 		p.textStyle(p.NORMAL); p.textSize(14);
-		for (let v = 0; v <= PER; v += 0.75) {
+		for (let v = 0; v <= TMAX; v += 0.75) {
 			p.stroke(235); p.strokeWeight(1); p.line(GX(v), GR.y0, GX(v), GR.y1);
 		}
 		[-100, -50, 50, 100].forEach(v => {
-			p.stroke(235); p.line(GX(0), GY(v), GX(PER), GY(v));
+			p.stroke(235); p.line(GX(0), GY(v), GX(TMAX), GY(v));
 			p.noStroke(); p.fill(90); p.textAlign(p.RIGHT, p.CENTER); p.text(v, GX(0) - 6, GY(v));
 		});
 		p.stroke(80); p.strokeWeight(1.5);
-		p.line(GX(0), GR.yc, GX(PER) + 14, GR.yc);
+		p.line(GX(0), GR.yc, GX(TMAX) + 14, GR.yc);
 		p.line(GX(0), GR.y1, GX(0), GR.y0 - 10);
-		[[0.75, '0,75'], [1.5, '1,5'], [3, '3'], [4.5, '4,5'], [6, '6']].forEach(([v, txt]) => {
+		[[1.5, '1,5'], [3, '3'], [4.5, '4,5'], [6, '6'], [7.5, '7,5'], [9, '9'], [10.5, '10,5'], [12, '12']].forEach(([v, txt]) => {
 			p.stroke(80); p.line(GX(v), GR.yc - 4, GX(v), GR.yc + 4);
-			p.noStroke(); p.fill(90); p.textAlign(p.CENTER, p.TOP); p.text(txt, GX(v) + (v === 1.5 || v === 4.5 ? 14 : 0), GR.yc + 7);
+			p.noStroke(); p.fill(90); p.textAlign(p.CENTER, p.TOP); p.text(txt, GX(v) + (v % 3 ? 14 : 0), GR.yc + 7);
 		});
 		rot('d', GX(0) + 12, GR.y0 - 10, COR.texto, 18, p.LEFT, p.ITALIC);
-		rot('t', GX(PER) + 14, GR.yc - 16, COR.texto, 18, p.CENTER, p.ITALIC);
+		rot('t', GX(TMAX) + 14, GR.yc - 16, COR.texto, 18, p.CENTER, p.ITALIC);
 
 		// assíntotas
 		p.stroke(...COR.ass); p.strokeWeight(1.5);
-		[1.5, 4.5].forEach(v => tracejado(GX(v), GR.y0, GX(v), GR.y1, 7, 6));
+		[1.5, 4.5, 7.5, 10.5].forEach(v => tracejado(GX(v), GR.y0, GX(v), GR.y1, 7, 6));
 
 		recortar(GR.x0 - 2, GR.y0, GR.x1 + 4, GR.y1);
 		if (cxCurva.checked()) {
 			p.noFill(); p.strokeWeight(3);
-			[[0, 1.499, true], [1.501, 4.499, false], [4.501, PER, true]].forEach(([a, b, real]) => {
+			[[0, 1.499, true], [1.501, 4.499, false], [4.501, 7.499, true], [7.501, 10.499, false], [10.501, TMAX, true]].forEach(([a, b, real]) => {
 				p.stroke(...(real ? COR.tan : [170, 170, 170]));
 				if (!real) p.drawingContext.setLineDash([6, 6]);
 				p.beginShape();
