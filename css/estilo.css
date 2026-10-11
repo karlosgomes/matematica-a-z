@@ -19,6 +19,8 @@
 .reveal .capa { display: flex !important; flex-direction: column; align-items: center; justify-content: flex-start;
 	height: 100%; padding-top: 70px; }
 .reveal .capa img.logo { width: 160px; height: 160px; margin: 0 0 40px; border-radius: 50%; }
+.reveal .capa a.voltar { position: absolute; top: 0; right: 0; font-size: 0.6em; color: #EE6A24; text-decoration: none; }
+.reveal .capa a.voltar:hover { color: #FB9E07; }
 .reveal .capa h1 { color: #111; font-size: 3.2em; margin: 0 0 24px; }
 .reveal .capa .subtitulo { font-size: 1.5em; color: #333; margin: 0; }
 .reveal .capa .subtitulo2 { font-size: 0.95em; color: #64748b; margin: 10px 0 0; letter-spacing: 0.04em; }
