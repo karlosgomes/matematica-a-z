@@ -41,7 +41,7 @@ SKETCHES['trig-p7'] = function (p, controlos) {
 			btPlay.html(aAnimar ? '⏸ Pausa' : '▶ Rodar');
 		});
 		UT.quebra(p, controlos);
-		[['t = 0', 0], ['t = 0,3', 0.3], ['t = 0,75', 0.75], ['t = 1,5', 1.5], ['t = 5', 5], ['t = 6', 6]]
+		[['t = 0', 0], ['t = 0,3', 0.3], ['t = 0,75', 0.75], ['t = 1,49', 1.49], ['t = 5', 5], ['t = 6', 6]]
 			.forEach(([txt, v]) => UT.botao(p, controlos, txt, () => { parar(); definir(v); }, 'atalho'));
 		UT.quebra(p, controlos);
 		cxTri = UT.caixa(p, controlos, 'Triângulo [LNM]', true);
