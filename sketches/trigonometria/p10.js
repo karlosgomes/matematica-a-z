@@ -5,7 +5,8 @@
    10.2: raio do paralelo r = R cos 41° ≈ 4808 km; num dia, 2πr ≈ 30 206 km
    Esfera em 3D desenhada à mão (projeção ortogonal), como na figura do manual:
    linhas da frente a cheio, linhas de trás a tracejado. A vista roda com cursores
-   (não com o rato: o Reveal escala o slide).
+   ou arrastando a Terra com o rato (ou o dedo): só se usam os deslocamentos do
+   ponteiro, por isso a escala do Reveal não atrapalha.
    ===================================================================== */
 (function () {
 	const R_KM = 6370, LAT_G = 41, LAT = LAT_G * Math.PI / 180;
@@ -35,7 +36,7 @@
 			let R_ = [0, 1, 0], U_ = [0, 0, 1], F_ = [1, 0, 0];
 
 			p.setup = function () {
-				p.createCanvas(W, H);
+				arrastar(p.createCanvas(W, H).elt);
 				p.textFont('Source Sans Pro');
 				if (alinea === 1) {
 					sl = UT.slider(p, controlos, 'Viagem N → E', 0, 1, s, 0.001);
@@ -56,7 +57,7 @@
 				UT.quebra(p, controlos);
 				slAz = UT.slider(p, controlos, 'Rodar a vista', -180, 180, az, 1);
 				slAz.input(() => { az = slAz.value(); });
-				slEl = UT.slider(p, controlos, 'Inclinação', -15, 70, el, 1);
+				slEl = UT.slider(p, controlos, 'Inclinação', -60, 80, el, 1);
 				slEl.input(() => { el = slEl.value(); });
 				slAz.style('width', '220px'); slEl.style('width', '220px');
 				UT.quebra(p, controlos);
@@ -64,6 +65,29 @@
 				else cxEq = UT.caixa(p, controlos, 'Equador');
 				cxCalc = UT.caixa(p, controlos, 'Mostrar cálculos');
 			};
+
+			// arrastar com o rato (ou o dedo) roda a vista: a superfície acompanha o ponteiro
+			function arrastar(cv) {
+				let ultimo = null;
+				cv.style.cursor = 'grab'; cv.style.touchAction = 'none';
+				cv.addEventListener('pointerdown', e => {
+					ultimo = [e.clientX, e.clientY]; cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing';
+					e.stopPropagation();
+				});
+				cv.addEventListener('pointermove', e => {
+					if (!ultimo) return;
+					const esc = (window.Reveal && Reveal.getScale && Reveal.getScale()) || 1;
+					const dx = (e.clientX - ultimo[0]) / esc, dy = (e.clientY - ultimo[1]) / esc;
+					ultimo = [e.clientX, e.clientY];
+					az -= dx * 0.4; if (az > 180) az -= 360; if (az < -180) az += 360;
+					el = p.constrain(el + dy * 0.4, -60, 80);
+					slAz.value(az); slEl.value(el);
+				});
+				const fim = () => { ultimo = null; cv.style.cursor = 'grab'; };
+				cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim);
+				// no tablet, o deslize sobre a Terra não muda de slide
+				['touchstart', 'touchmove'].forEach(t => cv.addEventListener(t, e => e.stopPropagation(), { passive: true }));
+			}
 
 			function parar() { aAnimar = false; btPlay.html(alinea === 1 ? '▶ Viajar' : '▶ Rodar a Terra'); }
 			function definir(v) {

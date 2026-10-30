@@ -30,10 +30,10 @@ Apresentação Reveal.js com problemas de Matemática A (secundário, currículo
 - Registo em modo instância: `SKETCHES['trig-pN'] = function (p, controlos) { ... }` — a chave é igual ao `data-sketch` do slide.
 - `js/main.js` cria as instâncias e só faz `loop()` no slide visível.
 - Controlos com os helpers `UT.slider`, `UT.botao`, `UT.caixa`, `UT.quebra` (HTML dentro de `.controlos`).
-- **Não depender do rato dentro do canvas**: o Reveal escala o slide e as coordenadas do rato no p5 ficam erradas — usar sliders/botões.
+- **Não depender do rato dentro do canvas**: o Reveal escala o slide e as coordenadas do rato no p5 ficam erradas — usar sliders/botões. Exceção: arrastar para rodar uma vista (só os deslocamentos do ponteiro, com eventos `pointer*` nativos no canvas e `touch*` com `stopPropagation`; ver `arrastar()` em `p10.js`).
 - Números com vírgula decimal: `UT.fmt(x, casas)`.
 - Problema com várias alíneas visualizadas separadamente → um slide por alínea (`trig-p3a`, `trig-p3b`, …), com todas as alíneas no enunciado e a atual destacada (`ul.condicoes li.atual` / `li.outra`).
-- Figuras 3D (ex.: `sketches/trigonometria/p10.js`, a Terra): projeção ortogonal feita à mão no canvas 2D (`camara()`/`pr()`), sem WEBGL (assim o texto continua em Source Sans Pro); linhas da frente a cheio e de trás a tracejado, como nas figuras do manual; a vista roda com cursores «Rodar a vista» e «Inclinação».
+- Figuras 3D (ex.: `sketches/trigonometria/p10.js`, a Terra): projeção ortogonal feita à mão no canvas 2D (`camara()`/`pr()`), sem WEBGL (assim o texto continua em Source Sans Pro); linhas da frente a cheio e de trás a tracejado, como nas figuras do manual; a vista roda com cursores «Rodar a vista» e «Inclinação» ou arrastando com o rato/dedo.
 - Modelo reutilizável `exploradorK(cfg)` em `sketches/trigonometria/p3.js` para condições com parâmetro k: círculo com arco do domínio + gráfico da expressão em k com faixa de valores admissíveis + eixo de k pintado verde/vermelho + caixa "Mostrar solução".
 
 ## Acrescentar
