@@ -170,7 +170,9 @@
 						<li><a href="#/trig-p7">O holofote da torre de vigia — $d = 30\tan\left(\frac{\pi t}{3}\right)$</a></li>
 						<li><a href="#/trig-p8">Os parâmetros $k$ e $a$ — gráfico de $y = k + a\cos x$</a></li>
 						<li><a href="#/trig-p9">O limite de $\frac{\sin\theta}{\theta}$ — áreas enquadradas no círculo trigonométrico</a></li>
-						<!-- <li><a href="#/trig-p10">...</a></li> -->
+						<li>Amarante, a latitude e a rotação da Terra (3D) —
+							<a href="#/trig-p10a">10.1</a> · <a href="#/trig-p10b">10.2</a></li>
+						<!-- <li><a href="#/trig-p11">...</a></li> -->
 					</ol>
 				</div>
 			</section>
@@ -470,6 +472,56 @@
 				</div>
 			</section>
 
+			<!-- ------------ Problema 10.1 ------------ -->
+			<section id="trig-p10a" class="sans" data-sketch="trig-p10a">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 10.1 — Amarante: a distância ao equador</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Seja $E$ a cidade de Amarante, $N$ o ponto do equador mais próximo de $E$ e $C$ o centro da Terra.
+							O ângulo ao centro $ECN$ chama-se <em>latitude</em> de $E$ e mede, aproximadamente, $41^\circ$.
+							Considera que a Terra é uma esfera com $6370$ km de raio.</p>
+						<ul class="condicoes">
+							<li class="atual"><span class="alinea">10.1.</span> A que distância do equador fica Amarante?
+								Considera uma viagem <em>sobre</em> a superfície da Terra e não através dela.</li>
+							<li class="outra"><span class="alinea">10.2.</span> Que distância percorrem os habitantes de Amarante,
+								num dia, devido à rotação da Terra em torno do seu eixo?</li>
+						</ul>
+						<p class="ideia"><b>Ideia:</b> O comprimento de um arco de circunferência é proporcional ao ângulo ao centro: a $41^\circ$ corresponde $\frac{41}{360}$ do perímetro de um meridiano.</p>
+						<p class="dica">Roda a vista com os cursores. A corda $[NE]$ seria a distância <em>através</em> da Terra. «Mostrar cálculos» revela as contas.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ------------ Problema 10.2 ------------ -->
+			<section id="trig-p10b" class="sans" data-sketch="trig-p10b">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 10.2 — Amarante: a rotação da Terra</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Seja $E$ a cidade de Amarante, $N$ o ponto do equador mais próximo de $E$ e $C$ o centro da Terra.
+							O ângulo ao centro $ECN$ chama-se <em>latitude</em> de $E$ e mede, aproximadamente, $41^\circ$.
+							Considera que a Terra é uma esfera com $6370$ km de raio.</p>
+						<ul class="condicoes">
+							<li class="outra"><span class="alinea">10.1.</span> A que distância do equador fica Amarante?
+								Considera uma viagem <em>sobre</em> a superfície da Terra e não através dela.</li>
+							<li class="atual"><span class="alinea">10.2.</span> Que distância percorrem os habitantes de Amarante,
+								num dia, devido à rotação da Terra em torno do seu eixo?</li>
+						</ul>
+						<p class="ideia"><b>Ideia:</b> Num dia, Amarante dá uma volta completa ao seu <em>paralelo</em>: uma circunferência de centro $O$ no eixo e raio $r = \overline{OE}$. No triângulo $[COE]$, retângulo em $O$, o ângulo em $E$ mede $41^\circ$.</p>
+						<p class="dica">Roda a Terra e a vista com os cursores. «Equador» compara com a volta de quem vive no equador.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
 			<!-- Novo problema: copiar o bloco <section> acima, mudar id/data-sketch (trig-p2, ...),
 			     criar sketches/trigonometria/pN.js e acrescentar a linha em #trig-problemas. -->
 
@@ -496,6 +548,7 @@
 	<script src="sketches/trigonometria/p7.js"></script>
 	<script src="sketches/trigonometria/p8.js"></script>
 	<script src="sketches/trigonometria/p9.js"></script>
+	<script src="sketches/trigonometria/p10.js"></script>
 
 	<script>
 		Reveal.initialize({
