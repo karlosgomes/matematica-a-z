@@ -172,7 +172,8 @@
 						<li><a href="#/trig-p9">O limite de $\frac{\sin\theta}{\theta}$ — áreas enquadradas no círculo trigonométrico</a></li>
 						<li>Amarante, a latitude e a rotação da Terra (3D) —
 							<a href="#/trig-p10a">10.1</a> · <a href="#/trig-p10b">10.2</a></li>
-						<!-- <li><a href="#/trig-p11">...</a></li> -->
+						<li><a href="#/trig-p11">A roda gigante — $h(t) = 9 - 8\cos\left(\frac{\pi t}{12}\right)$</a></li>
+						<!-- <li><a href="#/trig-p12">...</a></li> -->
 					</ol>
 				</div>
 			</section>
@@ -522,6 +523,34 @@
 				</div>
 			</section>
 
+			<!-- ------------ Problema 11 ------------ -->
+			<section id="trig-p11" class="sans" data-sketch="trig-p11">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 11 — A roda gigante</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>A Inês anda numa roda gigante com $8$ metros de raio, que dá uma volta completa em cada $24$ segundos.
+							A função $h$ definida por $h(t) = 9 - 8\cos\left(\frac{\pi t}{12}\right)$ dá a altura da Inês em relação
+							ao chão, em metros, $t$ segundos após o início da viagem. Por exemplo, $h(8) = 13$ significa que, ao fim
+							de $8$ segundos de viagem, a Inês está a $13$ metros do chão.</p>
+						<ul class="condicoes">
+							<li><span class="alinea">11.1.</span> Calcula $h(0)$ e explica o seu significado.</li>
+							<li><span class="alinea">11.2.</span> Explica porque é que $h(16) = h(8)$.</li>
+							<li><span class="alinea">11.3.</span> Determina um valor de $t$ que seja solução da equação $h(t) = 10$.
+								Interpreta esse valor no contexto da situação.</li>
+							<li><span class="alinea">11.4.</span> Explica porque é que $h(t + 24) = h(t)$, qualquer que seja o valor de $t$.</li>
+							<li><span class="alinea">11.5.</span> Qual é o conjunto de todos os valores que $h(t)$ pode tomar?</li>
+						</ul>
+						<p class="dica">Os botões 11.1 … 11.5 preparam a figura para cada alínea. Apoio: app <a href="https://karlosgomes.github.io/apps-matematica/parametrizacoes/#p=P(8sin(pi t/12),9-8cos(pi t/12))&amp;a=0&amp;b=24"
+							target="_blank">Parametrizações</a>.</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
 			<!-- Novo problema: copiar o bloco <section> acima, mudar id/data-sketch (trig-p2, ...),
 			     criar sketches/trigonometria/pN.js e acrescentar a linha em #trig-problemas. -->
 
@@ -549,6 +578,7 @@
 	<script src="sketches/trigonometria/p8.js"></script>
 	<script src="sketches/trigonometria/p9.js"></script>
 	<script src="sketches/trigonometria/p10.js"></script>
+	<script src="sketches/trigonometria/p11.js"></script>
 
 	<script>
 		Reveal.initialize({
