@@ -14,7 +14,7 @@ Apresentação Reveal.js com problemas de Matemática A (secundário, currículo
 2. **Índice** (`#indice`) — um bloco `.topico` por tópico, com links **Resumo · Problemas**.
 3. Por tópico (ex.: Trigonometria, prefixo `trig-`):
    - slides de resumo teórico (`trig-circulo`, `trig-fundamental`, `trig-reducao`) — enunciado/teoria à esquerda, animação à direita (a redução ao 1.º quadrante tem a tabela à esquerda, com a linha do ângulo escolhido destacada pelo sketch `sketches/trigonometria/reducao.js`);
-   - slide-lista de problemas (`trig-problemas`);
+   - slide-lista de problemas (`trig-problemas`), em duas colunas (`div.indice.largo` + `ol.duas-colunas`; as fórmulas não se partem);
    - um slide por problema (`trig-p1`, `trig-p2`, …).
 
 ## Convenções

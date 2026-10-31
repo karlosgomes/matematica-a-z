@@ -56,6 +56,11 @@
 .reveal .indice .nome-topico { margin: 0; font-size: 1.25em; font-weight: 600; color: #111; }
 .reveal .indice .links-topico { margin: 4px 0 16px; }
 .reveal .indice ul, .reveal .indice ol { display: block; margin-left: 1.4em; }
+/* lista de problemas em duas colunas (quando já não cabe numa) */
+.reveal .indice.largo { width: 1500px; font-size: 0.8em; line-height: 1.45; }
+.reveal .indice ol.duas-colunas { column-count: 2; column-gap: 60px; }
+.reveal .indice ol.duas-colunas li { break-inside: avoid; margin-bottom: 0.55em; }
+.reveal .indice ol.duas-colunas .katex { white-space: nowrap; }   /* as fórmulas não se partem */
 
 /* ---------- slide de problema / resumo ---------- */
 .reveal h4 { margin: 0 0 16px; color: #1d4ed8; text-align: left; }
