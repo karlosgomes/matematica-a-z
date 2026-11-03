@@ -173,7 +173,8 @@
 						<li>Amarante, a latitude e a rotação da Terra (3D) —
 							<a href="#/trig-p10a">10.1</a> · <a href="#/trig-p10b">10.2</a></li>
 						<li><a href="#/trig-p11">A roda gigante — $h(t) = 9 - 8\cos\left(\frac{\pi t}{12}\right)$</a></li>
-						<!-- <li><a href="#/trig-p12">...</a></li> -->
+						<li><a href="#/trig-p12">A esfera suspensa da mola — $d(t) = 60 + 8\cos(3\pi t)$</a></li>
+						<!-- <li><a href="#/trig-p13">...</a></li> -->
 					</ol>
 				</div>
 			</section>
@@ -551,6 +552,35 @@
 				</div>
 			</section>
 
+			<!-- ------------ Problema 12 ------------ -->
+			<section id="trig-p12" class="sans" data-sketch="trig-p12">
+				<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+				<h4>Problema 12 — A esfera suspensa da mola</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Uma pequena esfera está suspensa do teto por uma mola. Na posição de equilíbrio, o centro da esfera
+							fica a $60$ cm do teto. Puxa-se a esfera $8$ cm para baixo e larga-se no instante $t = 0$.
+							A esfera efetua $3$ oscilações completas a cada $2$ segundos.</p>
+						<p>Seja $d(t)$ a distância, em centímetros, do centro da esfera ao teto, $t$ segundos depois de ser largada.</p>
+						<ul class="condicoes">
+							<li><span class="alinea">12.1.</span> Mostra que $d(t) = 60 + 8\cos(3\pi t)$.</li>
+							<li><span class="alinea">12.2.</span> Indica a distância máxima e a distância mínima da esfera ao teto
+								e o primeiro instante em que a esfera está o mais perto possível do teto.</li>
+							<li><span class="alinea">12.3.</span> Determina, no intervalo $[0, 1]$, os instantes em que a esfera
+								está a mais de $64$ cm do teto. Durante quanto tempo isso acontece?</li>
+						</ul>
+						<p class="dica">Os botões 12.1 … 12.3 preparam a figura para cada alínea. Apoio: app
+							<a href="https://karlosgomes.github.io/apps-matematica/oscilador-harmonico/#horizontal&amp;m=1&amp;k=88.83&amp;L=0.6&amp;x0=0.08&amp;v0=0"
+							target="_blank">Oscilador harmónico</a> (na horizontal, em metros: equilíbrio a $0{,}6$ m da parede,
+							$x_0 = 0{,}08$ m, $v_0 = 0$, $\omega = \sqrt{k/m} \approx 3\pi$).</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
 			<!-- Novo problema: copiar o bloco <section> acima, mudar id/data-sketch (trig-p2, ...),
 			     criar sketches/trigonometria/pN.js e acrescentar a linha em #trig-problemas. -->
 
@@ -579,6 +609,7 @@
 	<script src="sketches/trigonometria/p9.js"></script>
 	<script src="sketches/trigonometria/p10.js"></script>
 	<script src="sketches/trigonometria/p11.js"></script>
+	<script src="sketches/trigonometria/p12.js"></script>
 
 	<script>
 		Reveal.initialize({
