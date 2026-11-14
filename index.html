@@ -69,6 +69,12 @@
 							<a href="#/trig-problemas">Problemas</a>
 						</p>
 					</div>
+					<div class="topico">
+						<p class="nome-topico">Produto escalar</p>
+						<p class="links-topico">
+							<a href="#/pe-definicao">Resumo</a>
+						</p>
+					</div>
 					<!-- novo tópico:
 					<div class="topico">
 						<p class="nome-topico">...</p>
@@ -583,6 +589,113 @@
 				</div>
 			</section>
 
+			<!-- =====================================================
+			     PRODUTO ESCALAR (prefixo pe-)
+			     ===================================================== -->
+
+			<!-- ============ RESUMO 1: DEFINIÇÃO E COORDENADAS ============ -->
+			<section id="pe-definicao" class="sans resumo" data-sketch="pe-definicao">
+				<a class="voltar" href="#/indice">↩ índice</a>
+				<h4>Produto escalar · Resumo — Definição e coordenadas</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Num referencial ortonormado, o <b>produto escalar</b> de $\textcolor{#1565c0}{\vec u} = (u_1, u_2)$ e $\textcolor{#7b1fa2}{\vec v} = (v_1, v_2)$ é o número real</p>
+						<p class="formula destaque">$\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v} = u_1 v_1 + u_2 v_2$</p>
+						<p>No espaço, com três coordenadas:</p>
+						<p class="formula">$\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v} = u_1 v_1 + u_2 v_2 + u_3 v_3$</p>
+						<p>Propriedades:</p>
+						<ul>
+							<li>$\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v} = \textcolor{#7b1fa2}{\vec v} \cdot \textcolor{#1565c0}{\vec u}$ <span class="ideia">(comutativa)</span></li>
+							<li>$\textcolor{#1565c0}{\vec u} \cdot (\textcolor{#7b1fa2}{\vec v} + \vec w) = \textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v} + \textcolor{#1565c0}{\vec u} \cdot \vec w$ <span class="ideia">(distributiva)</span></li>
+							<li>$(k\,\textcolor{#1565c0}{\vec u}) \cdot \textcolor{#7b1fa2}{\vec v} = k\,(\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v})$</li>
+							<li>$\textcolor{#1565c0}{\vec u} \cdot \textcolor{#1565c0}{\vec u} = u_1^2 + u_2^2 = \|\textcolor{#1565c0}{\vec u}\|^2$</li>
+						</ul>
+						<p class="dica">Apoio: app <a href="https://karlosgomes.github.io/apps-matematica/produto-escalar/" target="_blank">Produto escalar</a> (modo Vetores).</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ============ RESUMO 2: ÂNGULO, SINAL, PERPENDICULARIDADE ============ -->
+			<section id="pe-angulo" class="sans resumo" data-sketch="pe-angulo">
+				<a class="voltar" href="#/indice">↩ índice</a>
+				<h4>Produto escalar · Resumo — Ângulo de dois vetores</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Se $\textcolor{#1565c0}{\vec u}$ e $\textcolor{#7b1fa2}{\vec v}$ são não nulos e $\theta$ é a amplitude do ângulo por eles formado:</p>
+						<p class="formula destaque">$\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v} = \|\textcolor{#1565c0}{\vec u}\|\,\|\textcolor{#7b1fa2}{\vec v}\|\cos\theta$</p>
+						<p class="formula">$\cos\theta = \dfrac{\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v}}{\|\textcolor{#1565c0}{\vec u}\|\,\|\textcolor{#7b1fa2}{\vec v}\|},\quad 0^\circ \le \theta \le 180^\circ$</p>
+						<p>Como $\|\textcolor{#1565c0}{\vec u}\|\,\|\textcolor{#7b1fa2}{\vec v}\| > 0$, o sinal de $\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v}$ é o sinal de $\cos\theta$:</p>
+						<ul>
+							<li>$\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v} > 0 \iff \theta$ é <span style="color:#2e7d32"><b>agudo</b></span> (ou nulo)</li>
+							<li>$\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v} = 0 \iff \textcolor{#1565c0}{\vec u} \perp \textcolor{#7b1fa2}{\vec v}$ <span style="color:#ef6c00"><b>(reto)</b></span></li>
+							<li>$\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v} < 0 \iff \theta$ é <span style="color:#d32f2f"><b>obtuso</b></span> (ou raso)</li>
+						</ul>
+						<p><b>Projeção:</b> se $H$ é a projeção ortogonal da extremidade de $\textcolor{#7b1fa2}{\vec v}$ na reta de $\textcolor{#1565c0}{\vec u}$, então
+							$\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v} = \pm\,\|\textcolor{#1565c0}{\vec u}\| \times \overline{OH}$ (sinal $+$ se $\overrightarrow{OH}$ e $\textcolor{#1565c0}{\vec u}$ têm o mesmo sentido).</p>
+						<p class="dica">Apoio: app <a href="https://karlosgomes.github.io/apps-matematica/produto-escalar/#angulo&amp;projecao" target="_blank">Produto escalar</a> (Normas e ângulo, Projeção).</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ============ RESUMO 3: RETAS NO PLANO ============ -->
+			<section id="pe-retas" class="sans resumo" data-sketch="pe-retas">
+				<a class="voltar" href="#/indice">↩ índice</a>
+				<h4>Produto escalar · Resumo — Retas no plano</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>Uma reta $r$ com vetor diretor $\vec r = (r_1, r_2)$, $r_1 \ne 0$, tem <b>declive</b> e <b>inclinação</b> $\alpha$:</p>
+						<p class="formula">$m = \dfrac{r_2}{r_1} = \tan\alpha,\quad 0^\circ \le \alpha < 180^\circ$</p>
+						<p><b>Ângulo de duas retas</b> $r$ e $s$ (é sempre agudo ou reto):</p>
+						<p class="formula destaque">$\cos\theta = \dfrac{|\vec r \cdot \vec s|}{\|\vec r\|\,\|\vec s\|}$</p>
+						<p><b>Retas perpendiculares</b> (não verticais):</p>
+						<p class="formula">$r \perp s \iff \vec r \cdot \vec s = 0$</p>
+						<p class="formula">$r \perp s \iff m_r \times m_s = -1$</p>
+						<p class="ideia">O ângulo dos vetores diretores pode ser obtuso; nesse caso, o ângulo das retas é o suplementar.</p>
+						<p class="dica">Apoio: app <a href="https://karlosgomes.github.io/apps-matematica/produto-escalar/#retas&amp;C=1,4&amp;D=3,-2&amp;angulo" target="_blank">Produto escalar</a> (modo Retas).</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ============ RESUMO 4: PLANOS E RETAS NO ESPAÇO ============ -->
+			<section id="pe-espaco" class="sans resumo" data-sketch="pe-espaco">
+				<a class="voltar" href="#/indice">↩ índice</a>
+				<h4>Produto escalar · Resumo — Planos e retas no espaço</h4>
+				<div class="problema">
+					<div class="enunciado">
+						<p>O plano $\alpha$ que passa em $P$ e tem <b>vetor normal</b> $\vec n = (a, b, c)$ é o conjunto dos pontos $X$ tais que</p>
+						<p class="formula">$\vec n \cdot \overrightarrow{PX} = 0$</p>
+						<p class="formula destaque">$\alpha\colon\ ax + by + cz + d = 0$</p>
+						<p><b>Reta $r$</b> (vetor diretor $\vec r$) e <b>plano $\alpha$</b>:</p>
+						<ul>
+							<li>$\vec r \cdot \vec n = 0 \Rightarrow r$ paralela a $\alpha$ ou contida em $\alpha$</li>
+							<li>$\vec r$ colinear com $\vec n \Rightarrow r \perp \alpha$</li>
+						</ul>
+						<p><b>Dois planos</b> $\alpha$ e $\beta$ (vetores normais $\vec n$ e $\vec m$):</p>
+						<ul>
+							<li>$\vec n \cdot \vec m = 0 \iff \alpha \perp \beta$</li>
+							<li>$\vec n$ colinear com $\vec m \iff \alpha \parallel \beta$ (ou coincidentes)</li>
+						</ul>
+						<p class="dica">Apoio: app <a href="https://karlosgomes.github.io/apps-matematica/produto-escalar/#espaco" target="_blank">Produto escalar</a> (modo Espaço).</p>
+					</div>
+					<div class="animacao">
+						<div class="tela"></div>
+						<div class="controlos"></div>
+					</div>
+				</div>
+			</section>
+
 			<!-- Novo problema: copiar o bloco <section> acima, mudar id/data-sketch (trig-p2, ...),
 			     criar sketches/trigonometria/pN.js e acrescentar a linha em #trig-problemas. -->
 
@@ -612,6 +725,10 @@
 	<script src="sketches/trigonometria/p10.js"></script>
 	<script src="sketches/trigonometria/p11.js"></script>
 	<script src="sketches/trigonometria/p12.js"></script>
+	<script src="sketches/produto-escalar/definicao.js"></script>
+	<script src="sketches/produto-escalar/angulo.js"></script>
+	<script src="sketches/produto-escalar/retas.js"></script>
+	<script src="sketches/produto-escalar/espaco.js"></script>
 
 	<script>
 		Reveal.initialize({

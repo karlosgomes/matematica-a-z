@@ -17,6 +17,8 @@ Apresentação Reveal.js com problemas de Matemática A (secundário, currículo
    - slide-lista de problemas (`trig-problemas`), em duas colunas (`div.indice.largo` + `ol.duas-colunas`; as fórmulas não se partem);
    - um slide por problema (`trig-p1`, `trig-p2`, …).
 
+4. **Produto escalar** (prefixo `pe-`, 2026-11-15): só resumo por agora — `pe-definicao` (u·v nas coordenadas, cursores u₁…v₂), `pe-angulo` (u·v = ‖u‖‖v‖cos θ, sinal, projeção H), `pe-retas` (declive, inclinação, ângulo de duas retas, perpendicularidade; retas por P(1, 2)), `pe-espaco` (vetor normal, plano, posição reta/plano e plano/plano; 3D à mão como o p10, com partes escondidas a tracejado). Sketches em `sketches/produto-escalar/` (definicao.js, angulo.js, retas.js, espaco.js). Cores como na app Produto escalar: u `#1565c0`, v `#7b1fa2`, sinal verde `#2e7d32` / laranja `#ef6c00` / vermelho `#d32f2f`, reta r `#e65100`. No índice só há o link «Resumo»; «Problemas» quando houver problemas (o utilizador escolhe-os depois). Cada resumo tem um link de apoio para a app no modo respetivo. Nos textos KaTeX dos vetores coloridos usar `\textcolor{…}{\vec u}` (não `\color`).
+
 ## Convenções
 - **Numeração dos problemas desde 1** dentro de cada tópico (não usar o n.º do manual); alíneas 1.1, 1.2, …
 - **Layout de problema/resumo**: `<section class="sans" data-sketch="...">` com `.problema` = grelha de 2 colunas: `.enunciado` à esquerda, `.animacao` (`.tela` + `.controlos`) à direita. Tudo tem de caber no slide (1600×900).
