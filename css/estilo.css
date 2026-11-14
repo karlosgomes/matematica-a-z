@@ -62,6 +62,11 @@
 .reveal .indice ol.duas-colunas li { break-inside: avoid; margin-bottom: 0.55em; }
 .reveal .indice ol.duas-colunas .katex { white-space: nowrap; }   /* as fórmulas não se partem */
 
+/* ---------- abertura de capítulo: nome do capítulo ao centro (entre capítulos, pedido do utilizador 2026-11-15) ---------- */
+.reveal .slides section.capitulo { display: flex !important; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+.reveal .capitulo .num-capitulo { margin: 0 0 18px; font-size: 1.1em; color: #64748b; letter-spacing: 0.08em; text-transform: uppercase; }
+.reveal .capitulo h2 { margin: 0; padding-bottom: 22px; font-size: 2.6em; color: #111; border-bottom: 5px solid #1d4ed8; }
+
 /* ---------- slide de problema / resumo ---------- */
 .reveal h4 { margin: 0 0 16px; color: #1d4ed8; text-align: left; }
 

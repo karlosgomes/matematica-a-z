@@ -13,6 +13,7 @@ Apresentação Reveal.js com problemas de Matemática A (secundário, currículo
 **Menu do weblog** (`nav.barra-weblog`, fora do `.reveal`): barra fixa no topo igual à do weblog (logótipo, Início, Artigos, Reflexões/Problemas, Software, Apps de Matemática, Matemática A...Z ativo, ícones). O `.reveal` começa abaixo dela (`--barra: 62px`, como no weblog); em ecrã inteiro a barra esconde-se (classe `ecra-inteiro` no `<html>`). Se o menu do weblog mudar, atualizar aqui à mão. **Sem modo escuro, de propósito** (decisão de 2026-10-12): a apresentação é para projetar e fica sempre clara; o menu e a faixa já são sempre #170C3A.
 2. **Índice** (`#indice`) — um bloco `.topico` por tópico, com links **Resumo · Problemas**.
 3. Por tópico (ex.: Trigonometria, prefixo `trig-`):
+   - slide de abertura do capítulo (`section.capitulo`, id = prefixo: `#/trig`, `#/pe`), com «Capítulo n» e o nome ao centro (pedido do utilizador, 2026-11-15: quem anda só com → tem de ver que mudou de capítulo); tópico novo → acrescentar um igual antes do primeiro resumo;
    - slides de resumo teórico (`trig-circulo`, `trig-fundamental`, `trig-reducao`) — enunciado/teoria à esquerda, animação à direita (a redução ao 1.º quadrante tem a tabela à esquerda, com a linha do ângulo escolhido destacada pelo sketch `sketches/trigonometria/reducao.js`);
    - slide-lista de problemas (`trig-problemas`), em duas colunas (`div.indice.largo` + `ol.duas-colunas`; as fórmulas não se partem);
    - um slide por problema (`trig-p1`, `trig-p2`, …).
