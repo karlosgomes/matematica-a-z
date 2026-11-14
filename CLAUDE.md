@@ -15,6 +15,7 @@ Apresentação Reveal.js com problemas de Matemática A (secundário, currículo
 3. Por tópico (ex.: Trigonometria, prefixo `trig-`):
    - slide de abertura do capítulo (`section.capitulo`, id = prefixo: `#/trig`, `#/pe`), com «Capítulo n» e o nome ao centro (pedido do utilizador, 2026-11-15: quem anda só com → tem de ver que mudou de capítulo); tópico novo → acrescentar um igual antes do primeiro resumo;
    - slides de resumo teórico (`trig-circulo`, `trig-fundamental`, `trig-reducao`) — enunciado/teoria à esquerda, animação à direita (a redução ao 1.º quadrante tem a tabela à esquerda, com a linha do ângulo escolhido destacada pelo sketch `sketches/trigonometria/reducao.js`);
+   - **navegação em 2D** (pedido do utilizador, 2026-11-15): a abertura e os resumos seguem para a direita; o último resumo, a lista de problemas e os problemas formam uma pilha vertical (`<section>` exterior sem id à volta de `trig-reducao`, `trig-problemas`, `trig-p1`…) — os problemas seguem para baixo, e → passa ao capítulo seguinte. Os links por id (`#/trig-p4`) continuam a funcionar. No Produto escalar ainda não há pilha (sem problemas): quando houver, envolver `pe-espaco` + `pe-problemas` + problemas da mesma maneira;
    - slide-lista de problemas (`trig-problemas`), em duas colunas (`div.indice.largo` + `ol.duas-colunas`; as fórmulas não se partem);
    - um slide por problema (`trig-p1`, `trig-p2`, …).
 
