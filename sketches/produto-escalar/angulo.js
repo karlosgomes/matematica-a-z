@@ -1,6 +1,6 @@
 /* =====================================================================
    Produto escalar · Resumo 2 — ângulo de dois vetores
-   u fixo; v roda (ângulo e norma em cursores). u·v = ‖u‖‖v‖cos θ, o sinal
+   u e v arrastam-se pelas pontas (direção e norma); v pode rodar (botão). u·v = ‖u‖‖v‖cos θ, o sinal
    (agudo / reto / obtuso) e a projeção ortogonal H de v na reta de u.
    ===================================================================== */
 SKETCHES['pe-angulo'] = function (p, controlos) {
@@ -10,28 +10,53 @@ SKETCHES['pe-angulo'] = function (p, controlos) {
 		eixo: [100, 116, 139], grelha: [226, 232, 240], u: [21, 101, 192], v: [123, 31, 162],
 		pos: [46, 125, 50], zero: [239, 108, 0], neg: [211, 47, 47], texto: [30, 41, 59], cinza: [71, 85, 105]
 	};
-	const ANG_U = 20, NU = 4;                          // u = 4 (cos 20°, sin 20°)
-	let slA, slN, btPlay, cxProj, animar = false;
+	// estado: direção (graus) e norma de u e de v; arrastam-se pelas pontas no canvas
+	const st = { aU: 20, nU: 4, aV: 75, nV: 3 };
+	let btPlay, cxProj, animar = false, agarrado = null;
 
 	const X = x => O.x + x * K, Y = y => O.y - y * K;
 
 	p.setup = function () {
-		p.createCanvas(W, H);
+		arrastar(p.createCanvas(W, H).elt);
 		p.textFont('Source Sans Pro');
-		slA = UT.slider(p, controlos, 'direção de v', 0, 360, 75, 1);
-		slA.input(() => parar());
-		slN = UT.slider(p, controlos, '‖v‖', 1, 5, 3, 0.5);
+		p.createSpan('Arrasta as pontas dos vetores ·').parent(controlos);
 		btPlay = UT.botao(p, controlos, '▶ Rodar v', () => { animar = !animar; btPlay.html(animar ? '⏸ Pausa' : '▶ Rodar v'); });
 		UT.quebra(p, controlos);
-		UT.botao(p, controlos, 'Agudo', () => { parar(); slA.value(ANG_U + 50); }, 'atalho');
-		UT.botao(p, controlos, 'Reto', () => { parar(); slA.value(ANG_U + 90); }, 'atalho');
-		UT.botao(p, controlos, 'Obtuso', () => { parar(); slA.value(ANG_U + 135); }, 'atalho');
-		UT.botao(p, controlos, 'Mesmo sentido', () => { parar(); slA.value(ANG_U); }, 'atalho');
-		UT.botao(p, controlos, 'Sentidos opostos', () => { parar(); slA.value(ANG_U + 180); }, 'atalho');
+		UT.botao(p, controlos, 'Agudo', () => { parar(); st.aV = st.aU + 50; }, 'atalho');
+		UT.botao(p, controlos, 'Reto', () => { parar(); st.aV = st.aU + 90; }, 'atalho');
+		UT.botao(p, controlos, 'Obtuso', () => { parar(); st.aV = st.aU + 135; }, 'atalho');
+		UT.botao(p, controlos, 'Mesmo sentido', () => { parar(); st.aV = st.aU; }, 'atalho');
+		UT.botao(p, controlos, 'Sentidos opostos', () => { parar(); st.aV = st.aU + 180; }, 'atalho');
 		UT.quebra(p, controlos);
 		cxProj = UT.caixa(p, controlos, 'Mostrar a projeção de v sobre u', true);
 	};
 	function parar() { animar = false; btPlay.html('▶ Rodar v'); }
+
+	// arrastar a ponta de u ou de v (ponteiro convertido com o retângulo do canvas, que o Reveal escala)
+	function arrastar(cv) {
+		cv.style.touchAction = 'none';
+		const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
+		const ponta = k => { const a = p.radians(st['a' + k]), n = st['n' + k]; return [X(n * Math.cos(a)), Y(n * Math.sin(a))]; };
+		const perto = (x, y) => {
+			let best = null, bd = 32;
+			for (const k of ['V', 'U']) { const [px, py] = ponta(k), d = Math.hypot(px - x, py - y); if (d < bd) { bd = d; best = k; } }
+			return best;
+		};
+		cv.addEventListener('pointerdown', e => {
+			const [x, y] = pos(e); agarrado = perto(x, y);
+			if (agarrado) { parar(); cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing'; e.stopPropagation(); e.preventDefault(); }
+		});
+		cv.addEventListener('pointermove', e => {
+			const [x, y] = pos(e);
+			if (!agarrado) { cv.style.cursor = perto(x, y) ? 'grab' : 'default'; return; }
+			const dx = (x - O.x) / K, dy = (O.y - y) / K;
+			st['a' + agarrado] = (Math.round(Math.atan2(dy, dx) * 180 / Math.PI) + 360) % 360;
+			st['n' + agarrado] = p.constrain(Math.round(Math.hypot(dx, dy) * 10) / 10, 0.5, 5.5);
+		});
+		const fim = () => { agarrado = null; cv.style.cursor = 'default'; };
+		cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim);
+		['touchstart', 'touchmove'].forEach(t => cv.addEventListener(t, e => e.stopPropagation(), { passive: true }));
+	}
 
 	function rot(t, x, y, cor = COR.texto, tam = 22, ah = p.CENTER, estilo = p.BOLD) {
 		p.stroke(255); p.strokeWeight(6); p.strokeJoin(p.ROUND);
@@ -58,8 +83,8 @@ SKETCHES['pe-angulo'] = function (p, controlos) {
 	const f = (x, n = 2) => UT.fmt(Math.abs(x) < 0.005 ? 0 : x, n);
 
 	p.draw = function () {
-		if (animar) { let a = slA.value() + 70 * p.deltaTime / 1000; if (a > 360) a -= 360; slA.value(a); }
-		const aV = slA.value(), nv = slN.value();
+		if (animar) { st.aV = (st.aV + 70 * p.deltaTime / 1000) % 360; }
+		const aV = st.aV, nv = st.nV, ANG_U = st.aU, NU = st.nU;
 		const au = p.radians(ANG_U), av = p.radians(aV);
 		const u = [NU * Math.cos(au), NU * Math.sin(au)], v = [nv * Math.cos(av), nv * Math.sin(av)];
 		let th = Math.abs(aV - ANG_U) % 360; if (th > 180) th = 360 - th;      // ângulo dos vetores, em graus
@@ -117,12 +142,12 @@ SKETCHES['pe-angulo'] = function (p, controlos) {
 
 		// leitura
 		p.noStroke(); p.fill(255, 235); p.rect(14, 12, 420, cxProj.checked() ? 168 : 128, 10);
-		linha([['‖', null], ['u', COR.u, p.BOLDITALIC], ['‖ = ' + f(NU, 0) + '      ‖', null], ['v', COR.v, p.BOLDITALIC], ['‖ = ' + f(nv, 1) + '      θ = ' + f(th, 0) + '°', null]], 28, 36);
+		linha([['‖', null], ['u', COR.u, p.BOLDITALIC], ['‖ = ' + f(NU, 1) + '      ‖', null], ['v', COR.v, p.BOLDITALIC], ['‖ = ' + f(nv, 1) + '      θ = ' + f(th, 0) + '°', null]], 28, 36);
 		linha([['cos θ ≈ ' + f(c), null]], 28, 74);
-		linha([['u', COR.u, p.BOLDITALIC], [' · ', null], ['v', COR.v, p.BOLDITALIC], [' = ' + f(NU, 0) + ' × ' + f(nv, 1) + ' × cos θ ≈ ', null], [f(d), cs, p.BOLD]], 28, 112);
+		linha([['u', COR.u, p.BOLDITALIC], [' · ', null], ['v', COR.v, p.BOLDITALIC], [' = ' + f(NU, 1) + ' × ' + f(nv, 1) + ' × cos θ ≈ ', null], [f(d), cs, p.BOLD]], 28, 112);
 		if (cxProj.checked()) {
 			const oh = Math.abs(t);
-			linha([['u', COR.u, p.BOLDITALIC], [' · ', null], ['v', COR.v, p.BOLDITALIC], [' = ' + (dR < 0 ? '− ' : '') + '‖', null], ['u', COR.u, p.BOLDITALIC], ['‖ × OH ≈ ' + (dR < 0 ? '− ' : '') + f(NU, 0) + ' × ' + f(oh), null]], 28, 150);
+			linha([['u', COR.u, p.BOLDITALIC], [' · ', null], ['v', COR.v, p.BOLDITALIC], [' = ' + (dR < 0 ? '− ' : '') + '‖', null], ['u', COR.u, p.BOLDITALIC], ['‖ × OH ≈ ' + (dR < 0 ? '− ' : '') + f(NU, 1) + ' × ' + f(oh), null]], 28, 150);
 		}
 		const txt = Math.abs(dR) < 1e-9 ? 'u · v = 0  ⇔  u ⊥ v (ângulo reto)' : dR > 0 ? 'u · v > 0  ⇔  θ agudo' + (th < 0.5 ? ' (nulo)' : '') : 'u · v < 0  ⇔  θ obtuso' + (th > 179.5 ? ' (raso)' : '');
 		rot(txt, W - 20, H - 24, cs, 23, p.RIGHT, p.BOLD);

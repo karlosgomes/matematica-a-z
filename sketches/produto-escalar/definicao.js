@@ -12,7 +12,7 @@ SKETCHES['pe-definicao'] = function (p, controlos) {
 	};
 	// estado: coordenadas inteiras dos vetores (arrastam-se pelas pontas, no canvas)
 	const s = { u1: 3, u2: 1, v1: 1, v2: 2 };
-	let cxComp, cxQuad, agarrado = null;
+	let cxQuad, agarrado = null;
 
 	const X = x => O.x + x * K, Y = y => O.y - y * K;
 
@@ -25,7 +25,6 @@ SKETCHES['pe-definicao'] = function (p, controlos) {
 		UT.botao(p, controlos, 'Mesma direção', () => set(2, 1, 4, 2), 'atalho');
 		UT.botao(p, controlos, 'Início', () => set(3, 1, 1, 2), 'atalho');
 		UT.quebra(p, controlos);
-		cxComp = UT.caixa(p, controlos, 'Mostrar as coordenadas', true);
 		cxQuad = UT.caixa(p, controlos, 'Mostrar u · u = ‖u‖²', false);
 	};
 	function set(a, b, c, d) { s.u1 = a; s.u2 = b; s.v1 = c; s.v2 = d; }
@@ -102,15 +101,6 @@ SKETCHES['pe-definicao'] = function (p, controlos) {
 		for (let j = -5; j <= 5; j++) if (j) p.text(j, O.x - 6, Y(j));
 		rot('O', O.x - 14, O.y + 16, COR.eixo, 18);
 
-		// coordenadas (componentes a tracejado)
-		if (cxComp.checked()) {
-			p.drawingContext.setLineDash([6, 6]); p.strokeWeight(1.8);
-			for (const [a, b, cor] of [[u1, u2, COR.u], [v1, v2, COR.v]]) {
-				p.stroke(...cor, 160);
-				p.line(X(a), Y(b), X(a), O.y); p.line(X(a), Y(b), O.x, Y(b));
-			}
-			p.drawingContext.setLineDash([]);
-		}
 		// ângulo θ dos dois vetores (na cor do sinal; quadrado se for reto)
 		const nu = Math.hypot(u1, u2), nv = Math.hypot(v1, v2);
 		let th = null;
@@ -135,8 +125,11 @@ SKETCHES['pe-definicao'] = function (p, controlos) {
 		const vec = (a, b, cor, l) => {
 			if (a === 0 && b === 0) { p.noStroke(); p.fill(...cor); p.circle(O.x, O.y, 12); return; }
 			seta(O.x, O.y, X(a), Y(b), cor);
-			const n = Math.hypot(a, b);
-			nomeVetor(l, X(a) + a / n * 26, Y(b) - b / n * 26 + 4, cor);
+			const n = Math.hypot(a, b), lx = X(a) + a / n * 26, ly = Y(b) - b / n * 26 + 4;
+			nomeVetor(l, lx, ly, cor);
+			// etiqueta pequena com as coordenadas, a seguir ao nome
+			const dir = a / n >= -0.3 ? 1 : -1;
+			rot('(' + a + ', ' + b + ')', lx + dir * 14, ly + 2, cor, 17, dir > 0 ? p.LEFT : p.RIGHT, p.NORMAL);
 		};
 		vec(u1, u2, COR.u, 'u'); vec(v1, v2, COR.v, 'v');
 
