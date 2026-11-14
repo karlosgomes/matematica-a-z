@@ -58,7 +58,7 @@ SKETCHES['pe-angulo'] = function (p, controlos) {
 	const f = (x, n = 2) => UT.fmt(Math.abs(x) < 0.005 ? 0 : x, n);
 
 	p.draw = function () {
-		if (animar) { let a = slA.value() + 25 * p.deltaTime / 1000; if (a > 360) a -= 360; slA.value(a); }
+		if (animar) { let a = slA.value() + 70 * p.deltaTime / 1000; if (a > 360) a -= 360; slA.value(a); }
 		const aV = slA.value(), nv = slN.value();
 		const au = p.radians(ANG_U), av = p.radians(aV);
 		const u = [NU * Math.cos(au), NU * Math.sin(au)], v = [nv * Math.cos(av), nv * Math.sin(av)];

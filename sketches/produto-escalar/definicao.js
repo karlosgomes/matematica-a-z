@@ -10,19 +10,16 @@ SKETCHES['pe-definicao'] = function (p, controlos) {
 		eixo: [100, 116, 139], grelha: [226, 232, 240], u: [21, 101, 192], v: [123, 31, 162],
 		pos: [46, 125, 50], zero: [239, 108, 0], neg: [211, 47, 47], texto: [30, 41, 59]
 	};
-	let s = {}, cxComp, cxQuad;
+	// estado: coordenadas inteiras dos vetores (arrastam-se pelas pontas, no canvas)
+	const s = { u1: 3, u2: 1, v1: 1, v2: 2 };
+	let cxComp, cxQuad, agarrado = null;
 
 	const X = x => O.x + x * K, Y = y => O.y - y * K;
 
 	p.setup = function () {
-		p.createCanvas(W, H);
+		arrastar(p.createCanvas(W, H).elt);
 		p.textFont('Source Sans Pro');
-		const ini = { u1: 3, u2: 1, v1: 1, v2: 2 };
-		for (const k of ['u1', 'u2', 'v1', 'v2']) {
-			s[k] = UT.slider(p, controlos, k[0] + '₁₂'[+k[1] - 1] , -5, 5, ini[k], 1);
-			if (k === 'u2') UT.quebra(p, controlos);
-		}
-		UT.quebra(p, controlos);
+		p.createSpan('Arrasta as pontas dos vetores ·').parent(controlos).addClass('dica-arrastar');
 		UT.botao(p, controlos, 'Perpendiculares', () => set(3, 1, -1, 3), 'atalho');
 		UT.botao(p, controlos, 'Ângulo obtuso', () => set(3, 1, -2, 2), 'atalho');
 		UT.botao(p, controlos, 'Mesma direção', () => set(2, 1, 4, 2), 'atalho');
@@ -31,7 +28,32 @@ SKETCHES['pe-definicao'] = function (p, controlos) {
 		cxComp = UT.caixa(p, controlos, 'Mostrar as coordenadas', true);
 		cxQuad = UT.caixa(p, controlos, 'Mostrar u · u = ‖u‖²', false);
 	};
-	function set(a, b, c, d) { s.u1.value(a); s.u2.value(b); s.v1.value(c); s.v2.value(d); }
+	function set(a, b, c, d) { s.u1 = a; s.u2 = b; s.v1 = c; s.v2 = d; }
+
+	// arrastar a ponta de u ou de v (coordenadas do ponteiro convertidas com o retângulo do canvas,
+	// que o Reveal escala; os eventos não chegam ao Reveal)
+	function arrastar(cv) {
+		cv.style.touchAction = 'none';
+		const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
+		const perto = (x, y) => {
+			let best = null, bd = 30;
+			for (const k of ['u', 'v']) { const d = Math.hypot(X(s[k + '1']) - x, Y(s[k + '2']) - y); if (d < bd) { bd = d; best = k; } }
+			return best;
+		};
+		cv.addEventListener('pointerdown', e => {
+			const [x, y] = pos(e); agarrado = perto(x, y);
+			if (agarrado) { cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing'; e.stopPropagation(); e.preventDefault(); }
+		});
+		cv.addEventListener('pointermove', e => {
+			const [x, y] = pos(e);
+			if (!agarrado) { cv.style.cursor = perto(x, y) ? 'grab' : 'default'; return; }
+			s[agarrado + '1'] = p.constrain(Math.round((x - O.x) / K), -9, 9);
+			s[agarrado + '2'] = p.constrain(Math.round((O.y - y) / K), -5, 5);
+		});
+		const fim = () => { agarrado = null; cv.style.cursor = 'default'; };
+		cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim);
+		['touchstart', 'touchmove', 'mousedown'].forEach(t => cv.addEventListener(t, e => { if (agarrado || t !== 'mousedown') e.stopPropagation(); }, { passive: true }));
+	}
 
 	function rot(t, x, y, cor = COR.texto, tam = 22, ah = p.CENTER, estilo = p.BOLD) {
 		p.stroke(255); p.strokeWeight(6); p.strokeJoin(p.ROUND);
@@ -64,7 +86,7 @@ SKETCHES['pe-definicao'] = function (p, controlos) {
 	const par = v => v < 0 ? '(' + v + ')' : '' + v;
 
 	p.draw = function () {
-		const u1 = s.u1.value(), u2 = s.u2.value(), v1 = s.v1.value(), v2 = s.v2.value();
+		const { u1, u2, v1, v2 } = s;
 		const d = u1 * v1 + u2 * v2, cs = d > 0 ? COR.pos : d < 0 ? COR.neg : COR.zero;
 		p.background(255);
 
@@ -89,6 +111,26 @@ SKETCHES['pe-definicao'] = function (p, controlos) {
 			}
 			p.drawingContext.setLineDash([]);
 		}
+		// ângulo θ dos dois vetores (na cor do sinal; quadrado se for reto)
+		const nu = Math.hypot(u1, u2), nv = Math.hypot(v1, v2);
+		let th = null;
+		if (nu > 0 && nv > 0) {
+			th = Math.acos(p.constrain(d / (nu * nv), -1, 1));
+			const a0 = Math.atan2(u2, u1), a1 = Math.atan2(v2, v1);
+			let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+			const ini = da >= 0 ? a0 : a1, r = Math.min(56, 0.45 * K * Math.min(nu, nv) + 18);
+			if (d === 0) {
+				const q = 22, P1 = [O.x + q * Math.cos(a0), O.y - q * Math.sin(a0)], P2 = [O.x + q * Math.cos(a1), O.y - q * Math.sin(a1)];
+				p.noFill(); p.stroke(...cs); p.strokeWeight(2.5);
+				p.beginShape(); p.vertex(...P1); p.vertex(P1[0] + P2[0] - O.x, P1[1] + P2[1] - O.y); p.vertex(...P2); p.endShape();
+			} else if (th > 1e-6) {
+				p.fill(...cs, 50); p.stroke(...cs); p.strokeWeight(2.5);
+				p.arc(O.x, O.y, 2 * r, 2 * r, -(ini + Math.abs(da)), -ini, p.PIE);
+			}
+			const am = ini + Math.abs(da) / 2, rr = (d === 0 ? 22 : r) + 20;
+			if (th > 1e-6) rot('θ', O.x + rr * Math.cos(am), O.y - rr * Math.sin(am), cs, 24, p.CENTER, p.BOLDITALIC);
+		}
+
 		// vetores
 		const vec = (a, b, cor, l) => {
 			if (a === 0 && b === 0) { p.noStroke(); p.fill(...cor); p.circle(O.x, O.y, 12); return; }
@@ -100,7 +142,8 @@ SKETCHES['pe-definicao'] = function (p, controlos) {
 
 		// a conta, em cima à esquerda
 		p.noStroke(); p.fill(255, 235); p.rect(14, 12, 470, cxQuad.checked() ? 132 : 92, 10);
-		let x = linha([['u', COR.u, p.BOLDITALIC], [' = (' + u1 + ', ' + u2 + ')     ', COR.u], ['v', COR.v, p.BOLDITALIC], [' = (' + v1 + ', ' + v2 + ')', COR.v]], 28, 36);
+		let x = linha([['u', COR.u, p.BOLDITALIC], [' = (' + u1 + ', ' + u2 + ')     ', COR.u], ['v', COR.v, p.BOLDITALIC], [' = (' + v1 + ', ' + v2 + ')', COR.v],
+			[th === null ? '' : '     θ ≈ ' + UT.fmt(th * 180 / Math.PI, 1) + '°', cs]], 28, 36);
 		x = linha([['u', COR.u, p.BOLDITALIC], [' · ', null], ['v', COR.v, p.BOLDITALIC], [' = ', null],
 			[par(u1), COR.u], [' × ', null], [par(v1), COR.v], [' + ', null], [par(u2), COR.u], [' × ', null], [par(v2), COR.v],
 			[' = ', null], ['' + d, cs, p.BOLD]], 28, 76);
