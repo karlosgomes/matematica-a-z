@@ -60,12 +60,7 @@
 				['perpendicular', 'perpendicular'], ['nenhuma', 'nenhuma']].forEach(([k, t]) => {
 				botoesR[k] = UT.botao(p, controlos, t, () => { modoR = k; marcar(); });
 			});
-			UT.quebra(p, controlos);
-			slAz = UT.slider(p, controlos, 'Rodar a vista', -180, 180, az, 1);
-			slAz.input(() => { az = slAz.value(); });
-			slEl = UT.slider(p, controlos, 'Inclinação', -60, 80, el, 1);
-			slEl.input(() => { el = slEl.value(); });
-			slAz.style('width', '220px'); slEl.style('width', '220px');
+			// a vista roda arrastando no canvas (sem cursores, pedido do utilizador)
 			marcar();
 		};
 
@@ -91,7 +86,6 @@
 				ultimo = [e.clientX, e.clientY];
 				az -= dx * 0.4; if (az > 180) az -= 360; if (az < -180) az += 360;
 				el = p.constrain(el + dy * 0.4, -60, 80);
-				slAz.value(az); slEl.value(el);
 			});
 			const fim = () => { ultimo = null; cv.style.cursor = 'grab'; };
 			cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim);
@@ -105,7 +99,11 @@
 			R_ = [-Math.sin(a), Math.cos(a), 0];
 			U_ = [-Math.sin(e) * Math.cos(a), -Math.sin(e) * Math.sin(a), Math.cos(e)];
 		}
-		const pr = v => ({ x: G.cx + G.k * dot3(v, R_), y: G.cy - G.k * dot3(v, U_) });
+		// perspetiva (pedido do utilizador): observador à distância DIST da origem, na direção F_;
+		// a escala na origem continua a ser G.k
+		const DIST = 19;
+		const olho = () => mul(F_, DIST);
+		const pr = v => { const z = DIST - dot3(v, F_), s = G.k * DIST / Math.max(z, 0.5); return { x: G.cx + s * dot3(v, R_), y: G.cy - s * dot3(v, U_) }; };
 
 		/* ---------------- planos (paralelogramos) ---------------- */
 		// plano: centro C, vetores unitários e, f (lados), meias-medidas a, b, normal nn
@@ -114,14 +112,15 @@
 		const cantos = pl => [[1, 1], [-1, 1], [-1, -1], [1, -1]].map(([s, t]) => soma(pl.C, [pl.e, s * pl.a], [pl.f, t * pl.b]));
 
 		let planos = [];
-		// o ponto X está escondido por algum plano? (raio de X para o observador)
+		// o ponto X está escondido por algum plano? (segmento de X até ao olho do observador)
 		function oculto(X) {
+			const dir = sub(olho(), X);
 			for (const pl of planos) {
-				const den = dot3(pl.nn, F_);
-				if (Math.abs(den) < 1e-6) continue;
+				const den = dot3(pl.nn, dir);
+				if (Math.abs(den) < 1e-9) continue;
 				const t = -dot3(pl.nn, sub(X, pl.C)) / den;
-				if (t <= 1e-3) continue;
-				const Y = sub(add(X, mul(F_, t)), pl.C);
+				if (t <= 1e-3 || t >= 1) continue;
+				const Y = sub(add(X, mul(dir, t)), pl.C);
 				if (Math.abs(dot3(Y, pl.e)) <= pl.a && Math.abs(dot3(Y, pl.f)) <= pl.b) return true;
 			}
 			return false;
