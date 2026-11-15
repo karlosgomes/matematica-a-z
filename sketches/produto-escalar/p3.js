@@ -1,300 +1,188 @@
 /* =====================================================================
-   Produto escalar · Problema 3 — Tabela de produtos escalares
-   ‖a‖ = ‖b‖ = ‖c‖ = √2,  a·b = 1,  b·c = 0,  a·c = −√2
-   Ângulos: (a, b) = 60°, (b, c) = 90°, (a, c) = 135°
-   Coordenadas concretas que verificam a tabela:
-       b = (√2, 0, 0),  c = (0, √2, 0),  a = (1/√2, −1, 1/√2)
-   AB² = 2 + 2 − 2·1 = 2,  BC² = 2 + 2 − 0 = 4,  AC² = 2 + 2 + 2√2 = 4 + 2√2
-   ⇒ AB < BC < AC  → (D)
-   Figura 3D à mão em perspetiva (como espaco.js): a vista roda arrastando.
+   Produto escalar · Problema 3 — projeção de um ponto numa reta
+   A(2, 6), r: (x, y) = (5, 5) + k(2, 1). O aluno arrasta P ao longo de r
+   e vê AP · r⃗ na cor do sinal (ângulo reto quando dá 0; íman em k = −1).
+   Solução: 5 + 5k = 0 ⇔ k = −1, P(3, 4), ‖OP‖ = 5 → (D).
    ===================================================================== */
-(function () {
-	const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
-	const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-	const mul = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
-	const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-	const unit = a => mul(a, 1 / Math.hypot(...a));
-	const r2 = Math.SQRT2;
-
-	const VA = [1 / r2, -1, 1 / r2], VB = [r2, 0, 0], VC = [0, r2, 0];
-
-	SKETCHES['pe-p3'] = function (p, controlos) {
-		const W = 920, H = 600;
-		const G = { cx: 330, cy: 320, k: 170 };
-		const CEN = [0.5, 0.1, 0.2];
-		const COR = {
-			texto: [30, 41, 59], cinza: [100, 116, 139], eixo: [148, 163, 184], tri: [100, 116, 139],
-			a: [21, 101, 192], b: [123, 31, 162], c: [0, 131, 143],
-			pos: [46, 125, 50], zero: [239, 108, 0], neg: [211, 47, 47]
-		};
-		const VET = { a: VA, b: VB, c: VC };
-		// pares: produto escalar (texto), sinal, ângulo
-		const PARES = {
-			ab: { u: 'a', v: 'b', txt: '1', s: 1, ang: '60°' },
-			bc: { u: 'b', v: 'c', txt: '0', s: 0, ang: '90°' },
-			ac: { u: 'a', v: 'c', txt: '−√2', s: -1, ang: '135°' }
-		};
-
-		let az = 120, el = 30;
-		let alvo = null;                     // [az, el] para onde a vista roda ao escolher um par
-		let F_ = [1, 0, 0], R_ = [0, 1, 0], U_ = [0, 0, 1];
-		let par = null, cxSol;
-		const botoes = {};
-
-		p.setup = function () {
-			arrastar(p.createCanvas(W, H).elt);
-			p.textFont('Source Sans Pro');
-			p.createSpan('Arrasta para rodar a vista · Ângulo de').parent(controlos).addClass('dica-arrastar');
-			[['ab', 'a e b'], ['bc', 'b e c'], ['ac', 'a e c']].forEach(([k, t]) => {
-				botoes[k] = UT.botao(p, controlos, t, () => { par = par === k ? null : k; marcar(); if (par) alvo = vistaDe(par); });
-			});
-			UT.quebra(p, controlos);
-			cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
-			marcar();
-		};
-		// o par escolhido fica com o botão azul; os outros ficam claros
-		function marcar() {
-			Object.entries(botoes).forEach(([k, b]) => k === par ? b.removeClass('atalho') : b.addClass('atalho'));
-		}
-
-		// vista perpendicular ao plano dos dois vetores do par (o ângulo aparece em verdadeira grandeza)
-		function vistaDe(k) {
-			const u = VET[PARES[k].u], w = VET[PARES[k].v];
-			let n = unit([u[1] * w[2] - u[2] * w[1], u[2] * w[0] - u[0] * w[2], u[0] * w[1] - u[1] * w[0]]);
-			if (n[2] < 0) n = mul(n, -1);
-			const e = Math.min(Math.asin(n[2]) * 180 / Math.PI, 72);
-			const a = Math.hypot(n[0], n[1]) < 1e-6 ? az : Math.atan2(n[1], n[0]) * 180 / Math.PI;
-			return [a, e];
-		}
-
-		function arrastar(cv) {
-			let ultimo = null;
-			cv.style.cursor = 'grab'; cv.style.touchAction = 'none';
-			cv.addEventListener('pointerdown', e => {
-				alvo = null;
-				ultimo = [e.clientX, e.clientY]; cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing';
-				e.stopPropagation();
-			});
-			cv.addEventListener('pointermove', e => {
-				if (!ultimo) return;
-				const esc = (window.Reveal && Reveal.getScale && Reveal.getScale()) || 1;
-				const dx = (e.clientX - ultimo[0]) / esc, dy = (e.clientY - ultimo[1]) / esc;
-				ultimo = [e.clientX, e.clientY];
-				az -= dx * 0.4; if (az > 180) az -= 360; if (az < -180) az += 360;
-				el = p.constrain(el + dy * 0.4, -60, 80);
-			});
-			const fim = () => { ultimo = null; cv.style.cursor = 'grab'; };
-			cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim);
-			['touchstart', 'touchmove', 'mousedown'].forEach(t => cv.addEventListener(t, e => e.stopPropagation(), { passive: true }));
-		}
-
-		/* ---------------- projeção (perspetiva) ---------------- */
-		function camara() {
-			const a = az * Math.PI / 180, e = el * Math.PI / 180;
-			F_ = [Math.cos(e) * Math.cos(a), Math.cos(e) * Math.sin(a), Math.sin(e)];
-			R_ = [-Math.sin(a), Math.cos(a), 0];
-			U_ = [-Math.sin(e) * Math.cos(a), -Math.sin(e) * Math.sin(a), Math.cos(e)];
-		}
-		const DIST = 19;
-		const pr = v => {
-			const w = sub(v, CEN), z = DIST - dot3(w, F_), s = G.k * DIST / Math.max(z, 0.5);
-			return { x: G.cx + s * dot3(w, R_), y: G.cy - s * dot3(w, U_) };
-		};
-
-		/* ---------------- desenho de base ---------------- */
-		function seg(a, b, cor, peso, alfa = 255) {
-			const A = pr(a), B = pr(b);
-			p.stroke(...cor, alfa); p.strokeWeight(peso); p.strokeCap(p.ROUND); p.line(A.x, A.y, B.x, B.y);
-		}
-		function seta(a, b, cor, peso = 3.5, alfa = 255) {
-			const A = pr(a), B = pr(b);
-			const dx = B.x - A.x, dy = B.y - A.y, l = Math.hypot(dx, dy);
-			const h = 16, recuo = l > h ? h * 0.8 / l : 0;
-			seg(a, add(a, mul(sub(b, a), 1 - recuo)), cor, peso, alfa);
-			if (l < 6) return;
-			const ux = dx / l, uy = dy / l;
-			p.noStroke(); p.fill(...cor, alfa);
-			p.triangle(B.x, B.y, B.x - h * ux - h * 0.42 * uy, B.y - h * uy + h * 0.42 * ux,
-				B.x - h * ux + h * 0.42 * uy, B.y - h * uy - h * 0.42 * ux);
-		}
-		function rot(t, x, y, cor = COR.texto, tam = 22, alfa = 255, estilo = p.BOLD, ah = p.CENTER) {
-			p.stroke(255, alfa); p.strokeWeight(6); p.strokeJoin(p.ROUND);
-			p.fill(...cor, alfa); p.textSize(tam); p.textStyle(estilo);
-			p.textAlign(ah, p.CENTER); p.text(t, x, y);
-		}
-		function setinha(x, w, y, cor, tam, alfa = 255) {
-			const yy = y - tam * 0.86, x1 = x + w + 2;
-			p.stroke(...cor, alfa); p.strokeWeight(Math.max(1.5, tam / 13)); p.line(x - 1, yy, x1, yy);
-			p.noStroke(); p.fill(...cor, alfa);
-			p.triangle(x1 + 3, yy, x1 - 4, yy - 3.5, x1 - 4, yy + 3.5);
-		}
-		// nome de vetor (letra com seta por cima) centrado em (x, y)
-		function rotVet(t, x, y, cor, tam = 26, alfa = 255) {
-			rot(t, x, y, cor, tam, alfa, p.BOLDITALIC);
-			p.textSize(tam); p.textStyle(p.BOLDITALIC);
-			const w = p.textWidth(t);
-			// base do texto ≈ y + 0.3·tam (texto centrado na vertical)
-			setinha(x - w / 2, w, y + tam * 0.3, cor, tam, alfa);
-		}
-		// texto às peças: [texto, cor, estilo, vetor?]; devolve a largura
-		function frase(partes, x, y, tam = 22, so = false, alfa = 255) {
-			p.textSize(tam); p.textAlign(p.LEFT, p.BASELINE);
-			const x0 = x;
-			partes.forEach(([t, cor, est, vet]) => {
-				p.textStyle(est || (vet ? p.BOLDITALIC : p.NORMAL));
-				const w = p.textWidth(t);
-				if (!so) {
-					p.noStroke(); p.fill(...(cor || COR.texto), alfa); p.text(t, x, y);
-					if (vet) setinha(x, w, y, cor || COR.texto, tam, alfa);
-				}
-				x += w;
-			});
-			return x - x0;
-		}
-		function caixa(linhas, x0, y0, dy = 34, tam = 22, alinhaDir = false) {
-			const wmax = Math.max(...linhas.map(l => frase(l, 0, 0, tam, true)));
-			const bx = alinhaDir ? x0 - wmax - 24 : x0;
-			p.stroke(203, 213, 225); p.strokeWeight(1.5); p.fill(255, 235);
-			p.rect(bx, y0, wmax + 24, linhas.length * dy + 12, 8);
-			linhas.forEach((l, i) => frase(l, bx + 12, y0 + 6 + dy * 0.78 + i * dy, tam));
-		}
-		const v = (s, cor) => [s, cor, p.BOLDITALIC, true];
-
-		function eixos() {
-			[[[1, 0, 0], 'x'], [[0, 1, 0], 'y'], [[0, 0, 1], 'z']].forEach(([e, nome]) => {
-				seta(mul(e, -1.1), mul(e, 2.3), COR.eixo, 1.6);
-				const T = pr(mul(e, 2.5));
-				rot(nome, T.x, T.y, COR.cinza, 22, 255, p.ITALIC);
-			});
-		}
-
-		// ângulo entre os vetores u e w (a partir de O): arco, ou quadrado se reto
-		function angulo(u, w, cor, rr = 0.42) {
-			const eu = unit(u), ew0 = unit(w);
-			const cs = dot3(eu, ew0), th = Math.acos(Math.max(-1, Math.min(1, cs)));
-			const ep = unit(sub(ew0, mul(eu, cs)));          // perpendicular a u, no plano de u e w
-			const P = s => add(mul(eu, rr * Math.cos(s)), mul(ep, rr * Math.sin(s)));
-			if (Math.abs(cs) < 1e-9) {
-				const q = rr * 0.7;
-				const c1 = mul(eu, q), c2 = add(mul(eu, q), mul(ew0, q)), c3 = mul(ew0, q);
-				const Q = [[0, 0, 0], c1, c2, c3].map(pr);
-				p.noStroke(); p.fill(...cor, 50); p.beginShape(); Q.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
-				seg(c1, c2, cor, 2.5); seg(c2, c3, cor, 2.5);
-			} else {
-				const n = 40, pts = [];
-				for (let i = 0; i <= n; i++) pts.push(pr(P(th * i / n)));
-				const O = pr([0, 0, 0]);
-				p.noStroke(); p.fill(...cor, 50);
-				p.beginShape(); p.vertex(O.x, O.y); pts.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
-				p.noFill(); p.stroke(...cor); p.strokeWeight(2.5);
-				p.beginShape(); pts.forEach(q => p.vertex(q.x, q.y)); p.endShape();
-			}
-			// ponto (no ecrã) na bissetriz, um pouco fora do arco, para o texto
-			return pr(P(th / 2).map(x => x * 0.62));
-		}
-
-		/* ---------------- desenho ---------------- */
-		p.draw = function () {
-			if (alvo) {
-				// rodar a vista suavemente até ao alvo (pelo caminho mais curto em az)
-				let d = alvo[0] - az; d -= 360 * Math.round(d / 360);
-				const f = Math.min(1, p.deltaTime / 1000 * 4);
-				az += d * f; el += (alvo[1] - el) * f;
-				if (Math.abs(d) < 0.1 && Math.abs(alvo[1] - el) < 0.1) alvo = null;
-			}
-			camara();
-			p.background(255);
-			const sol = cxSol.checked();
-			const O = [0, 0, 0];
-			const PT = { A: VA, B: VB, C: VC };
-			const sel = par ? PARES[par] : null;
-			const QG = pr(mul(add(add(VA, VB), VC), 1 / 3));     // centro do triângulo, no ecrã
-
-			eixos();
-
-			// triângulo [ABC]
-			const T3 = [VA, VB, VC].map(pr);
-			p.noStroke(); p.fill(...COR.tri, 28);
-			p.beginShape(); T3.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
-			[['A', 'B'], ['B', 'C'], ['A', 'C']].forEach(([X, Y]) => seg(PT[X], PT[Y], COR.tri, 2.5, 200));
-
-			// vetores a partir de O (esbatidos os que não estão no par escolhido)
-			const Q0 = pr(O);
-			['a', 'b', 'c'].forEach(n => {
-				const ativo = !sel || sel.u === n || sel.v === n, alfa = ativo ? 255 : 70;
-				seta(O, VET[n], COR[n], ativo && sel ? 4.5 : 3.5, alfa);
-				// nome do vetor a meio, afastado da seta
-				const M = pr(mul(VET[n], 0.55)), E = pr(VET[n]);
-				let dx = E.x - Q0.x, dy = E.y - Q0.y; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
-				// do lado da seta oposto ao centro do triângulo
-				const nx = -dy, ny = dx, s = (QG.x - M.x) * nx + (QG.y - M.y) * ny > 0 ? -1 : 1;
-				rotVet(n, M.x + s * nx * 24, M.y + s * ny * 24, COR[n], 26, alfa);
-			});
-
-			// ângulo do par escolhido, com a célula da tabela
-			if (sel) {
-				const cs = sel.s > 0 ? COR.pos : sel.s < 0 ? COR.neg : COR.zero;
-				const L = angulo(VET[sel.u], VET[sel.v], cs);
-				if (sol) rot(sel.ang, L.x, L.y, cs, 20, 255, p.BOLD);
-			}
-
-			// pontos A, B, C (nome para fora do triângulo)
-			['A', 'B', 'C'].forEach(n => {
-				const Q = pr(PT[n]);
-				p.stroke(255); p.strokeWeight(2); p.fill(...COR.texto); p.circle(Q.x, Q.y, 11);
-				let dx = Q.x - QG.x, dy = Q.y - QG.y; const l = Math.hypot(dx, dy) || 1;
-				rot(n, Q.x + dx / l * 22, Q.y + dy / l * 22, COR.texto, 24, 255, p.BOLDITALIC);
-			});
-			rot('O', Q0.x - 4, Q0.y + 22, COR.texto, 22, 255, p.ITALIC);
-
-			// comprimentos dos lados (com a solução)
-			if (sol) {
-				const lado = (X, Y, Z, t) => {
-					// ponto do lado mais afastado (no ecrã) do terceiro vértice e de O
-					const QZ = pr(PT[Z]);
-					let M = null, md = -1;
-					[0.5, 0.38, 0.62, 0.28, 0.72].forEach(f => {
-						const q = pr(add(mul(PT[X], 1 - f), mul(PT[Y], f)));
-						const d = Math.min(Math.hypot(q.x - QZ.x, q.y - QZ.y), Math.hypot(q.x - Q0.x, q.y - Q0.y));
-						if (d > md + 25) { md = d; M = q; }
-					});
-					// texto sobre o lado, na direção do lado (sempre direito)
-					const P1 = pr(PT[X]), P2 = pr(PT[Y]);
-					let ang = Math.atan2(P2.y - P1.y, P2.x - P1.x);
-					if (ang > Math.PI / 2) ang -= Math.PI; if (ang < -Math.PI / 2) ang += Math.PI;
-					p.push(); p.translate(M.x, M.y); p.rotate(ang);
-					p.textSize(18); p.textStyle(p.BOLD);
-					const w = p.textWidth(t);
-					p.noStroke(); p.fill(255, 235); p.rect(-w / 2 - 5, -12, w + 10, 24, 5);
-					rot(t, 0, 0, COR.texto, 18, 255, p.BOLD);
-					p.pop();
-				};
-				lado('A', 'B', 'C', 'AB = √2');
-				lado('B', 'C', 'A', 'BC = 2');
-				lado('A', 'C', 'B', 'AC = √(4 + 2√2) ≈ 2,61');
-			}
-
-			// lembrete: a diagonal da tabela dá as normas
-			const N = COR.texto;
-			const topo = [[['‖', N], v('a', COR.a), ['‖ = ‖', N], v('b', COR.b), ['‖ = ‖', N], v('c', COR.c), ['‖ = √2', N]]];
-			if (sel) {
-				const cs = sel.s > 0 ? COR.pos : sel.s < 0 ? COR.neg : COR.zero;
-				topo.push([v(sel.u, COR[sel.u]), [' · ', N], v(sel.v, COR[sel.v]), [' = ' + sel.txt, cs, p.BOLD],
-					[sel.s > 0 ? '   (> 0: agudo)' : sel.s < 0 ? '   (< 0: obtuso)' : '   (= 0: reto)', cs]]);
-			}
-			caixa(topo, 12, 12, 34, 22);
-
-			if (sol) {
-				const V = COR.pos, a = v('a', COR.a), b = v('b', COR.b), c = v('c', COR.c);
-				caixa([
-					[['AB² = ‖', N], b, [' − ', N], a, ['‖² = 2 + 2 − 2 × 1 = 2', N]],
-					[['BC² = ‖', N], c, [' − ', N], b, ['‖² = 2 + 2 − 2 × 0 = 4', N]],
-					[['AC² = ‖', N], c, [' − ', N], a, ['‖² = 2 + 2 + 2√2 = 4 + 2√2', N]],
-					[['AB < BC < AC   → (D)', V, p.BOLD]],
-					[b, [' · ', N], c, [' = 0  ⇒  ', N], b, [' ⊥ ', N], c],
-					[['cos θ = −√2 / (√2 × √2) = −√2/2  ⇒  θ = 135°', N]]
-				], W - 12, H - 12 - 6 * 34 - 12, 34, 21, true);
-			}
-		};
+SKETCHES['pe-p3'] = function (p, controlos) {
+	const W = 920, H = 600;
+	const O = { x: 140, y: 520 }, K = 58;
+	const COR = {
+		eixo: [100, 116, 139], grelha: [226, 232, 240], u: [21, 101, 192], v: [123, 31, 162],
+		pos: [46, 125, 50], zero: [239, 108, 0], neg: [211, 47, 47], texto: [30, 41, 59],
+		r: [230, 81, 0], cinza: [100, 116, 139], op: [15, 118, 110]
 	};
-})();
+	const A = { x: 2, y: 6 }, R0 = { x: 5, y: 5 }, D = { x: 2, y: 1 };
+	const XMIN = -2.2, XMAX = 13.3, YMIN = -1.3, YMAX = 8.8, KMIN = -3.5, KMAX = 3.5;
+	let k = 2, agarrado = false, cxSol;
+
+	const X = x => O.x + x * K, Y = y => O.y - y * K;
+	const Pk = t => ({ x: R0.x + t * D.x, y: R0.y + t * D.y });
+	const corSinal = d => Math.abs(d) < 1e-9 ? COR.zero : d > 0 ? COR.pos : COR.neg;
+
+	p.setup = function () {
+		arrastar(p.createCanvas(W, H).elt);
+		p.textFont('Source Sans Pro');
+		p.createSpan('Arrasta o ponto P ao longo da reta r ·').parent(controlos).addClass('dica-arrastar');
+		UT.botao(p, controlos, 'Início', () => { k = 2; }, 'atalho');
+		UT.quebra(p, controlos);
+		cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
+		cxSol.changed(() => { if (cxSol.checked()) k = -1; });
+	};
+
+	// arrastar P sobre r: k da projeção do ponteiro, às décimas, com íman nos inteiros (mais forte em k = −1)
+	function arrastar(cv) {
+		cv.style.touchAction = 'none';
+		const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
+		const perto = (x, y) => { const P = Pk(k); return Math.hypot(X(P.x) - x, Y(P.y) - y) < 30; };
+		cv.addEventListener('pointerdown', e => {
+			const [x, y] = pos(e); agarrado = perto(x, y);
+			if (agarrado) { cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing'; e.stopPropagation(); e.preventDefault(); }
+		});
+		cv.addEventListener('pointermove', e => {
+			const [x, y] = pos(e);
+			if (!agarrado) { cv.style.cursor = perto(x, y) ? 'grab' : 'default'; return; }
+			const ux = (x - O.x) / K, uy = (O.y - y) / K;
+			let t = ((ux - R0.x) * D.x + (uy - R0.y) * D.y) / (D.x * D.x + D.y * D.y);
+			if (Math.abs(t + 1) < 0.2) t = -1;
+			else if (Math.abs(t - Math.round(t)) < 0.08) t = Math.round(t);
+			else t = Math.round(t * 10) / 10;
+			k = p.constrain(t, KMIN, KMAX);
+		});
+		const fim = () => { agarrado = false; cv.style.cursor = 'default'; };
+		cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim);
+		['touchstart', 'touchmove', 'mousedown'].forEach(t => cv.addEventListener(t, e => { if (agarrado || t !== 'mousedown') e.stopPropagation(); }, { passive: true }));
+	}
+
+	/* ---------- desenho ---------- */
+	function rot(t, x, y, cor = COR.texto, tam = 22, ah = p.CENTER, estilo = p.BOLD) {
+		p.stroke(255); p.strokeWeight(6); p.strokeJoin(p.ROUND);
+		p.fill(...cor); p.textSize(tam); p.textStyle(estilo);
+		p.textAlign(ah, p.CENTER); p.text(t, x, y);
+	}
+	function setaTopo(x0, x1, yy, cor) {
+		p.stroke(...cor); p.strokeWeight(2); p.line(x0, yy, x1, yy);
+		p.noStroke(); p.fill(...cor); p.triangle(x1 + 4, yy, x1 - 3, yy - 4, x1 - 3, yy + 4);
+	}
+	function nomeVetor(l, x, y, cor, tam = 26) {
+		rot(l, x, y, cor, tam, p.CENTER, p.BOLDITALIC);
+		const w = p.textWidth(l);
+		setaTopo(x - w * 0.55, x + w * 0.55, y - tam * 0.62, cor);
+	}
+	function seta(x1, y1, x2, y2, cor, peso = 4) {
+		p.stroke(...cor); p.strokeWeight(peso); p.line(x1, y1, x2, y2);
+		const a = Math.atan2(y2 - y1, x2 - x1);
+		p.push(); p.translate(x2, y2); p.rotate(a);
+		p.noStroke(); p.fill(...cor); p.triangle(0, 0, -18, -7, -18, 7); p.pop();
+	}
+	function linha(pecas, x, y, tam = 23) {
+		p.textSize(tam); p.textAlign(p.LEFT, p.CENTER); p.noStroke();
+		for (const [t, cor, est, vec] of pecas) {
+			p.textStyle(est || p.NORMAL); p.fill(...(cor || COR.texto)); p.noStroke(); p.text(t, x, y);
+			const w = p.textWidth(t);
+			if (vec) setaTopo(x + 1, x + w - 2, y - tam * 0.62, cor || COR.texto);
+			x += w;
+		}
+		return x;
+	}
+	const inteiro = v => Math.abs(v - Math.round(v)) < 1e-9;
+	const num = v => (v < -1e-9 ? '−' : '') + UT.fmt(Math.abs(v), inteiro(v) ? 0 : 1);
+	const par = v => v < -1e-9 ? '(' + num(v) + ')' : num(v);
+	const ponto = (x, y) => '(' + num(x) + (inteiro(x) && inteiro(y) ? ', ' : ' ; ') + num(y) + ')';
+	function bola(x, y, cor, d = 12) { p.stroke(255); p.strokeWeight(2); p.fill(...cor); p.circle(X(x), Y(y), d); }
+
+	function grelha() {
+		p.strokeWeight(1); p.stroke(...COR.grelha);
+		for (let i = Math.ceil(XMIN); i <= XMAX; i++) p.line(X(i), Y(YMIN), X(i), Y(YMAX));
+		for (let j = Math.ceil(YMIN); j <= YMAX; j++) p.line(X(XMIN), Y(j), X(XMAX), Y(j));
+		p.stroke(...COR.eixo); p.strokeWeight(1.6);
+		p.line(X(XMIN), O.y, X(XMAX), O.y); p.line(O.x, Y(YMIN), O.x, Y(YMAX));
+		p.noStroke(); p.fill(...COR.eixo); p.textSize(14); p.textStyle(p.NORMAL); p.textAlign(p.CENTER, p.TOP);
+		for (let i = Math.ceil(XMIN); i <= XMAX; i++) if (i) p.text(i, X(i), O.y + 5);
+		p.textAlign(p.RIGHT, p.CENTER);
+		for (let j = Math.ceil(YMIN); j <= YMAX; j++) if (j) p.text(j, O.x - 6, Y(j));
+		rot('O', O.x - 14, O.y + 16, COR.eixo, 18);
+		rot('x', X(XMAX) - 10, O.y - 16, COR.eixo, 18, p.CENTER, p.ITALIC);
+		rot('y', O.x + 14, Y(YMAX) + 12, COR.eixo, 18, p.CENTER, p.ITALIC);
+	}
+
+	p.draw = function () {
+		const sol = cxSol.checked();
+		const P = Pk(k), ax = P.x - A.x, ay = P.y - A.y, na = Math.hypot(ax, ay);
+		const d = ax * D.x + ay * D.y, cs = corSinal(d);
+		p.background(255);
+		grelha();
+
+		// reta r, com marcas nos valores inteiros de k
+		const t0 = (XMIN - R0.x) / D.x, t1 = (XMAX - R0.x) / D.x;
+		p.stroke(...COR.r); p.strokeWeight(3);
+		p.line(X(R0.x + t0 * D.x), Y(R0.y + t0 * D.y), X(R0.x + t1 * D.x), Y(R0.y + t1 * D.y));
+		const nr = Math.hypot(D.x, D.y), qx = -D.y / nr * 6, qy = D.x / nr * 6;   // perpendicular (px)
+		p.strokeWeight(2);
+		for (let t = Math.ceil(KMIN); t <= KMAX; t++) { const M = Pk(t); p.line(X(M.x) - qx, Y(M.y) + qy, X(M.x) + qx, Y(M.y) - qy); }
+		rot('r', X(11.6), Y(R0.y + (11.6 - R0.x) / 2) + 26, COR.r, 26, p.CENTER, p.BOLDITALIC);
+
+		// solução: OP
+		if (sol) {
+			seta(O.x, O.y, X(P.x), Y(P.y), COR.op, 3.5);
+			const mx = (O.x + X(P.x)) / 2, my = (O.y + Y(P.y)) / 2;
+			nomeVetor('OP', mx + 26, my + 12, COR.op, 22);
+		}
+
+		// ponto (5, 5) e vetor diretor r⃗ = (2, 1)
+		bola(R0.x, R0.y, COR.cinza, 10);
+		rot('(5, 5)', X(R0.x) + 4, Y(R0.y) + 24, COR.cinza, 16, p.LEFT, p.NORMAL);
+		seta(X(R0.x), Y(R0.y), X(R0.x + D.x), Y(R0.y + D.y), COR.u, 4);
+		nomeVetor('r', X(R0.x + D.x) + 6, Y(R0.y + D.y) - 26, COR.u);
+		rot('(2, 1)', X(R0.x + D.x) + 20, Y(R0.y + D.y) - 22, COR.u, 17, p.LEFT, p.NORMAL);
+
+		// ângulo de AP com r⃗, em P (cópia esbatida de r⃗ e prolongamento de AP)
+		if (na > 1e-9) {
+			const aAP = Math.atan2(ay, ax), aR = Math.atan2(D.y, D.x);
+			p.stroke(...COR.u, 70); p.strokeWeight(2);
+			p.line(X(P.x), Y(P.y), X(P.x) + 60 * Math.cos(aR), Y(P.y) - 60 * Math.sin(aR));
+			p.stroke(...COR.v, 70);
+			p.line(X(P.x), Y(P.y), X(P.x) + 50 * Math.cos(aAP), Y(P.y) - 50 * Math.sin(aAP));
+			if (Math.abs(d) < 1e-9) {
+				const q = 18, P1 = [X(P.x) + q * Math.cos(aAP), Y(P.y) - q * Math.sin(aAP)], P2 = [X(P.x) + q * Math.cos(aR), Y(P.y) - q * Math.sin(aR)];
+				p.noFill(); p.stroke(...cs); p.strokeWeight(2.5);
+				p.beginShape(); p.vertex(...P1); p.vertex(P1[0] + P2[0] - X(P.x), P1[1] + P2[1] - Y(P.y)); p.vertex(...P2); p.endShape();
+			} else {
+				let da = aR - aAP; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+				const ini = da >= 0 ? aAP : aR;
+				p.fill(...cs, 50); p.stroke(...cs); p.strokeWeight(2);
+				p.arc(X(P.x), Y(P.y), 56, 56, -(ini + Math.abs(da)), -ini, p.PIE);
+			}
+		}
+
+		// A e o vetor AP
+		if (na > 1e-9) {
+			seta(X(A.x), Y(A.y), X(P.x), Y(P.y), COR.v, 3.5);
+			const mx = (X(A.x) + X(P.x)) / 2, my = (Y(A.y) + Y(P.y)) / 2;
+			// nome do lado de cima/esquerda de AP
+			let ox = ay / na, oy = ax / na;
+			if (ox > 0 || (Math.abs(ox) < 1e-9 && oy > 0)) { ox = -ox; oy = -oy; }
+			nomeVetor('AP', mx + ox * 26, my + oy * 26 + 4, COR.v, 22);
+		}
+		bola(A.x, A.y, COR.texto, 12);
+		rot('A(2, 6)', X(A.x) - 14, Y(A.y) - 18, COR.texto, 19, p.RIGHT, p.BOLD);
+
+		// P (pega)
+		p.noFill(); p.stroke(...cs, 120); p.strokeWeight(2); p.circle(X(P.x), Y(P.y), 26);
+		bola(P.x, P.y, cs, 14);
+		rot('P', X(P.x) + 14, Y(P.y) + 22, cs, 22, p.LEFT, p.BOLDITALIC);
+		rot(ponto(P.x, P.y), X(P.x) + 30, Y(P.y) + 24, cs, 17, p.LEFT, p.NORMAL);
+
+		// contas, em baixo à direita
+		const bx = 372, by = sol ? 392 : 470;
+		p.noStroke(); p.fill(255, 215); p.rect(bx, by, W - bx - 10, H - by - 10, 10);
+		let y = by + 26;
+		linha([['k = ' + num(k), COR.texto, p.BOLD], ['     P = (5 + 2k, 5 + k) = ' + ponto(P.x, P.y)]], bx + 14, y); y += 38;
+		linha([['AP', COR.v, p.BOLDITALIC, 'v'], [' · '], ['r', COR.u, p.BOLDITALIC, 'v'], [' = ' + par(ax) + ' × 2 + ' + par(ay) + ' × 1 = '],
+			[num(d), cs, p.BOLD]], bx + 14, y); y += 38;
+		if (sol) {
+			linha([['2(3 + 2k) + (−1 + k) = 5 + 5k = 0  ⇔  '], ['k = −1', COR.zero, p.BOLD]], bx + 14, y); y += 38;
+			linha([['P = (3, 4),   '], ['‖', COR.op, p.BOLD], ['OP', COR.op, p.BOLD, 'v'], ['‖', COR.op, p.BOLD], [' = √(3² + 4²) = 5   → '], ['(D)', COR.op, p.BOLD]], bx + 14, y);
+		}
+	};
+};
