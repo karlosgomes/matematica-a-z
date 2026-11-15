@@ -140,3 +140,14 @@
 .enunciado table.reducao th { color: #1d4ed8; border-bottom: 2px solid #94a3b8; }
 .enunciado table.reducao tr.atual td { background: #fff7ed; }
 .enunciado table.reducao tr.atual td:first-child { box-shadow: inset 4px 0 #ea580c; }
+
+/* ---------- escolha múltipla e tabela de produtos escalares (problemas do Produto escalar) ---------- */
+.enunciado p.opcoes { margin: -6px 0 20px 1.6em; display: flex; flex-wrap: wrap; gap: 6px 30px; }
+.enunciado p.opcoes.duas { display: grid; grid-template-columns: auto auto; justify-content: start; }
+.enunciado p.opcoes span { white-space: nowrap; }
+.enunciado p.opcoes b { color: #475569; margin-right: 8px; }
+.compacto .enunciado { font-size: 0.78em; }
+.compacto .enunciado p { margin-bottom: 14px; }
+.enunciado table.produtos { border-collapse: collapse; margin: 0 auto 18px; font-size: 0.9em; }
+.enunciado table.produtos th, .enunciado table.produtos td { border: 1px solid #cbd5e1; padding: 4px 16px; text-align: center; }
+.enunciado table.produtos th { background: #f1f5f9; }

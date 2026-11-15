@@ -72,7 +72,8 @@
 					<div class="topico">
 						<p class="nome-topico">Produto escalar</p>
 						<p class="links-topico">
-							<a href="#/pe-definicao">Resumo</a>
+							<a href="#/pe-definicao">Resumo</a> ·
+							<a href="#/pe-problemas">Problemas</a>
 						</p>
 					</div>
 					<!-- novo tópico:
@@ -685,32 +686,216 @@
 				</div>
 			</section>
 
-			<!-- ============ RESUMO 4: PLANOS E RETAS NO ESPAÇO ============ -->
-			<section id="pe-espaco" class="sans resumo" data-sketch="pe-espaco">
-				<a class="voltar" href="#/indice">↩ índice</a>
-				<h4>Produto escalar · Resumo — Planos e retas no espaço</h4>
-				<div class="problema">
-					<div class="enunciado">
-						<p>O plano $\alpha$ que passa em $P$ e tem <b>vetor normal</b> $\vec n = (a, b, c)$ é o conjunto dos pontos $X$ tais que</p>
-						<p class="formula">$\vec n \cdot \overrightarrow{PX} = 0$</p>
-						<p class="formula destaque">$\alpha\colon\ ax + by + cz + d = 0$</p>
-						<p><b>Reta $r$</b> (vetor diretor $\vec r$) e <b>plano $\alpha$</b>:</p>
-						<ul>
-							<li>$\vec r \cdot \vec n = 0 \Rightarrow r$ paralela a $\alpha$ ou contida em $\alpha$</li>
-							<li>$\vec r$ colinear com $\vec n \Rightarrow r \perp \alpha$</li>
-						</ul>
-						<p><b>Dois planos</b> $\alpha$ e $\beta$ (vetores normais $\vec n$ e $\vec m$):</p>
-						<ul>
-							<li>$\vec n \cdot \vec m = 0 \iff \alpha \perp \beta$</li>
-							<li>$\vec n$ colinear com $\vec m \iff \alpha \parallel \beta$ (ou coincidentes)</li>
-						</ul>
-						<p class="dica">Apoio: app <a href="https://karlosgomes.github.io/apps-matematica/produto-escalar/#espaco&amp;texto" target="_blank">Produto escalar</a> (modo Espaço).</p>
+			<!-- pilha vertical: último resumo e, para baixo, a lista e os problemas (Produto escalar) -->
+			<section>
+				<!-- ============ RESUMO 4: PLANOS E RETAS NO ESPAÇO ============ -->
+				<section id="pe-espaco" class="sans resumo" data-sketch="pe-espaco">
+					<a class="voltar" href="#/indice">↩ índice</a>
+					<h4>Produto escalar · Resumo — Planos e retas no espaço</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>O plano $\alpha$ que passa em $P$ e tem <b>vetor normal</b> $\vec n = (a, b, c)$ é o conjunto dos pontos $X$ tais que</p>
+							<p class="formula">$\vec n \cdot \overrightarrow{PX} = 0$</p>
+							<p class="formula destaque">$\alpha\colon\ ax + by + cz + d = 0$</p>
+							<p><b>Reta $r$</b> (vetor diretor $\vec r$) e <b>plano $\alpha$</b>:</p>
+							<ul>
+								<li>$\vec r \cdot \vec n = 0 \Rightarrow r$ paralela a $\alpha$ ou contida em $\alpha$</li>
+								<li>$\vec r$ colinear com $\vec n \Rightarrow r \perp \alpha$</li>
+							</ul>
+							<p><b>Dois planos</b> $\alpha$ e $\beta$ (vetores normais $\vec n$ e $\vec m$):</p>
+							<ul>
+								<li>$\vec n \cdot \vec m = 0 \iff \alpha \perp \beta$</li>
+								<li>$\vec n$ colinear com $\vec m \iff \alpha \parallel \beta$ (ou coincidentes)</li>
+							</ul>
+							<p class="dica">Apoio: app <a href="https://karlosgomes.github.io/apps-matematica/produto-escalar/#espaco&amp;texto" target="_blank">Produto escalar</a> (modo Espaço).</p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
 					</div>
-					<div class="animacao">
-						<div class="tela"></div>
-						<div class="controlos"></div>
+				</section>
+
+				<!-- ============ PROBLEMAS (adaptados da ficha 2, Parte II) ============ -->
+				<section id="pe-problemas">
+					<a class="voltar" href="#/indice">↩ índice</a>
+					<h3>Produto escalar — Problemas</h3>
+					<div class="indice largo">
+						<p class="links-topico"><a href="#/pe-definicao">Ver o resumo teórico</a></p>
+						<ol class="duas-colunas">
+							<li><a href="#/pe-p1">Reta no espaço e o plano $xOy$</a></li>
+							<li><a href="#/pe-p2">Hexágono regular</a></li>
+							<li><a href="#/pe-p3">Tabela de produtos escalares</a></li>
+							<li><a href="#/pe-p4">Trapézio isósceles</a></li>
+							<li><a href="#/pe-p5">Reta perpendicular a um vetor</a></li>
+							<li><a href="#/pe-p6">Projeção de um ponto numa reta</a></li>
+							<li><a href="#/pe-p7">Ângulo de duas retas</a></li>
+							<li><a href="#/pe-p8">Quatro pontos numa circunferência</a></li>
+							<li><a href="#/pe-p9">Desafio: um ponto no interior de um triângulo</a></li>
+						</ol>
+						<p class="dica">Problemas adaptados de exames.</p>
 					</div>
-				</div>
+				</section>
+				<section id="pe-p1" class="sans" data-sketch="pe-p1">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 1 — Reta no espaço e o plano $xOy$</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Considera, num referencial ortonormado $Oxyz$, os pontos $A(-1, 1, -2)$ e $B(2, 4, 1)$.</p>
+							<p>Seja $P$ o ponto de interseção do segmento de reta $[AB]$ com o plano $xOy$.</p>
+							<p>Qual é o valor de $\overline{AP}$?</p>
+							<p class="opcoes"><span><b>(A)</b> $\sqrt{13}$</span><span><b>(B)</b> $2\sqrt{3}$</span><span><b>(C)</b> $\sqrt{14}$</span><span><b>(D)</b> $4$</span></p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+				<section id="pe-p2" class="sans" data-sketch="pe-p2">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 2 — Hexágono regular</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Na figura está representado o hexágono regular $[ABCDEF]$, de lado $1$.</p>
+							<p><span class="alinea">2.1.</span> Qual é o valor de $\left\|\overrightarrow{AE} + \overrightarrow{BC}\right\|$?</p>
+							<p class="opcoes"><span><b>(A)</b> $\sqrt{6}$</span><span><b>(B)</b> $\sqrt{7}$</span><span><b>(C)</b> $2\sqrt{2}$</span><span><b>(D)</b> $3$</span></p>
+							<p><span class="alinea">2.2.</span> Determina $\overrightarrow{AE} \cdot \overrightarrow{BC}$ e a amplitude do ângulo dos vetores $\overrightarrow{AE}$ e $\overrightarrow{BC}$.</p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+				<section id="pe-p3" class="sans compacto" data-sketch="pe-p3">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 3 — Tabela de produtos escalares</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Num referencial o.n. $Oxyz$, sejam $\vec a = \overrightarrow{OA}$, $\vec b = \overrightarrow{OB}$ e $\vec c = \overrightarrow{OC}$. Na tabela estão os produtos escalares destes vetores, dois a dois.</p>
+							<table class="produtos">
+								<tr><th>$\cdot$</th><th>$\vec a$</th><th>$\vec b$</th><th>$\vec c$</th></tr>
+								<tr><th>$\vec a$</th><td>$2$</td><td>$1$</td><td>$-\sqrt{2}$</td></tr>
+								<tr><th>$\vec b$</th><td>$1$</td><td>$2$</td><td>$0$</td></tr>
+								<tr><th>$\vec c$</th><td>$-\sqrt{2}$</td><td>$0$</td><td>$2$</td></tr>
+							</table>
+							<p><span class="alinea">3.1.</span> Qual das opções ordena corretamente as distâncias entre os pontos $A$, $B$ e $C$?</p>
+							<p class="opcoes duas"><span><b>(A)</b> $\overline{AB}<\overline{AC}<\overline{BC}$</span><span><b>(B)</b> $\overline{BC}<\overline{AB}<\overline{AC}$</span><span><b>(C)</b> $\overline{AC}<\overline{AB}<\overline{BC}$</span><span><b>(D)</b> $\overline{AB}<\overline{BC}<\overline{AC}$</span></p>
+							<p><span class="alinea">3.2.</span> Justifica que os vetores $\vec b$ e $\vec c$ são perpendiculares.</p>
+							<p><span class="alinea">3.3.</span> Determina a amplitude do ângulo dos vetores $\vec a$ e $\vec c$.</p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+				<section id="pe-p4" class="sans" data-sketch="pe-p4">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 4 — Trapézio isósceles</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Na figura está representado o trapézio $[ABCD]$, em que $[AD]$ é paralelo a $[BC]$ e $C\hat{B}A = D\hat{C}B$.</p>
+							<p>Sabe-se que $\left\|\overrightarrow{AD}\right\| = 2$, $\left\|\overrightarrow{BC}\right\| = 4$ e $\left\|\overrightarrow{AB} + \overrightarrow{AC}\right\| = 2\sqrt{5}$.</p>
+							<p><span class="alinea">4.1.</span> Qual é o valor de $\left\|\overrightarrow{BD}\right\|$?</p>
+							<p class="opcoes"><span><b>(A)</b> $\sqrt{11}$</span><span><b>(B)</b> $2\sqrt{3}$</span><span><b>(C)</b> $\sqrt{13}$</span><span><b>(D)</b> $\sqrt{14}$</span></p>
+							<p><span class="alinea">4.2.</span> Determina o valor exato do cosseno do ângulo das diagonais $[AC]$ e $[BD]$ e conclui se essas diagonais são ou não perpendiculares.</p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+				<section id="pe-p5" class="sans" data-sketch="pe-p5">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 5 — Reta perpendicular a um vetor</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Seja $r$ a reta que passa no ponto de coordenadas $(4, 1)$ e é perpendicular ao vetor $\vec n = (1, 2)$.</p>
+							<p>Sejam $(a, 0)$ e $(0, b)$ as coordenadas dos pontos de interseção da reta $r$ com o eixo $Ox$ e com o eixo $Oy$, respetivamente.</p>
+							<p>Determina o valor de $a + b$.</p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+				<section id="pe-p6" class="sans" data-sketch="pe-p6">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 6 — Projeção de um ponto numa reta</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Considera o ponto $A(2, 6)$ e a reta $r$ definida pela equação vetorial</p>
+							<p class="formula">$(x, y) = (5, 5) + k(2, 1),\ k \in \mathbb{R}$</p>
+							<p>Seja $P$ o ponto da reta $r$ tal que o vetor $\overrightarrow{AP}$ é perpendicular à reta $r$.</p>
+							<p>Qual é o valor de $\left\|\overrightarrow{OP}\right\|$?</p>
+							<p class="opcoes"><span><b>(A)</b> $3$</span><span><b>(B)</b> $4$</span><span><b>(C)</b> $2\sqrt{5}$</span><span><b>(D)</b> $5$</span></p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+				<section id="pe-p7" class="sans" data-sketch="pe-p7">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 7 — Ângulo de duas retas</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Considera as retas $r$ e $s$ definidas por</p>
+							<p class="formula">$r\colon (x, y) = (-1, 3) + k(2, 1),\ k \in \mathbb{R}$</p>
+							<p class="formula">$s\colon y = 3x - 1$</p>
+							<p>Seja $\theta$ a amplitude do ângulo das retas $r$ e $s$. Qual é o valor de $\cos\theta$?</p>
+							<p class="opcoes"><span><b>(A)</b> $\frac12$</span><span><b>(B)</b> $\frac{\sqrt5}{4}$</span><span><b>(C)</b> $\frac{\sqrt7}{4}$</span><span><b>(D)</b> $\frac{\sqrt2}{2}$</span></p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+				<section id="pe-p8" class="sans" data-sketch="pe-p8">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 8 — Quatro pontos numa circunferência</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Os pontos $A$, $B$, $C$ e $D$, distintos dois a dois, pertencem a uma circunferência e satisfazem as condições:</p>
+							<ul class="dados">
+								<li>$\left\|\overrightarrow{AB}\right\| = 8$ e $\overrightarrow{AC} \cdot \overrightarrow{BC} = 0$;</li>
+								<li>$\overrightarrow{AD} = \frac12\,\overrightarrow{AB} - 2\,\overrightarrow{BC}$.</li>
+							</ul>
+							<p>Qual é o valor de $\left\|\overrightarrow{AD}\right\|^2$?</p>
+							<p class="opcoes"><span><b>(A)</b> $34$</span><span><b>(B)</b> $36$</span><span><b>(C)</b> $38$</span><span><b>(D)</b> $40$</span></p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+				<section id="pe-p9" class="sans compacto" data-sketch="pe-p9">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 9 — Desafio: um ponto no interior de um triângulo</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Considera um triângulo $[ABC]$ e um ponto $P$ do interior desse triângulo tais que:</p>
+							<ul class="dados">
+								<li>$\overrightarrow{PA} \cdot \overrightarrow{PC} = 0$ e $\left\|\overrightarrow{PA}\right\| = 3\left\|\overrightarrow{PC}\right\|$;</li>
+								<li>$\overrightarrow{PB} \cdot \overrightarrow{PC} = -\frac{\sqrt2}{2}\left\|\overrightarrow{PB}\right\|\left\|\overrightarrow{PC}\right\| = -2\left\|\overrightarrow{PC}\right\|^2$.</li>
+							</ul>
+							<p>Seja $D$ o ponto de interseção da reta $AP$ com o segmento $[BC]$. Sabe-se que $\overrightarrow{AD} = k\,\overrightarrow{PD}$, com $k \in \mathbb{R}$. Qual é o valor de $k$?</p>
+							<p class="opcoes"><span><b>(A)</b> $\frac{11}{2}$</span><span><b>(B)</b> $6$</span><span><b>(C)</b> $\frac{13}{2}$</span><span><b>(D)</b> $7$</span></p>
+							<p class="dica">Sugestão: considera um referencial o.n. com origem em $P$ e em que $C$ pertence ao semieixo positivo $Ox$.</p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
 			</section>
 
 			<!-- Novo problema: copiar o bloco <section> acima, mudar id/data-sketch (trig-p2, ...),
@@ -746,6 +931,15 @@
 	<script src="sketches/produto-escalar/angulo.js"></script>
 	<script src="sketches/produto-escalar/retas.js"></script>
 	<script src="sketches/produto-escalar/espaco.js"></script>
+	<script src="sketches/produto-escalar/p1.js"></script>
+	<script src="sketches/produto-escalar/p2.js"></script>
+	<script src="sketches/produto-escalar/p3.js"></script>
+	<script src="sketches/produto-escalar/p4.js"></script>
+	<script src="sketches/produto-escalar/p5.js"></script>
+	<script src="sketches/produto-escalar/p6.js"></script>
+	<script src="sketches/produto-escalar/p7.js"></script>
+	<script src="sketches/produto-escalar/p8.js"></script>
+	<script src="sketches/produto-escalar/p9.js"></script>
 
 	<script>
 		Reveal.initialize({
