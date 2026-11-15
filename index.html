@@ -44,23 +44,8 @@
 	<div class="reveal">
 		<div class="slides">
 
-			<!-- ============ CAPA ============ -->
-			<section class="capa">
-				<p class="subtitulo2">Problemas selecionados</p>
-				<table class="ajuda">
-					<tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>navegar entre slides</td>
-						<td><kbd>Esc</kbd></td><td>ver todos os slides</td></tr>
-					<tr><td><kbd>F</kbd></td><td>ecrã inteiro</td>
-						<td><kbd>C</kbd> <i class="fa-solid fa-pen"></i></td><td>caneta sobre o slide</td></tr>
-					<tr><td><kbd>B</kbd> <i class="fa-solid fa-chalkboard"></i></td><td>quadro branco</td>
-						<td><kbd>Del</kbd> <i class="fa-solid fa-eraser"></i></td><td>apagar desenhos do slide</td></tr>
-				</table>
-				<p class="pequeno">Os botões no canto inferior esquerdo fazem o mesmo.
-					Com a caneta ou o quadro abertos, clique direito escolhe a cor.</p>
-			</section>
-
-			<!-- ============ ÍNDICE DE TÓPICOS ============ -->
-			<section id="indice">
+			<!-- ============ ÍNDICE (1.º slide, com a faixa do título) ============ -->
+			<section id="indice" class="capa">
 				<h3>Índice</h3>
 				<div class="indice">
 					<div class="topico">
@@ -83,6 +68,16 @@
 						<p class="links-topico"><a href="#/xxx-resumo">Resumo</a> · <a href="#/xxx-problemas">Problemas</a></p>
 					</div> -->
 				</div>
+				<table class="ajuda">
+					<tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>navegar entre slides</td>
+						<td><kbd>Esc</kbd></td><td>ver todos os slides</td></tr>
+					<tr><td><kbd>F</kbd></td><td>ecrã inteiro</td>
+						<td><kbd>C</kbd> <i class="fa-solid fa-pen"></i></td><td>caneta sobre o slide</td></tr>
+					<tr><td><kbd>B</kbd> <i class="fa-solid fa-chalkboard"></i></td><td>quadro branco</td>
+						<td><kbd>Del</kbd> <i class="fa-solid fa-eraser"></i></td><td>apagar desenhos do slide</td></tr>
+				</table>
+				<p class="pequeno">Os botões no canto inferior esquerdo fazem o mesmo.
+					Com a caneta ou o quadro abertos, clique direito escolhe a cor.</p>
 			</section>
 
 			<!-- =====================================================
@@ -958,7 +953,7 @@
 			},
 			customcontrols: {
 				controls: [
-					{ icon: '<i class="fa-solid fa-list"></i>', title: 'Índice', action: "Reveal.slide(1)" },
+					{ icon: '<i class="fa-solid fa-list"></i>', title: 'Índice', action: "Reveal.slide(0)" },
 					{ icon: '<i class="fa-solid fa-table-cells"></i>', title: 'Todos os slides (Esc)', action: 'Reveal.toggleOverview();' },
 					{ icon: '<i class="fa-solid fa-pen"></i>', title: 'Caneta sobre o slide (C)', action: 'RevealChalkboard.toggleNotesCanvas()' },
 					{ icon: '<i class="fa-solid fa-chalkboard"></i>', title: 'Quadro (B)', action: 'RevealChalkboard.toggleChalkboard()' },
