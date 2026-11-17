@@ -161,10 +161,10 @@ SKETCHES['pe-p3'] = function (p, controlos) {
 		if (sol) {
 			p.noStroke(); p.fill(255, 240); p.stroke(226, 232, 240); p.strokeWeight(1.5); p.rect(14, H - 212, W - 28, 200, 10);
 			let y = H - 192;
-			linha([['3.1  ', COR.cinza, p.BOLD], ['(18 − 12) : 2 = 3;  altura √(5² − 3²) = 4;  B(18, 0), C(15, 4), D(3, 4)', null]], 28, y); y += 31;
-			linha([['3.2  ', COR.cinza, p.BOLD], ['a roda toca nas duas bases, que distam 4: raio 2 e centro sempre em y = 2', null]], 28, y); y += 31;
-			linha([['3.3  ', COR.cinza, p.BOLD], ['a) ', null], V('n', COR.n), [' · ', null], V('AD'), [' = (4, −3) · (3, 4) = 12 − 12 = 0;   b) o raio ', null], V('TP', COR.n), [' é ⊥ ao lado e ‖', null], V('n', COR.n), ['‖ = 5', null]], 28, y); y += 31;
-			linha([['       c) T = (3k, 4k),  P = T + (8/5, −6/5);  4k − 6/5 = 2 ⇒ k = 4/5:  ', null], ['T(12/5, 16/5),  P(4, 2)', COR.pq, p.BOLD]], 28, y); y += 31;
+			linha([['dados  ', COR.cinza, p.BOLD], ['raio 2 e o centro a 2 de cada base: centro sempre em y = 2;  ', null], V('AD'), [' = (3, 4)', null]], 28, y); y += 31;
+			linha([['3.1  ', COR.cinza, p.BOLD], V('n', COR.n), [' · ', null], V('AD'), [' = (4, −3) · (3, 4) = 12 − 12 = 0', null]], 28, y); y += 31;
+			linha([['3.2  ', COR.cinza, p.BOLD], ['o raio ', null], V('TP', COR.n), [' é ⊥ ao lado [AD], com ‖', null], V('TP', COR.n), ['‖ = 2 e ‖', null], V('n', COR.n), ['‖ = 5  ⇒  ', null], V('TP', COR.n), [' = (2/5)', null], V('n', COR.n)], 28, y); y += 31;
+			linha([['3.3  ', COR.cinza, p.BOLD], ['T = (3k, 4k),  P = T + (8/5, −6/5);  4k − 6/5 = 2 ⇒ k = 4/5:  ', null], ['T(12/5, 16/5),  P(4, 2)', COR.pq, p.BOLD]], 28, y); y += 31;
 			linha([['3.4  ', COR.cinza, p.BOLD], ['por simetria (reta x = 9):  ', null], ['Q(14, 2)', COR.pq, p.BOLD], ['   ⇒   ', null], ['PQ = 14 − 4 = 10', COR.pq, p.BOLD]], 28, y);
 		}
 	};
