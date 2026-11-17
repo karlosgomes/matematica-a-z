@@ -12,15 +12,22 @@ window.SKETCHES = {};
 
 const instancias = {};
 
+// cria (ou recria, do zero) o sketch de uma secção, parado
+function criarSketch(sec) {
+	const id = sec.dataset.sketch;
+	const tela = sec.querySelector('.tela');
+	const controlos = sec.querySelector('.controlos');
+	if (instancias[id]) { instancias[id].remove(); tela.innerHTML = ''; controlos.innerHTML = ''; }
+	instancias[id] = new p5(p => SKETCHES[id](p, controlos), tela);
+	instancias[id].noLoop();
+}
+
 function iniciarSketches() {
 	document.querySelectorAll('section[data-sketch]').forEach(sec => {
 		const id = sec.dataset.sketch;
 		const fn = SKETCHES[id];
 		if (!fn) { console.warn('Sketch em falta:', id); return; }
-		const tela = sec.querySelector('.tela');
-		const controlos = sec.querySelector('.controlos');
-		instancias[id] = new p5(p => fn(p, controlos), tela);
-		instancias[id].noLoop();
+		criarSketch(sec);
 	});
 
 	// animação escondida ao abrir o problema (data-esconder): o aluno tenta primeiro e só depois a vê
@@ -39,7 +46,11 @@ function iniciarSketches() {
 	});
 
 	const ativar = ({ currentSlide, previousSlide }) => {
-		if (previousSlide && previousSlide.hasAttribute('data-esconder')) esconder(previousSlide, true);
+		// ao sair de um problema: animação escondida e posta no estado inicial (pedido do utilizador, 2026-11-17)
+		if (previousSlide && previousSlide.hasAttribute('data-esconder')) {
+			esconder(previousSlide, true);
+			if (previousSlide.dataset.sketch && instancias[previousSlide.dataset.sketch]) criarSketch(previousSlide);
+		}
 		const ant = previousSlide && previousSlide.dataset.sketch;
 		const atual = currentSlide && currentSlide.dataset.sketch;
 		if (ant && instancias[ant]) instancias[ant].noLoop();

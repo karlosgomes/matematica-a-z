@@ -68,7 +68,7 @@ SKETCHES['pe-p7'] = function (p, controlos) {
 		rot(l, x0 + wp, y, cor, tam, p.LEFT, p.BOLDITALIC);
 		const yy = y - tam * 0.66, a = x0 + wp, b = a + w;
 		p.stroke(...cor); p.strokeWeight(2); p.line(a, yy, b, yy);
-		p.noStroke(); p.fill(...cor); p.triangle(b + 4, yy, b - 3, yy - 4, b - 3, yy + 4);
+		p.noStroke(); p.fill(...cor); p.triangle(b + 4, yy, b - 3 - 1, yy - 5.5, b - 3, yy);
 	}
 	function seta(x1, y1, x2, y2, cor, peso = 4, alfa = 255) {
 		p.stroke(...cor, alfa); p.strokeWeight(peso); p.line(x1, y1, x2, y2);
@@ -85,7 +85,7 @@ SKETCHES['pe-p7'] = function (p, controlos) {
 			if (vec) {
 				const yy = y - tam * 0.62;
 				p.stroke(...c); p.strokeWeight(1.6); p.line(x + 1, yy, x + w - 1, yy);
-				p.noStroke(); p.triangle(x + w + 2, yy, x + w - 4, yy - 3.5, x + w - 4, yy + 3.5);
+				p.noStroke(); p.triangle(x + w + 2, yy, x + w - 4 - 1, yy - 5, x + w - 4, yy);
 			}
 			x += w;
 		}

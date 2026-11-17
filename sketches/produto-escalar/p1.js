@@ -39,7 +39,7 @@ SKETCHES['pe-p1'] = function (p, controlos) {
 	// letra com seta por cima, em HTML (para os botões)
 	function vec(l) {
 		return '<span style="display:inline-block;position:relative;font-style:italic">' + l +
-			'<span style="position:absolute;left:-0.1em;right:-0.2em;top:-0.62em;font-size:0.7em;font-style:normal;text-align:center">→</span></span>';
+			'<span style="position:absolute;left:-0.1em;right:-0.2em;top:-0.62em;font-size:0.7em;font-style:normal;text-align:center">⇀</span></span>';
 	}
 
 	// arrastar a ponta de r⃗ ou de s⃗ ao longo da sua direção (múltiplos do vetor diretor, às décimas)
@@ -80,7 +80,7 @@ SKETCHES['pe-p1'] = function (p, controlos) {
 	}
 	function setaTopo(x0, x1, yy, cor) {
 		p.stroke(...cor); p.strokeWeight(2); p.line(x0, yy, x1, yy);
-		p.noStroke(); p.fill(...cor); p.triangle(x1 + 4, yy, x1 - 3, yy - 4, x1 - 3, yy + 4);
+		p.noStroke(); p.fill(...cor); p.triangle(x1 + 4, yy, x1 - 3 - 1, yy - 5.5, x1 - 3, yy);
 	}
 	function nomeVetor(l, x, y, cor, tam = 26) {
 		rot(l, x, y, cor, tam, p.CENTER, p.BOLDITALIC);

@@ -147,7 +147,7 @@
 			const yy = y - tam * 0.86, x1 = x + w + 2;
 			p.stroke(...cor); p.strokeWeight(Math.max(1.6, tam / 13)); p.line(x - 1, yy, x1, yy);
 			p.noStroke(); p.fill(...cor);
-			p.triangle(x1 + 3, yy, x1 - 4, yy - 3.5, x1 - 4, yy + 3.5);
+			p.triangle(x1 + 3, yy, x1 - 4 - 1, yy - 5, x1 - 4, yy);
 		}
 		// ponto com nome e (opcional) coordenadas pequenas a seguir
 		function ponto(X, nome, cor, coords, dir = [1, -1], tam = 12) {

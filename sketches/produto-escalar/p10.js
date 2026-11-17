@@ -126,7 +126,7 @@
 			const yy = y - tam * 0.86, x1 = x + w + 2;
 			p.stroke(...cor, alfa); p.strokeWeight(Math.max(1.5, tam / 13)); p.line(x - 1, yy, x1, yy);
 			p.noStroke(); p.fill(...cor, alfa);
-			p.triangle(x1 + 3, yy, x1 - 4, yy - 3.5, x1 - 4, yy + 3.5);
+			p.triangle(x1 + 3, yy, x1 - 4 - 1, yy - 5, x1 - 4, yy);
 		}
 		// nome de vetor (letra com seta por cima) centrado em (x, y)
 		function rotVet(t, x, y, cor, tam = 26, alfa = 255) {

@@ -71,7 +71,7 @@ SKETCHES['pe-p3'] = function (p, controlos) {
 			if (vec) {
 				const yy = y - tam * 0.62;
 				p.stroke(...c); p.strokeWeight(1.6); p.line(x + 1, yy, x + w - 1, yy);
-				p.noStroke(); p.triangle(x + w + 2, yy, x + w - 4, yy - 3.5, x + w - 4, yy + 3.5);
+				p.noStroke(); p.triangle(x + w + 2, yy, x + w - 4 - 1, yy - 5, x + w - 4, yy);
 			}
 			x += w;
 		}
@@ -161,11 +161,11 @@ SKETCHES['pe-p3'] = function (p, controlos) {
 		if (sol) {
 			p.noStroke(); p.fill(255, 240); p.stroke(226, 232, 240); p.strokeWeight(1.5); p.rect(14, H - 212, W - 28, 200, 10);
 			let y = H - 192;
-			linha([['dados  ', COR.cinza, p.BOLD], ['raio 2 e o centro a 2 de cada base: centro sempre em y = 2;  ', null], V('AD'), [' = (3, 4)', null]], 28, y); y += 31;
-			linha([['3.1  ', COR.cinza, p.BOLD], V('n', COR.n), [' · ', null], V('AD'), [' = (4, −3) · (3, 4) = 12 − 12 = 0', null]], 28, y); y += 31;
-			linha([['3.2  ', COR.cinza, p.BOLD], ['o raio ', null], V('TP', COR.n), [' é ⊥ ao lado [AD], com ‖', null], V('TP', COR.n), ['‖ = 2 e ‖', null], V('n', COR.n), ['‖ = 5  ⇒  ', null], V('TP', COR.n), [' = (2/5)', null], V('n', COR.n)], 28, y); y += 31;
-			linha([['3.3  ', COR.cinza, p.BOLD], ['T = (3k, 4k),  P = T + (8/5, −6/5);  4k − 6/5 = 2 ⇒ k = 4/5:  ', null], ['T(12/5, 16/5),  P(4, 2)', COR.pq, p.BOLD]], 28, y); y += 31;
-			linha([['3.4  ', COR.cinza, p.BOLD], ['por simetria (reta x = 9):  ', null], ['Q(14, 2)', COR.pq, p.BOLD], ['   ⇒   ', null], ['PQ = 14 − 4 = 10', COR.pq, p.BOLD]], 28, y);
+			linha([['1  ', COR.cinza, p.BOLD], ['A(0, 0), B(18, 0); altura √(5² − 3²) = 4 ⇒ D(3, 4), C(15, 4); raio 2 ⇒ centro em y = 2', null]], 28, y); y += 31;
+			linha([['2  ', COR.cinza, p.BOLD], V('AD'), [' = (3, 4);  ', null], V('n', COR.n), [' = (4, −3) ⊥ ', null], V('AD'), [' porque (4, −3) · (3, 4) = 12 − 12 = 0', null]], 28, y); y += 31;
+			linha([['3  ', COR.cinza, p.BOLD], ['T: ponto de contacto com [AD]; o raio ', null], V('TP', COR.n), [' é ⊥ a [AD], com ‖', null], V('TP', COR.n), ['‖ = 2 e ‖', null], V('n', COR.n), ['‖ = 5  ⇒  ', null], V('TP', COR.n), [' = (2/5)', null], V('n', COR.n)], 28, y); y += 31;
+			linha([['4  ', COR.cinza, p.BOLD], ['T = A + k', null], V('AD'), [' = (3k, 4k),  P = T + (8/5, −6/5);  4k − 6/5 = 2 ⇒ k = 4/5:  ', null], ['T(12/5, 16/5),  P(4, 2)', COR.pq, p.BOLD]], 28, y); y += 31;
+			linha([['5  ', COR.cinza, p.BOLD], ['por simetria (reta x = 9):  ', null], ['Q(14, 2)', COR.pq, p.BOLD], ['   ⇒   ', null], ['PQ = 14 − 4 = 10', COR.pq, p.BOLD]], 28, y);
 		}
 	};
 };

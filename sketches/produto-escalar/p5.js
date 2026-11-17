@@ -80,7 +80,7 @@ SKETCHES['pe-p5'] = function (p, controlos) {
 		rot(l, x, y, cor, tam, p.CENTER, p.BOLDITALIC);
 		const w = p.textWidth(l), yy = y - tam * 0.66;
 		p.stroke(...cor); p.strokeWeight(2); p.line(x - w * 0.5, yy, x + w * 0.5, yy);
-		p.noStroke(); p.fill(...cor); p.triangle(x + w * 0.5 + 4, yy, x + w * 0.5 - 3, yy - 4, x + w * 0.5 - 3, yy + 4);
+		p.noStroke(); p.fill(...cor); p.triangle(x + w * 0.5 + 4, yy, x + w * 0.5 - 3 - 1, yy - 5.5, x + w * 0.5 - 3, yy);
 	}
 	function seta(x1, y1, x2, y2, cor, peso = 4, alfa = 255) {
 		p.stroke(...cor, alfa); p.strokeWeight(peso); p.line(x1, y1, x2, y2);
@@ -98,7 +98,7 @@ SKETCHES['pe-p5'] = function (p, controlos) {
 			if (vec) {
 				const yy = y - tam * 0.62;
 				p.stroke(...c); p.strokeWeight(1.6); p.line(x + 1, yy, x + w - 1, yy);
-				p.noStroke(); p.triangle(x + w + 2, yy, x + w - 4, yy - 3.5, x + w - 4, yy + 3.5);
+				p.noStroke(); p.triangle(x + w + 2, yy, x + w - 4 - 1, yy - 5, x + w - 4, yy);
 			}
 			x += w;
 		}

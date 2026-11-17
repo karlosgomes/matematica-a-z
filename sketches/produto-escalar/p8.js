@@ -60,7 +60,7 @@ SKETCHES['pe-p8'] = function (p, controlos) {
 	}
 	function setaTopo(x0, x1, yy, cor, peso = 2) {
 		p.stroke(...cor); p.strokeWeight(peso); p.line(x0, yy, x1, yy);
-		p.noStroke(); p.fill(...cor); p.triangle(x1 + 3, yy, x1 - 3, yy - 3.5, x1 - 3, yy + 3.5);
+		p.noStroke(); p.fill(...cor); p.triangle(x1 + 3, yy, x1 - 3 - 1, yy - 5, x1 - 3, yy);
 	}
 	function nomeVetor(l, x, y, cor, tam = 24) {
 		rot(l, x, y, cor, tam, p.CENTER, p.BOLDITALIC);
