@@ -23,7 +23,20 @@ function iniciarSketches() {
 		instancias[id].noLoop();
 	});
 
+	// animação escondida ao abrir o problema (data-esconder): o aluno tenta primeiro e só depois a vê
+	// (pedido do utilizador, 2026-11-17, problemas do Produto escalar); volta a esconder-se ao sair do slide
+	document.querySelectorAll('section[data-esconder] .animacao').forEach(an => {
+		const capa = document.createElement('div');
+		capa.className = 'capa-anim';
+		capa.innerHTML = '<p>Tenta resolver primeiro!</p><button type="button">Mostrar a animação</button>';
+		capa.querySelector('button').addEventListener('click', e => { e.stopPropagation(); an.classList.remove('oculta'); });
+		an.appendChild(capa);
+		an.classList.add('oculta');
+	});
+
 	const ativar = ({ currentSlide, previousSlide }) => {
+		if (previousSlide && previousSlide.hasAttribute('data-esconder'))
+			previousSlide.querySelector('.animacao').classList.add('oculta');
 		const ant = previousSlide && previousSlide.dataset.sketch;
 		const atual = currentSlide && currentSlide.dataset.sketch;
 		if (ant && instancias[ant]) instancias[ant].noLoop();

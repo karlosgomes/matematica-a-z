@@ -1,51 +1,57 @@
 /* =====================================================================
-   Produto escalar · Problema 1 — reta perpendicular a um vetor
-   r passa em Q(4, 1) e é perpendicular a n = (1, 2). O aluno arrasta um
-   ponto X pelo plano e vê n · QX = (x − 4) + 2(y − 1) na cor do sinal;
-   o rasto (verde / vermelho, laranja onde dá 0) deixa ver a reta.
-   Solução: x + 2y − 6 = 0, (6, 0) e (0, 3), a + b = 9.
+   Produto escalar · Problema 1 — ângulo de duas retas
+   r: (x, y) = (−1, 3) + k(2, 1) e s: y = 3x − 1 (vetor diretor (1, 3)).
+   Os vetores diretores partem do ponto de interseção I(1,8 ; 4,4); as pontas
+   arrastam-se ao longo da reta (outros vetores diretores), «−s» troca o sentido
+   e «r, s → O» desliza-os para a origem. β = ângulo dos vetores, θ = das retas.
+   Solução: cos θ = |r·s| / (‖r‖‖s‖) = 5 / (√5 √10) = √2/2 → (D), θ = 45°.
    ===================================================================== */
 SKETCHES['pe-p1'] = function (p, controlos) {
 	const W = 920, H = 600;
-	const O = { x: 250, y: 410 }, K = 50;            // origem e escala (px por unidade)
+	const O = { x: 320, y: 390 }, K = 46;
 	const COR = {
 		eixo: [100, 116, 139], grelha: [226, 232, 240], u: [21, 101, 192], v: [123, 31, 162],
 		pos: [46, 125, 50], zero: [239, 108, 0], neg: [211, 47, 47], texto: [30, 41, 59],
-		r: [230, 81, 0], cinza: [100, 116, 139]
+		r: [230, 81, 0], s: [123, 31, 162], cinza: [100, 116, 139]
 	};
-	const Q = { x: 4, y: 1 }, N = { x: 1, y: 2 };
-	const XMIN = -4.8, XMAX = 13.2, YMIN = -3.6, YMAX = 8;
-	const s = { x: 7, y: 4 };                          // ponto X (arrasta-se)
-	let rasto = new Map(), agarrado = false, cxSol;
+	const R0 = { x: -1, y: 3 }, DR = { x: 2, y: 1 }, DS = { x: 1, y: 3 };
+	const I = { x: 1.8, y: 4.4 };                    // −1 + 2k = x, 3 + k = 3x − 1 ⇒ k = 1,4
+	const XMIN = -6.8, XMAX = 12.9, YMIN = -4.4, YMAX = 8.4;
+	const st = { mu: 1, lam: 1, e: 0, alvo: 0 };     // r⃗ = μ(2, 1), s⃗ = λ(1, 3); e: 0 em I, 1 em O
+	let agarrado = null, cxSol, btO;
 
 	const X = x => O.x + x * K, Y = y => O.y - y * K;
-	const prod = (x, y) => N.x * (x - Q.x) + N.y * (y - Q.y);
 	const corSinal = d => Math.abs(d) < 1e-9 ? COR.zero : d > 0 ? COR.pos : COR.neg;
+	const suave = t => t * t * (3 - 2 * t);
+	const base = () => { const t = suave(st.e); return { x: I.x * (1 - t), y: I.y * (1 - t) }; };
 
 	p.setup = function () {
 		arrastar(p.createCanvas(W, H).elt);
 		p.textFont('Source Sans Pro');
-		p.createSpan('Arrasta o ponto X ·').parent(controlos).addClass('dica-arrastar');
-		UT.botao(p, controlos, 'Limpar o rasto', () => { rasto = new Map(); }, 'atalho');
+		p.createSpan('Arrasta as pontas dos vetores ·').parent(controlos).addClass('dica-arrastar');
+		btO = UT.botao(p, controlos, vec('r') + ', ' + vec('s') + ' → O', () => { st.alvo = st.alvo ? 0 : 1; btO.html(vec('r') + ', ' + vec('s') + (st.alvo ? ' → I' : ' → O')); });
+		UT.botao(p, controlos, '−' + vec('s'), () => { st.lam = -st.lam; }, 'atalho');
+		UT.botao(p, controlos, 'Início', () => { st.mu = 1; st.lam = 1; st.alvo = 0; btO.html(vec('r') + ', ' + vec('s') + ' → O'); }, 'atalho');
 		UT.quebra(p, controlos);
 		cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
-		marcar();
 	};
 
-	function marcar() {
-		const k = Math.round(s.x * 10) + ',' + Math.round(s.y * 10);
-		if (!rasto.has(k)) rasto.set(k, { x: s.x, y: s.y, d: prod(s.x, s.y) });
-		if (rasto.size > 4000) rasto.delete(rasto.keys().next().value);
+	// letra com seta por cima, em HTML (para os botões)
+	function vec(l) {
+		return '<span style="display:inline-block;position:relative;font-style:italic">' + l +
+			'<span style="position:absolute;left:-0.1em;right:-0.2em;top:-0.62em;font-size:0.7em;font-style:normal;text-align:center">→</span></span>';
 	}
 
-	// íman: inteiros (perto) ou décimas
-	const iman = v => Math.abs(v - Math.round(v)) < 0.12 ? Math.round(v) : Math.round(v * 10) / 10;
-
-	// arrastar X (ponteiro convertido com o retângulo do canvas, que o Reveal escala)
+	// arrastar a ponta de r⃗ ou de s⃗ ao longo da sua direção (múltiplos do vetor diretor, às décimas)
 	function arrastar(cv) {
 		cv.style.touchAction = 'none';
 		const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
-		const perto = (x, y) => Math.hypot(X(s.x) - x, Y(s.y) - y) < 30;
+		const ponta = id => { const B = base(), D = id === 'r' ? DR : DS, t = id === 'r' ? st.mu : st.lam; return [X(B.x + t * D.x), Y(B.y + t * D.y)]; };
+		const perto = (x, y) => {
+			let best = null, bd = 30;
+			for (const id of ['s', 'r']) { const [px, py] = ponta(id), d = Math.hypot(px - x, py - y); if (d < bd) { bd = d; best = id; } }
+			return best;
+		};
 		cv.addEventListener('pointerdown', e => {
 			const [x, y] = pos(e); agarrado = perto(x, y);
 			if (agarrado) { cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing'; e.stopPropagation(); e.preventDefault(); }
@@ -53,11 +59,15 @@ SKETCHES['pe-p1'] = function (p, controlos) {
 		cv.addEventListener('pointermove', e => {
 			const [x, y] = pos(e);
 			if (!agarrado) { cv.style.cursor = perto(x, y) ? 'grab' : 'default'; return; }
-			s.x = p.constrain(iman((x - O.x) / K), -4.5, 12.5);
-			s.y = p.constrain(iman((O.y - y) / K), -3.4, 7.6);
-			marcar();
+			const B = base(), D = agarrado === 'r' ? DR : DS, max = agarrado === 'r' ? 2.5 : 1.1;
+			const ux = (x - O.x) / K - B.x, uy = (O.y - y) / K - B.y;
+			let t = (ux * D.x + uy * D.y) / (D.x * D.x + D.y * D.y);
+			t = Math.abs(t - Math.round(t)) < 0.1 ? Math.round(t) : Math.round(t * 10) / 10;
+			if (Math.abs(t) < 0.3) t = t < 0 ? -0.3 : 0.3;
+			t = p.constrain(t, -max, max);
+			if (agarrado === 'r') st.mu = t; else st.lam = t;
 		});
-		const fim = () => { agarrado = false; cv.style.cursor = 'default'; };
+		const fim = () => { agarrado = null; cv.style.cursor = 'default'; };
 		cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim);
 		['touchstart', 'touchmove', 'mousedown'].forEach(t => cv.addEventListener(t, e => { if (agarrado || t !== 'mousedown') e.stopPropagation(); }, { passive: true }));
 	}
@@ -83,8 +93,7 @@ SKETCHES['pe-p1'] = function (p, controlos) {
 		p.push(); p.translate(x2, y2); p.rotate(a);
 		p.noStroke(); p.fill(...cor); p.triangle(0, 0, -18, -7, -18, 7); p.pop();
 	}
-	// texto às peças: [texto, cor, estilo, 'v' = com seta de vetor]
-	function linha(pecas, x, y, tam = 23) {
+	function linha(pecas, x, y, tam = 22) {
 		p.textSize(tam); p.textAlign(p.LEFT, p.CENTER); p.noStroke();
 		for (const [t, cor, est, vec] of pecas) {
 			p.textStyle(est || p.NORMAL); p.fill(...(cor || COR.texto)); p.noStroke(); p.text(t, x, y);
@@ -94,12 +103,10 @@ SKETCHES['pe-p1'] = function (p, controlos) {
 		}
 		return x;
 	}
-	const num = v => (v < 0 ? '−' : '') + UT.fmt(Math.abs(v), Math.abs(v - Math.round(v)) < 1e-9 ? 0 : 1);
-	const par = v => v < 0 ? '(' + num(v) + ')' : num(v);
-	const ponto = (x, y) => {
-		const inteiros = Math.abs(x - Math.round(x)) < 1e-9 && Math.abs(y - Math.round(y)) < 1e-9;
-		return '(' + num(x) + (inteiros ? ', ' : ' ; ') + num(y) + ')';
-	};
+	const inteiro = v => Math.abs(v - Math.round(v)) < 1e-9;
+	const num = v => (v < -1e-9 ? '−' : '') + UT.fmt(Math.abs(v), inteiro(v) ? 0 : inteiro(v * 10) ? 1 : 2);
+	const par = v => v < -1e-9 ? '(' + num(v) + ')' : num(v);
+	const vetor = (x, y) => '(' + num(x) + (inteiro(x) && inteiro(y) ? ', ' : ' ; ') + num(y) + ')';
 	function bola(x, y, cor, d = 12) { p.stroke(255); p.strokeWeight(2); p.fill(...cor); p.circle(X(x), Y(y), d); }
 
 	function grelha() {
@@ -116,82 +123,86 @@ SKETCHES['pe-p1'] = function (p, controlos) {
 		rot('x', X(XMAX) - 10, O.y - 16, COR.eixo, 18, p.CENTER, p.ITALIC);
 		rot('y', O.x + 14, Y(YMAX) + 12, COR.eixo, 18, p.CENTER, p.ITALIC);
 	}
+	// reta pelo ponto P com direção D, cortada à janela
+	function reta(P, D, cor, alfa) {
+		const ts = [];
+		if (D.x) ts.push((XMIN - P.x) / D.x, (XMAX - P.x) / D.x);
+		if (D.y) ts.push((YMIN - P.y) / D.y, (YMAX - P.y) / D.y);
+		ts.sort((a, b) => a - b);
+		const a = ts[1], b = ts[2];                          // o troço dentro do retângulo
+		p.stroke(...cor, alfa); p.strokeWeight(3);
+		p.line(X(P.x + a * D.x), Y(P.y + a * D.y), X(P.x + b * D.x), Y(P.y + b * D.y));
+	}
+	// arco de ângulo no ponto C (px) entre as direções a0 e a1 (rad, sentido matemático)
+	function arco(cx, cy, a0, a1, r, cor, alfa = 50) {
+		let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+		const ini = da >= 0 ? a0 : a1;
+		p.fill(...cor, alfa); p.stroke(...cor); p.strokeWeight(2);
+		p.arc(cx, cy, 2 * r, 2 * r, -(ini + Math.abs(da)), -ini, p.PIE);
+		return ini + Math.abs(da) / 2;                       // direção do meio
+	}
 
 	p.draw = function () {
 		const sol = cxSol.checked();
-		const d = prod(s.x, s.y), cs = corSinal(d);
+		// animação do deslize
+		const passo = p.deltaTime / 1000 / 1.2;
+		if (st.e < st.alvo) st.e = Math.min(st.alvo, st.e + passo); else if (st.e > st.alvo) st.e = Math.max(st.alvo, st.e - passo);
+		const B = base(), t = suave(st.e);
+		const r = { x: st.mu * DR.x, y: st.mu * DR.y }, s = { x: st.lam * DS.x, y: st.lam * DS.y };
+		const d = r.x * s.x + r.y * s.y, cs = corSinal(d);
 		p.background(255);
 		grelha();
 
-		// rasto: pontinhos na cor do sinal; os de produto nulo maiores
-		p.noStroke();
-		for (const r of rasto.values()) {
-			if (Math.abs(r.d) < 1e-9) continue;
-			p.fill(...corSinal(r.d), 90); p.circle(X(r.x), Y(r.y), 6);
-		}
-		for (const r of rasto.values()) if (Math.abs(r.d) < 1e-9) { p.fill(...COR.zero); p.circle(X(r.x), Y(r.y), 11); }
+		// as retas (esbatem-se quando os vetores vão para a origem)
+		const alfa = 255 - 150 * t;
+		reta(R0, DR, COR.r, alfa); reta(I, DS, COR.s, alfa * 0.75);
+		rot('r', X(9.6), Y(R0.y + (9.6 - R0.x) / 2) + 24, COR.r, 26, p.CENTER, p.BOLDITALIC);
+		rot('s', X(7.3 / 3) - 22, Y(6.3), COR.s, 26, p.CENTER, p.BOLDITALIC);
+		bola(R0.x, R0.y, COR.cinza, 9);
+		rot('(−1, 3)', X(R0.x) - 8, Y(R0.y) - 18, COR.cinza, 16, p.RIGHT, p.NORMAL);
 
-		// solução: a reta r e os pontos dos eixos
+		// solução: θ, o ângulo (agudo) das retas, em I
 		if (sol) {
-			p.stroke(...COR.r); p.strokeWeight(3.5);
-			p.line(X(XMIN), Y((6 - XMIN) / 2), X(XMAX), Y((6 - XMAX) / 2));
-			rot('r', X(10.4), Y(-2.2) + 22, COR.r, 26, p.CENTER, p.BOLDITALIC);
-			bola(6, 0, COR.r, 14); bola(0, 3, COR.r, 14);
-			rot('(6, 0)', X(6) + 10, Y(0) - 18, COR.r, 19, p.LEFT, p.BOLD);
-			rot('(0, 3)', X(0) + 12, Y(3) - 20, COR.r, 19, p.LEFT, p.BOLD);
+			const am = arco(X(I.x), Y(I.y), Math.atan2(DR.y, DR.x) + Math.PI, Math.atan2(DS.y, DS.x) + Math.PI, 46, COR.texto, 40);
+			rot('θ = 45°', X(I.x) + 100 * Math.cos(am), Y(I.y) - 100 * Math.sin(am), COR.texto, 20, p.CENTER, p.BOLD);
 		}
 
-		// ângulo entre n e QX, em Q
-		const qx = s.x - Q.x, qy = s.y - Q.y, nq = Math.hypot(qx, qy);
-		if (nq > 1e-9) {
-			const a0 = Math.atan2(N.y, N.x), a1 = Math.atan2(qy, qx);
-			if (Math.abs(d) < 1e-9) {
-				const q = 18, P1 = [X(Q.x) + q * Math.cos(a0), Y(Q.y) - q * Math.sin(a0)], P2 = [X(Q.x) + q * Math.cos(a1), Y(Q.y) - q * Math.sin(a1)];
-				p.noFill(); p.stroke(...cs); p.strokeWeight(2.5);
-				p.beginShape(); p.vertex(...P1); p.vertex(P1[0] + P2[0] - X(Q.x), P1[1] + P2[1] - Y(Q.y)); p.vertex(...P2); p.endShape();
-			} else {
-				let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
-				const ini = da >= 0 ? a0 : a1, r = Math.min(40, 0.45 * K * Math.min(nq, Math.hypot(N.x, N.y)) + 12);
-				if (Math.abs(da) > 1e-6) { p.fill(...cs, 50); p.stroke(...cs); p.strokeWeight(2); p.arc(X(Q.x), Y(Q.y), 2 * r, 2 * r, -(ini + Math.abs(da)), -ini, p.PIE); }
-			}
+		// ponto de interseção
+		bola(I.x, I.y, COR.texto, 11);
+		rot('I', X(I.x) - 16, Y(I.y) - 6, COR.texto, 21, p.RIGHT, p.BOLDITALIC);
+		rot('(1,8 ; 4,4)', X(I.x) - 30, Y(I.y) - 6, COR.texto, 16, p.RIGHT, p.NORMAL);
+
+		// β: ângulo dos vetores, na base (cor do sinal)
+		const bx = X(B.x), by = Y(B.y);
+		const aR = Math.atan2(r.y, r.x), aS = Math.atan2(s.y, s.x);
+		const am = arco(bx, by, aR, aS, 32, cs);
+		rot('β', bx + 52 * Math.cos(am), by - 52 * Math.sin(am), cs, 22, p.CENTER, p.BOLDITALIC);
+
+		// vetores diretores
+		const vec = (v, cor, l, ox, oy) => {
+			seta(bx, by, X(B.x + v.x), Y(B.y + v.y), cor);
+			const n = Math.hypot(v.x, v.y), lx = X(B.x + v.x) + v.x / n * 22 + ox, ly = p.constrain(Y(B.y + v.y) - v.y / n * 22 + oy, 44, H - 16);
+			nomeVetor(l, lx, ly, cor);
+			rot(vetor(v.x, v.y), lx + 14, ly + 3, cor, 17, p.LEFT, p.NORMAL);
+		};
+		vec(r, COR.u, 'r', 0, 6); vec(s, COR.v, 's', 0, 4);
+		for (const [v, cor] of [[r, COR.u], [s, COR.v]]) {   // pegas
+			p.noFill(); p.stroke(...cor, 90); p.strokeWeight(2); p.circle(X(B.x + v.x), Y(B.y + v.y), 24);
 		}
 
-		// vetores n (a partir de Q) e QX; os nomes ficam de lados opostos
-		let sx = 1;                                        // lado (em ecrã) do nome de QX
-		if (nq > 1e-9) sx = (qy * N.x - qx * N.y) > 0 ? 1 : -1;   // sinal do produto vetorial
-		const nn = Math.hypot(N.x, N.y), pnx = sx * N.y / nn, pny = sx * N.x / nn;   // perpendicular a n, longe de QX
-		seta(X(Q.x), Y(Q.y), X(Q.x + N.x), Y(Q.y + N.y), COR.u);
-		const lnx = X(Q.x + N.x / 2) + pnx * 24, lny = Y(Q.y + N.y / 2) + pny * 24 + 4;
-		nomeVetor('n', lnx, lny, COR.u);
-		rot('(1, 2)', lnx + (pnx < 0 ? -12 : 12), lny + 22, COR.u, 17, pnx < 0 ? p.RIGHT : p.LEFT, p.NORMAL);
-		if (nq > 1e-9) {
-			seta(X(Q.x), Y(Q.y), X(s.x), Y(s.y), COR.v, 3.5);
-			const mx = (X(Q.x) + X(s.x)) / 2, my = (Y(Q.y) + Y(s.y)) / 2;
-			const ox = -sx * qy / nq, oy = -sx * qx / nq;    // perpendicular a QX, do lado contrário a n
-			nomeVetor('QX', mx + ox * 26, my + oy * 26 + 4, COR.v, 22);
-		}
-		bola(Q.x, Q.y, COR.texto, 12);
-		rot('Q(4, 1)', X(Q.x) + 4, Y(Q.y) + 22, COR.texto, 19, p.LEFT, p.BOLD);
-
-		// X (pega)
-		p.noFill(); p.stroke(...cs, 120); p.strokeWeight(2); p.circle(X(s.x), Y(s.y), 26);
-		bola(s.x, s.y, cs, 14);
-		const dir = qx >= -0.3 ? 1 : -1;
-		rot('X', X(s.x) + dir * 16, Y(s.y) - 16, cs, 22, dir > 0 ? p.LEFT : p.RIGHT, p.BOLDITALIC);
-		const wX = p.textWidth('X');
-		rot(ponto(s.x, s.y), X(s.x) + dir * (22 + wX), Y(s.y) - 14, cs, 17, dir > 0 ? p.LEFT : p.RIGHT, p.NORMAL);
-
-		// contas, em cima à esquerda
-		p.noStroke(); p.fill(255, 235); p.rect(12, 10, 476, sol ? 172 : 96, 10);
-		linha([['QX', COR.v, p.BOLDITALIC, 'v'], [' = (x − 4, y − 1) = ' + ponto(qx, qy), COR.v]], 26, 36);
-		linha([['n', COR.u, p.BOLDITALIC, 'v'], [' · '], ['QX', COR.v, p.BOLDITALIC, 'v'], [' = 1 × ' + par(qx) + ' + 2 × ' + par(qy) + ' = '],
-			[num(d), cs, p.BOLD]], 26, 76);
+		// contas, em baixo à direita
+		const x0 = 490, h = sol ? 214 : (d < 0 ? 122 : 86), y0 = H - 10 - h;
+		p.noStroke(); p.fill(255, 225); p.rect(x0, y0, W - x0 - 10, h, 10);
+		let y = y0 + 26;
+		linha([['r', COR.u, p.BOLDITALIC, 'v'], [' = ' + vetor(r.x, r.y) + '     ', COR.u], ['s', COR.v, p.BOLDITALIC, 'v'], [' = ' + vetor(s.x, s.y), COR.v]], x0 + 14, y); y += 36;
+		linha([['r', COR.u, p.BOLDITALIC, 'v'], [' · '], ['s', COR.v, p.BOLDITALIC, 'v'], [' = ' + par(r.x) + ' × ' + par(s.x) + ' + ' + par(r.y) + ' × ' + par(s.y) + ' = '],
+			[num(d), cs, p.BOLD]], x0 + 14, y); y += 36;
+		if (d < 0) { linha([['β obtuso  →  θ = 180° − β', COR.neg]], x0 + 14, y); y += 36; }
 		if (sol) {
-			linha([['n', COR.u, p.BOLDITALIC, 'v'], [' · '], ['QX', COR.v, p.BOLDITALIC, 'v'], [' = 0  ⇔  x + 2y − 6 = 0', COR.r, p.BOLD]], 26, 116);
-			linha([['y = 0 → a = 6,   x = 0 → b = 3,   '], ['a + b = 9', COR.r, p.BOLD]], 26, 154);
+			const xa = linha([['cos θ = |'], ['r', COR.u, p.BOLDITALIC, 'v'], [' · '], ['s', COR.v, p.BOLDITALIC, 'v'], ['| / (‖'],
+				['r', COR.u, p.BOLDITALIC, 'v'], ['‖ ‖'], ['s', COR.v, p.BOLDITALIC, 'v'], ['‖)']], x0 + 14, y); y += 36;
+			linha([['= |2 + 3| / (√5 × √10) = 5 / √50']], x0 + 50, y); y += 36;
+			linha([['= √2 / 2   → '], ['(D)', COR.texto, p.BOLD], ['     θ = 45°']], x0 + 50, y);
 		}
-		// sinal
-		const txt = d > 0 ? 'n · QX > 0' : d < 0 ? 'n · QX < 0' : nq > 1e-9 ? 'n · QX = 0 : X está na reta r' : 'X = Q';
-		rot(txt, 20, H - 24, cs, 22, p.LEFT, p.BOLD);
 	};
 };

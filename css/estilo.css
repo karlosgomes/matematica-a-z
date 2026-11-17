@@ -94,6 +94,16 @@
 
 .animacao { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .animacao .tela canvas { border: 1px solid #cbd5e1; border-radius: 8px; display: block; }
+/* animação escondida até o aluno pedir (section[data-esconder]; js/main.js) */
+.animacao { position: relative; }
+.animacao .capa-anim { display: none; }
+.animacao.oculta > .tela, .animacao.oculta > .controlos { visibility: hidden; }
+.animacao.oculta .capa-anim { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+	position: absolute; inset: 0; border: 3px dashed #cbd5e1; border-radius: 12px; background: #f8fafc; }
+.animacao .capa-anim p { margin: 0; font-size: 0.8em; color: #64748b; }
+.animacao .capa-anim button { font: inherit; font-size: 0.75em; padding: 10px 26px; border-radius: 10px; cursor: pointer;
+	border: 2px solid #1d4ed8; background: #1d4ed8; color: #fff; font-weight: 600; }
+.animacao .capa-anim button:hover { background: #1e40af; }
 
 /* ---------- controlos p5 ---------- */
 .controlos {
