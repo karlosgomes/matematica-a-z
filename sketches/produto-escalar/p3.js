@@ -28,8 +28,8 @@ SKETCHES['pe-p3'] = function (p, controlos) {
 		arrastar(p.createCanvas(W, H).elt);
 		p.textFont('Source Sans Pro');
 		p.createSpan('Arrasta o vetor BC ·').parent(controlos).addClass('dica-arrastar');
-		UT.botao(p, controlos, 'Soma (4.1)', () => ir(P.E), 'atalho');
-		UT.botao(p, controlos, 'Ângulo (4.2)', () => ir(P.A), 'atalho');
+		UT.botao(p, controlos, 'Soma (3.1)', () => ir(P.E), 'atalho');
+		UT.botao(p, controlos, 'Ângulo (3.2)', () => ir(P.A), 'atalho');
 		UT.botao(p, controlos, 'Início', () => ir(P.B), 'atalho');
 		UT.quebra(p, controlos);
 		cxGrelha = UT.caixa(p, controlos, 'Quadrícula de triângulos', false);

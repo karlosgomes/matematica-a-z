@@ -104,6 +104,10 @@
 .animacao .capa-anim button { font: inherit; font-size: 0.75em; padding: 10px 26px; border-radius: 10px; cursor: pointer;
 	border: 2px solid #1d4ed8; background: #1d4ed8; color: #fff; font-weight: 600; }
 .animacao .capa-anim button:hover { background: #1e40af; }
+.animacao .esconder-anim { position: absolute; top: -40px; right: 130px; z-index: 2; font: inherit; font-size: 0.5em; padding: 4px 12px;
+	border-radius: 8px; border: 1.5px solid #94a3b8; background: rgba(255, 255, 255, 0.9); color: #475569; cursor: pointer; }
+.animacao .esconder-anim:hover { border-color: #1d4ed8; color: #1d4ed8; }
+.animacao.oculta .esconder-anim { display: none; }
 
 /* ---------- controlos p5 ---------- */
 .controlos {

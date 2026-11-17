@@ -31,6 +31,11 @@ function iniciarSketches() {
 		capa.innerHTML = '<p>Tenta resolver primeiro!</p><button type="button">Mostrar a animação</button>';
 		capa.querySelector('button').addEventListener('click', e => { e.stopPropagation(); an.classList.remove('oculta'); });
 		an.appendChild(capa);
+		// botão para voltar a esconder (canto superior direito da animação)
+		const esc = document.createElement('button');
+		esc.type = 'button'; esc.className = 'esconder-anim'; esc.textContent = 'Esconder a animação';
+		esc.addEventListener('click', e => { e.stopPropagation(); an.classList.add('oculta'); });
+		an.appendChild(esc);
 		an.classList.add('oculta');
 	});
 
