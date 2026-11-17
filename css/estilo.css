@@ -163,6 +163,8 @@
 .enunciado p.opcoes b { color: #475569; margin-right: 8px; }
 .compacto .enunciado { font-size: 0.78em; }
 .compacto .enunciado p { margin-bottom: 14px; }
+.mais-compacto .enunciado { font-size: 0.72em; }
+.mais-compacto .enunciado p { margin-bottom: 10px; }
 .enunciado table.produtos { border-collapse: collapse; margin: 0 auto 18px; font-size: 0.9em; }
 .enunciado table.produtos th, .enunciado table.produtos td { border: 1px solid #cbd5e1; padding: 4px 16px; text-align: center; }
 .enunciado table.produtos th { background: #f1f5f9; }

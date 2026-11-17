@@ -721,13 +721,14 @@
 						<ol class="duas-colunas">
 							<li><a href="#/pe-p1">Ângulo de duas retas</a></li>
 							<li><a href="#/pe-p2">Ângulo das diagonais de um trapézio</a></li>
-							<li><a href="#/pe-p3">Projeção de um ponto numa reta</a></li>
-							<li><a href="#/pe-p4">Hexágono regular</a></li>
-							<li><a href="#/pe-p5">Trapézio isósceles</a></li>
-							<li><a href="#/pe-p6">Quatro pontos numa circunferência</a></li>
-							<li><a href="#/pe-p7">Desafio: um ponto no interior de um triângulo</a></li>
-							<li><a href="#/pe-p8">Reta no espaço e o plano $xOy$</a></li>
-							<li><a href="#/pe-p9">Tabela de produtos escalares</a></li>
+							<li><a href="#/pe-p3">A roda dentro do trapézio</a></li>
+							<li><a href="#/pe-p4">Projeção de um ponto numa reta</a></li>
+							<li><a href="#/pe-p5">Hexágono regular</a></li>
+							<li><a href="#/pe-p6">Trapézio isósceles</a></li>
+							<li><a href="#/pe-p7">Quatro pontos numa circunferência</a></li>
+							<li><a href="#/pe-p8">Desafio: um ponto no interior de um triângulo</a></li>
+							<li><a href="#/pe-p9">Reta no espaço e o plano $xOy$</a></li>
+							<li><a href="#/pe-p10">Tabela de produtos escalares</a></li>
 						</ol>
 						<p class="dica">Problemas adaptados de exames.</p>
 					</div>
@@ -781,9 +782,45 @@
 						</div>
 					</div>
 				</section>
-				<section id="pe-p3" class="sans" data-esconder data-sketch="pe-p3">
+				<section id="pe-p3" class="sans compacto mais-compacto" data-esconder data-sketch="pe-p3">
 					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
-					<h4>Problema 3 — Projeção de um ponto numa reta</h4>
+					<h4>Problema 3 — A roda dentro do trapézio</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Na figura está representado o trapézio isósceles $[ABCD]$, de bases $[AB]$ e $[DC]$. Dentro dele rola uma roda que toca sempre nas duas bases. $P$ e $Q$ são as posições do centro da roda quando ela toca no lado $[AD]$ e no lado $[BC]$, respetivamente.</p>
+							<svg class="fig-enunciado" viewBox="-22 -22 352 120" width="380" aria-label="Trapézio isósceles com uma roda e o segmento PQ">
+								<g fill="none" stroke="#1e293b" stroke-width="1.8" stroke-linejoin="round">
+									<path d="M0,68 L306,68 L255,0 L51,0 Z"/>
+									<circle cx="187" cy="34" r="34" stroke="#1565c0"/>
+									<path d="M68,34 L238,34" stroke="#d32f2f" stroke-width="1.6"/>
+								</g>
+								<g fill="#d32f2f"><circle cx="68" cy="34" r="3"/><circle cx="238" cy="34" r="3"/></g>
+								<circle cx="187" cy="34" r="2.2" fill="#1565c0"/>
+								<g font-family="Source Sans Pro, sans-serif" font-size="14" fill="#1e293b" text-anchor="middle">
+									<text x="153" y="-6">12</text><text x="153" y="85">18</text>
+									<text x="13.5" y="38">5</text><text x="292.5" y="38">5</text>
+									<text x="-8" y="82" font-weight="600">A</text><text x="314" y="82" font-weight="600">B</text>
+									<text x="263" y="-5" font-weight="600">C</text><text x="43" y="-5" font-weight="600">D</text>
+									<text x="59" y="39" fill="#d32f2f" font-weight="600">P</text><text x="248" y="39" fill="#d32f2f" font-weight="600">Q</text>
+								</g>
+							</svg>
+														<p><span class="alinea">3.1.</span> Mostra que a altura do trapézio é $4$. Num referencial o.n. com origem em $A$ e $B$ no semieixo positivo $Ox$, indica as coordenadas de $B$, $C$ e $D$.</p>
+							<p><span class="alinea">3.2.</span> Justifica que o raio da roda é $2$ e que o centro da roda se desloca sobre a reta de equação $y = 2$.</p>
+							<p><span class="alinea">3.3.</span> Seja $T$ o ponto em que a roda toca no lado $[AD]$.</p>
+							<p class="sub">a) Mostra que $\vec n = (4, -3)$ é perpendicular a $\overrightarrow{AD}$.</p>
+							<p class="sub">b) Justifica que $\overrightarrow{TP} = \frac{2}{5}\,\vec n$.</p>
+							<p class="sub">c) Sabendo que $T = A + k\,\overrightarrow{AD}$, com $k \in [0, 1]$, determina $T$ e $P$.</p>
+							<p><span class="alinea">3.4.</span> Determina as coordenadas de $Q$ e $\overline{PQ}$.</p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+				<section id="pe-p4" class="sans" data-esconder data-sketch="pe-p4">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 4 — Projeção de um ponto numa reta</h4>
 					<div class="problema">
 						<div class="enunciado">
 							<p>Considera o ponto $A(2, 6)$ e a reta $r$ definida pela equação vetorial</p>
@@ -798,32 +835,15 @@
 						</div>
 					</div>
 				</section>
-				<section id="pe-p4" class="sans" data-esconder data-sketch="pe-p4">
+				<section id="pe-p5" class="sans" data-esconder data-sketch="pe-p5">
 					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
-					<h4>Problema 4 — Hexágono regular</h4>
+					<h4>Problema 5 — Hexágono regular</h4>
 					<div class="problema">
 						<div class="enunciado">
 							<p>Na figura está representado o hexágono regular $[ABCDEF]$, de lado $1$.</p>
-							<p><span class="alinea">4.1.</span> Qual é o valor de $\left\|\overrightarrow{AE} + \overrightarrow{BC}\right\|$?</p>
+							<p><span class="alinea">5.1.</span> Qual é o valor de $\left\|\overrightarrow{AE} + \overrightarrow{BC}\right\|$?</p>
 							<p class="opcoes"><span><b>(A)</b> $\sqrt{6}$</span><span><b>(B)</b> $\sqrt{7}$</span><span><b>(C)</b> $2\sqrt{2}$</span><span><b>(D)</b> $3$</span></p>
-							<p><span class="alinea">4.2.</span> Determina $\overrightarrow{AE} \cdot \overrightarrow{BC}$ e a amplitude do ângulo dos vetores $\overrightarrow{AE}$ e $\overrightarrow{BC}$.</p>
-						</div>
-						<div class="animacao">
-							<div class="tela"></div>
-							<div class="controlos"></div>
-						</div>
-					</div>
-				</section>
-				<section id="pe-p5" class="sans" data-esconder data-sketch="pe-p5">
-					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
-					<h4>Problema 5 — Trapézio isósceles</h4>
-					<div class="problema">
-						<div class="enunciado">
-							<p>Na figura está representado o trapézio $[ABCD]$, em que $[AD]$ é paralelo a $[BC]$ e $C\hat{B}A = D\hat{C}B$.</p>
-							<p>Sabe-se que $\left\|\overrightarrow{AD}\right\| = 2$, $\left\|\overrightarrow{BC}\right\| = 4$ e $\left\|\overrightarrow{AB} + \overrightarrow{AC}\right\| = 2\sqrt{5}$.</p>
-							<p><span class="alinea">5.1.</span> Qual é o valor de $\left\|\overrightarrow{BD}\right\|$?</p>
-							<p class="opcoes"><span><b>(A)</b> $\sqrt{11}$</span><span><b>(B)</b> $2\sqrt{3}$</span><span><b>(C)</b> $\sqrt{13}$</span><span><b>(D)</b> $\sqrt{14}$</span></p>
-							<p><span class="alinea">5.2.</span> Determina o valor exato do cosseno do ângulo das diagonais $[AC]$ e $[BD]$ e conclui se essas diagonais são ou não perpendiculares.</p>
+							<p><span class="alinea">5.2.</span> Determina $\overrightarrow{AE} \cdot \overrightarrow{BC}$ e a amplitude do ângulo dos vetores $\overrightarrow{AE}$ e $\overrightarrow{BC}$.</p>
 						</div>
 						<div class="animacao">
 							<div class="tela"></div>
@@ -833,7 +853,24 @@
 				</section>
 				<section id="pe-p6" class="sans" data-esconder data-sketch="pe-p6">
 					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
-					<h4>Problema 6 — Quatro pontos numa circunferência</h4>
+					<h4>Problema 6 — Trapézio isósceles</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Na figura está representado o trapézio $[ABCD]$, em que $[AD]$ é paralelo a $[BC]$ e $C\hat{B}A = D\hat{C}B$.</p>
+							<p>Sabe-se que $\left\|\overrightarrow{AD}\right\| = 2$, $\left\|\overrightarrow{BC}\right\| = 4$ e $\left\|\overrightarrow{AB} + \overrightarrow{AC}\right\| = 2\sqrt{5}$.</p>
+							<p><span class="alinea">6.1.</span> Qual é o valor de $\left\|\overrightarrow{BD}\right\|$?</p>
+							<p class="opcoes"><span><b>(A)</b> $\sqrt{11}$</span><span><b>(B)</b> $2\sqrt{3}$</span><span><b>(C)</b> $\sqrt{13}$</span><span><b>(D)</b> $\sqrt{14}$</span></p>
+							<p><span class="alinea">6.2.</span> Determina o valor exato do cosseno do ângulo das diagonais $[AC]$ e $[BD]$ e conclui se essas diagonais são ou não perpendiculares.</p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+				<section id="pe-p7" class="sans" data-esconder data-sketch="pe-p7">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 7 — Quatro pontos numa circunferência</h4>
 					<div class="problema">
 						<div class="enunciado">
 							<p>Os pontos $A$, $B$, $C$ e $D$, distintos dois a dois, pertencem a uma circunferência e satisfazem as condições:</p>
@@ -850,9 +887,9 @@
 						</div>
 					</div>
 				</section>
-				<section id="pe-p7" class="sans compacto" data-esconder data-sketch="pe-p7">
+				<section id="pe-p8" class="sans compacto" data-esconder data-sketch="pe-p8">
 					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
-					<h4>Problema 7 — Desafio: um ponto no interior de um triângulo</h4>
+					<h4>Problema 8 — Desafio: um ponto no interior de um triângulo</h4>
 					<div class="problema">
 						<div class="enunciado">
 							<p>Considera um triângulo $[ABC]$ e um ponto $P$ do interior desse triângulo tais que:</p>
@@ -870,9 +907,9 @@
 						</div>
 					</div>
 				</section>
-				<section id="pe-p8" class="sans" data-esconder data-sketch="pe-p8">
+				<section id="pe-p9" class="sans" data-esconder data-sketch="pe-p9">
 					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
-					<h4>Problema 8 — Reta no espaço e o plano $xOy$</h4>
+					<h4>Problema 9 — Reta no espaço e o plano $xOy$</h4>
 					<div class="problema">
 						<div class="enunciado">
 							<p>Considera, num referencial ortonormado $Oxyz$, os pontos $A(-1, 1, -2)$ e $B(2, 4, 1)$.</p>
@@ -886,9 +923,9 @@
 						</div>
 					</div>
 				</section>
-				<section id="pe-p9" class="sans compacto" data-esconder data-sketch="pe-p9">
+				<section id="pe-p10" class="sans compacto" data-esconder data-sketch="pe-p10">
 					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
-					<h4>Problema 9 — Tabela de produtos escalares</h4>
+					<h4>Problema 10 — Tabela de produtos escalares</h4>
 					<div class="problema">
 						<div class="enunciado">
 							<p>Num referencial o.n. $Oxyz$, sejam $\vec a = \overrightarrow{OA}$, $\vec b = \overrightarrow{OB}$ e $\vec c = \overrightarrow{OC}$. Na tabela estão os produtos escalares destes vetores, dois a dois.</p>
@@ -898,10 +935,10 @@
 								<tr><th>$\vec b$</th><td>$1$</td><td>$2$</td><td>$0$</td></tr>
 								<tr><th>$\vec c$</th><td>$-\sqrt{2}$</td><td>$0$</td><td>$2$</td></tr>
 							</table>
-							<p><span class="alinea">9.1.</span> Qual das opções ordena corretamente as distâncias entre os pontos $A$, $B$ e $C$?</p>
+							<p><span class="alinea">10.1.</span> Qual das opções ordena corretamente as distâncias entre os pontos $A$, $B$ e $C$?</p>
 							<p class="opcoes duas"><span><b>(A)</b> $\overline{AB}<\overline{AC}<\overline{BC}$</span><span><b>(B)</b> $\overline{BC}<\overline{AB}<\overline{AC}$</span><span><b>(C)</b> $\overline{AC}<\overline{AB}<\overline{BC}$</span><span><b>(D)</b> $\overline{AB}<\overline{BC}<\overline{AC}$</span></p>
-							<p><span class="alinea">9.2.</span> Justifica que os vetores $\vec b$ e $\vec c$ são perpendiculares.</p>
-							<p><span class="alinea">9.3.</span> Determina a amplitude do ângulo dos vetores $\vec a$ e $\vec c$.</p>
+							<p><span class="alinea">10.2.</span> Justifica que os vetores $\vec b$ e $\vec c$ são perpendiculares.</p>
+							<p><span class="alinea">10.3.</span> Determina a amplitude do ângulo dos vetores $\vec a$ e $\vec c$.</p>
 						</div>
 						<div class="animacao">
 							<div class="tela"></div>
@@ -953,6 +990,7 @@
 	<script src="sketches/produto-escalar/p7.js"></script>
 	<script src="sketches/produto-escalar/p8.js"></script>
 	<script src="sketches/produto-escalar/p9.js"></script>
+	<script src="sketches/produto-escalar/p10.js"></script>
 
 	<script>
 		Reveal.initialize({
