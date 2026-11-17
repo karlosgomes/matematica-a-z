@@ -143,6 +143,7 @@
 .enunciado ul.condicoes li.atual { background: #eff6ff; border-left: 4px solid #1d4ed8; }
 .enunciado .ideia { font-size: 0.9em; color: #334155; }
 .enunciado .dica { font-size: 0.75em; color: #64748b; }
+.enunciado .fig-enunciado { display: block; margin: 0.3em auto; max-width: 100%; height: auto; }
 .enunciado .verde { color: #16a34a; } .enunciado .vermelho { color: #dc2626; }
 .enunciado ul.dados { display: block; margin: 0 0 18px 1.2em; }
 .enunciado ul.dados li { margin: 4px 0; }

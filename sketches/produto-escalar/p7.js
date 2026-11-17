@@ -1,266 +1,231 @@
 /* =====================================================================
-   Produto escalar · Problema 7 — [AB] e o plano xOy
-   A(−1, 1, −2), B(2, 4, 1);  AB = (3, 3, 3)
-   X(t) = A + t·AB = (−1 + 3t, 1 + 3t, −2 + 3t),  t ∈ [0, 1]
-   z = 0  ⇔  t = 2/3  ⇒  P = (1, 3, 0);   AP = (2/3)·‖AB‖ = (2/3)·3√3 = 2√3   → (B)
-   Figura 3D à mão em perspetiva (como espaco.js): a vista roda arrastando o fundo;
-   o ponto X arrasta-se ao longo de [AB] (t de 1/30 em 1/30).
+   Produto escalar · Problema 7 (desafio) — um ponto no interior de um triângulo
+   Referencial com origem em P e C(t, 0) no semieixo positivo Ox (C arrasta-se:
+   a escala t não altera k). Passos: 1) P e C; 2) A(0, 3t), PA ⊥ PC;
+   3) B: ângulo BPC = 135° e ‖PB‖ = 2√2 t ⇒ B(−2t, −2t); 4) triângulo, reta AP,
+   D(0, −2t/3), AD = 11t/3, PD = 2t/3. Solução: k = AD/PD = 11/2 → (A).
    ===================================================================== */
-(function () {
-	const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
-	const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-	const mul = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
-	const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-
-	const A = [-1, 1, -2], B = [2, 4, 1], AB = sub(B, A);
-	const PSOL = [1, 3, 0];
-	const N = 30;                        // t = k/30
-	const mdc = (a, b) => b ? mdc(b, a % b) : a;
-	// t = k/30 como fração irredutível
-	const fracT = k => { if (k === 0) return '0'; if (k === N) return '1'; const d = mdc(k, N); return (k / d) + '/' + (N / d); };
-	// coordenada com uma casa decimal (3t = k/10), sem «,0»
-	const num = x => { const r = Math.round(x * 10) / 10; const s = Number.isInteger(r) ? '' + Math.abs(r) : UT.fmt(Math.abs(r), 1); return (r < 0 ? '−' : '') + s; };
-
-	SKETCHES['pe-p7'] = function (p, controlos) {
-		const W = 920, H = 600;
-		const G = { cx: 565, cy: 365, k: 78 };
-		const CEN = [0.6, 2.0, -0.4];       // centro da vista
-		const COR = {
-			texto: [30, 41, 59], cinza: [100, 116, 139], eixo: [71, 85, 105], grelha: [148, 163, 184],
-			plano: [96, 125, 139], seg: [230, 81, 0], zero: [239, 108, 0], verde: [46, 125, 50], azul: [21, 101, 192]
-		};
-
-		let az = -38, el = 12;
-		let F_ = [1, 0, 0], R_ = [0, 1, 0], U_ = [0, 0, 1];
-		let k = 9;                           // X = A + (k/30)·AB
-		let cxSol;
-		let modo = null;                     // 'X' ou 'rodar'
-
-		p.setup = function () {
-			arrastar(p.createCanvas(W, H).elt);
-			p.textFont('Source Sans Pro');
-			p.createSpan('Arrasta X ao longo de [AB] · arrasta o fundo para rodar a vista ·').parent(controlos).addClass('dica-arrastar');
-			UT.botao(p, controlos, 'X em A', () => { k = 0; }, 'atalho');
-			UT.botao(p, controlos, 'X em B', () => { k = N; }, 'atalho');
-			UT.quebra(p, controlos);
-			cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
-		};
-
-		/* ---------------- projeção (perspetiva) ---------------- */
-		function camara() {
-			const a = az * Math.PI / 180, e = el * Math.PI / 180;
-			F_ = [Math.cos(e) * Math.cos(a), Math.cos(e) * Math.sin(a), Math.sin(e)];
-			R_ = [-Math.sin(a), Math.cos(a), 0];
-			U_ = [-Math.sin(e) * Math.cos(a), -Math.sin(e) * Math.sin(a), Math.cos(e)];
-		}
-		const DIST = 19;
-		const olho = () => add(CEN, mul(F_, DIST));
-		const pr = v => {
-			const w = sub(v, CEN), z = DIST - dot3(w, F_), s = G.k * DIST / Math.max(z, 0.5);
-			return { x: G.cx + s * dot3(w, R_), y: G.cy - s * dot3(w, U_) };
-		};
-
-		// região do plano xOy que se desenha
-		const PX0 = -2, PX1 = 3.5, PY0 = -1, PY1 = 5;
-		// X escondido pelo plano xOy? (segmento de X até ao olho atravessa a região desenhada)
-		function oculto(X) {
-			const E = olho(), dz = E[2] - X[2];
-			if (Math.abs(dz) < 1e-9) return false;
-			const t = -X[2] / dz;
-			if (t <= 1e-3 || t >= 1) return false;
-			const x = X[0] + (E[0] - X[0]) * t, y = X[1] + (E[1] - X[1]) * t;
-			return x >= PX0 && x <= PX1 && y >= PY0 && y <= PY1;
-		}
-
-		/* ---------------- arrastar ---------------- */
-		function arrastar(cv) {
-			let ultimo = null;
-			cv.style.cursor = 'grab'; cv.style.touchAction = 'none';
-			const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
-			const pertoX = (x, y) => { const q = pr(add(A, mul(AB, k / N))); return Math.hypot(q.x - x, q.y - y) < 28; };
-			cv.addEventListener('pointerdown', e => {
-				const [x, y] = pos(e);
-				modo = pertoX(x, y) ? 'X' : 'rodar';
-				ultimo = [e.clientX, e.clientY];
-				cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing';
-				e.stopPropagation(); e.preventDefault();
-			});
-			cv.addEventListener('pointermove', e => {
-				const [x, y] = pos(e);
-				if (!modo) { cv.style.cursor = 'grab'; return; }
-				if (modo === 'X') {
-					// o valor de k cujo ponto projetado fica mais perto do ponteiro
-					let best = k, bd = Infinity;
-					for (let i = 0; i <= N; i++) {
-						const q = pr(add(A, mul(AB, i / N))), d = Math.hypot(q.x - x, q.y - y);
-						if (d < bd) { bd = d; best = i; }
-					}
-					k = best;
-					return;
-				}
-				const esc = (window.Reveal && Reveal.getScale && Reveal.getScale()) || 1;
-				const dx = (e.clientX - ultimo[0]) / esc, dy = (e.clientY - ultimo[1]) / esc;
-				ultimo = [e.clientX, e.clientY];
-				az -= dx * 0.4; if (az > 180) az -= 360; if (az < -180) az += 360;
-				el = p.constrain(el + dy * 0.4, -60, 80);
-			});
-			const fim = () => { modo = null; ultimo = null; cv.style.cursor = 'grab'; };
-			cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim);
-			['touchstart', 'touchmove', 'mousedown'].forEach(t => cv.addEventListener(t, e => e.stopPropagation(), { passive: true }));
-		}
-
-		/* ---------------- desenho de base ---------------- */
-		// segmento 3D: troços visíveis a cheio, escondidos pelo plano a tracejado e esbatidos
-		function seg(a, b, cor, peso, alfa = 255) {
-			const n = 60, pts = [], esc = [];
-			for (let i = 0; i <= n; i++) pts.push(pr(add(a, mul(sub(b, a), i / n))));
-			for (let i = 0; i < n; i++) esc.push(oculto(add(a, mul(sub(b, a), (i + 0.5) / n))));
-			p.noFill(); p.strokeWeight(peso); p.strokeCap(p.ROUND);
-			let i = 0;
-			while (i < n) {
-				let j = i;
-				while (j < n && esc[j] === esc[i]) j++;
-				p.stroke(...cor, esc[i] ? alfa * 0.55 : alfa);
-				if (esc[i]) p.drawingContext.setLineDash([8, 7]);
-				p.line(pts[i].x, pts[i].y, pts[j].x, pts[j].y);
-				p.drawingContext.setLineDash([]);
-				i = j;
-			}
-		}
-		function seta(a, b, cor, peso = 2) {
-			const P1 = pr(a), P2 = pr(b);
-			const dx = P2.x - P1.x, dy = P2.y - P1.y, l = Math.hypot(dx, dy);
-			const h = 14, recuo = l > h ? h * 0.8 / l : 0;
-			seg(a, add(a, mul(sub(b, a), 1 - recuo)), cor, peso);
-			if (l < 6) return;
-			const ux = dx / l, uy = dy / l, esc = oculto(b);
-			p.noStroke(); p.fill(...cor, esc ? 140 : 255);
-			p.triangle(P2.x, P2.y, P2.x - h * ux - h * 0.42 * uy, P2.y - h * uy + h * 0.42 * ux,
-				P2.x - h * ux + h * 0.42 * uy, P2.y - h * uy - h * 0.42 * ux);
-		}
-		function rot(t, x, y, cor = COR.texto, tam = 22, alfa = 255, estilo = p.BOLD, ah = p.CENTER) {
-			p.stroke(255, alfa); p.strokeWeight(6); p.strokeJoin(p.ROUND);
-			p.fill(...cor, alfa); p.textSize(tam); p.textStyle(estilo);
-			p.textAlign(ah, p.CENTER); p.text(t, x, y);
-		}
-		function setinha(x, w, y, cor, tam) {
-			const yy = y - tam * 0.86, x1 = x + w + 2;
-			p.stroke(...cor); p.strokeWeight(Math.max(1.6, tam / 13)); p.line(x - 1, yy, x1, yy);
-			p.noStroke(); p.fill(...cor);
-			p.triangle(x1 + 3, yy, x1 - 4, yy - 3.5, x1 - 4, yy + 3.5);
-		}
-		// ponto com nome e (opcional) coordenadas pequenas a seguir
-		function ponto(X, nome, cor, coords, dir = [1, -1], tam = 12) {
-			const Q = pr(X), esc = oculto(X), alfa = esc ? 150 : 255;
-			p.stroke(255); p.strokeWeight(2); p.fill(...cor, alfa); p.circle(Q.x, Q.y, tam);
-			if (!nome) return;
-			const lx = Q.x + dir[0] * 20, ly = Q.y + dir[1] * 20;
-			p.textSize(26); p.textStyle(p.BOLDITALIC);
-			const w = p.textWidth(nome);
-			if (dir[0] >= 0) {
-				rot(nome, lx, ly, cor, 26, alfa, p.BOLDITALIC, p.LEFT);
-				if (coords) rot(coords, lx + w + 3, ly + 2, cor, 18, alfa, p.NORMAL, p.LEFT);
-			} else {
-				p.textSize(18); p.textStyle(p.NORMAL);
-				const wc = coords ? p.textWidth(coords) + 3 : 0;
-				rot(nome, lx - wc, ly, cor, 26, alfa, p.BOLDITALIC, p.RIGHT);
-				if (coords) rot(coords, lx, ly + 2, cor, 18, alfa, p.NORMAL, p.RIGHT);
-			}
-		}
-
-		function planoXOy() {
-			const c = [[PX0, PY0], [PX1, PY0], [PX1, PY1], [PX0, PY1]].map(([x, y]) => pr([x, y, 0]));
-			p.noStroke(); p.fill(...COR.plano, 34);
-			p.beginShape(); c.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
-			p.stroke(...COR.grelha, 110); p.strokeWeight(1);
-			for (let i = Math.ceil(PX0); i <= PX1; i++) { const a = pr([i, PY0, 0]), b = pr([i, PY1, 0]); p.line(a.x, a.y, b.x, b.y); }
-			for (let j = Math.ceil(PY0); j <= PY1; j++) { const a = pr([PX0, j, 0]), b = pr([PX1, j, 0]); p.line(a.x, a.y, b.x, b.y); }
-			p.stroke(...COR.plano, 150); p.strokeWeight(1.5); p.noFill();
-			p.beginShape(); c.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
-			const K = pr([PX1 - 0.3, PY1 - 1.2, 0]);
-			rot('xOy', K.x, K.y, COR.plano, 22, 230, p.ITALIC);
-		}
-		function eixos() {
-			[[[1, 0, 0], "x", -2.2, 4.0], [[0, 1, 0], "y", -1.2, 6.4], [[0, 0, 1], "z", -3.0, 2.4]].forEach(([e, nome, m, L]) => {
-				seta(mul(e, m), mul(e, L), COR.eixo, 2);
-				const T = pr(mul(e, L + 0.4));
-				rot(nome, T.x, T.y, COR.eixo, 22, 255, p.ITALIC);
-			});
-			const O = pr([0, 0, 0]);
-			rot('O', O.x - 14, O.y + 16, COR.eixo, 20, 255, p.ITALIC);
-		}
-
-		/* ---------------- painel de texto ---------------- */
-		// partes: [texto, cor, estilo, vetor?]
-		function frase(partes, x, y, tam = 24, so = false) {
-			p.textSize(tam); p.textAlign(p.LEFT, p.BASELINE);
-			partes.forEach(([t, cor, est, vet]) => {
-				p.textStyle(est || p.NORMAL);
-				const w = p.textWidth(t);
-				if (!so) { p.noStroke(); p.fill(...(cor || COR.texto)); p.text(t, x, y); if (vet) setinha(x, w, y, cor || COR.texto, tam); }
-				x += w;
-			});
-			return x;
-		}
-		function caixa(linhas, x0, y0, dy = 36, tam = 24, alinhaDir = false) {
-			const wmax = Math.max(...linhas.map(l => frase(l, 0, 0, tam, true)));
-			const bx = alinhaDir ? x0 - wmax - 24 : x0;
-			p.stroke(203, 213, 225); p.strokeWeight(1.5); p.fill(255, 235);
-			p.rect(bx, y0, wmax + 24, linhas.length * dy + 12, 8);
-			linhas.forEach((l, i) => frase(l, bx + 12, y0 + 6 + dy * 0.78 + i * dy, tam));
-		}
-
-		/* ---------------- desenho ---------------- */
-		p.draw = function () {
-			camara();
-			p.background(255);
-			const sol = cxSol.checked();
-			const t = k / N, X = add(A, mul(AB, t)), z = X[2];
-			const zz = Math.abs(z) < 1e-9;
-
-			planoXOy();
-			eixos();
-
-			// segmento [AB] (a parte escondida pelo plano a tracejado)
-			seg(A, B, COR.seg, 4);
-			// com a solução: [AP] realçado
-			if (sol) {
-				seg(A, PSOL, COR.verde, 7, 120);
-				const M = pr(add(A, mul(AB, 1 / 3))), Q1 = pr(A), Q2 = pr(PSOL);
-				const nx = -(Q2.y - Q1.y), ny = Q2.x - Q1.x, l = Math.hypot(nx, ny) || 1, s = nx / l > 0 ? 1 : -1;
-				rot('AP = 2√3', M.x + s * nx / l * 52, M.y + s * ny / l * 52, COR.verde, 22, 255, p.BOLD);
-			}
-
-			ponto(A, 'A', COR.texto, '(−1, 1, −2)', [-1, 0.4]);
-			ponto(B, 'B', COR.texto, '(2, 4, 1)', [1, -0.6]);
-			if (sol) ponto(PSOL, 'P', COR.verde, '(1, 3, 0)', [1, 0.7], 14);
-
-			// ponto X, na cor laranja quando está no plano (z = 0)
-			const corX = zz ? COR.zero : COR.azul;
-			const QX = pr(X);
-			p.noFill(); p.stroke(...corX, 70); p.strokeWeight(8); p.circle(QX.x, QX.y, 26);
-			ponto(X, 'X', corX, null, [-0.9, -0.9], 15);
-
-			// painel com X(t) e a cota
-			const T = COR.texto, cz = zz ? COR.zero : T;
-			const v = (s, c = T) => [s, c, p.BOLDITALIC, true];
-			const linhas = [
-				[['X = A + t ', T], v('AB'), ['   (0 ≤ t ≤ 1)', COR.cinza]],
-				[v('AB'), [' = B − A = (3, 3, 3)', T]],
-				[['t = ' + fracT(k), corX, p.BOLD], ['     X = (' + num(X[0]) + ', ' + num(X[1]) + ', ' + num(X[2]) + ')', T]],
-				[['z = −2 + 3t = ' + num(z), cz, zz ? p.BOLD : p.NORMAL], [zz ? '   ⇒  X ∈ xOy' : (z < 0 ? '   (abaixo de xOy)' : '   (acima de xOy)'), zz ? COR.zero : COR.cinza]]
-			];
-			caixa(linhas, 12, 12);
-
-			if (sol) {
-				const V = COR.verde;
-				caixa([
-					[['z = 0  ⇔  −2 + 3t = 0  ⇔  t = 2/3', T]],
-					[['P = (1, 3, 0)', V, p.BOLD]],
-					[['‖', T], v('AB'), ['‖ = √(9 + 9 + 9) = 3√3', T]],
-					[['AP = (2/3) × 3√3 = ', T], ['2√3', V, p.BOLD], ['   → (B)', V, p.BOLD]]
-				], W - 12, H - 12 - 4 * 34 - 12, 34, 22, true);
-			}
-		};
+SKETCHES['pe-p7'] = function (p, controlos) {
+	const W = 920, H = 600;
+	const O = { x: 262, y: 362 }, K = 85;
+	const COR = {
+		eixo: [100, 116, 139], grelha: [226, 232, 240], u: [21, 101, 192], v: [123, 31, 162],
+		pos: [46, 125, 50], zero: [239, 108, 0], neg: [211, 47, 47], texto: [30, 41, 59],
+		b: [0, 121, 107], cinza: [148, 163, 184], tri: [230, 81, 0]
 	};
-})();
+	const XMIN = -2.9, XMAX = 1.9, YMIN = -2.7, YMAX = 3.9;
+	let t = 1, passo = 0, a = 1, agarrado = false, cxSol, bts = [];
+
+	const X = x => O.x + x * K, Y = y => O.y - y * K;
+	const suave = s => s * s * (3 - 2 * s);
+	const R2 = Math.SQRT2;
+
+	p.setup = function () {
+		arrastar(p.createCanvas(W, H).elt);
+		p.textFont('Source Sans Pro');
+		for (let n = 1; n <= 4; n++) bts.push(UT.botao(p, controlos, 'Passo ' + n, () => irPara(n), 'atalho'));
+		UT.botao(p, controlos, 'Início', () => irPara(0), 'atalho');
+		UT.quebra(p, controlos);
+		p.createSpan('Arrasta C (muda a escala) ·').parent(controlos).addClass('dica-arrastar');
+		cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
+		cxSol.changed(() => { if (cxSol.checked() && passo < 4) { passo = 4; a = 1; } });
+	};
+	function irPara(n) { passo = n; a = n ? 0 : 1; if (n < 4) cxSol.checked(false); }
+
+	// arrastar C ao longo do semieixo positivo Ox (t às décimas, entre 0,6 e 1,2)
+	function arrastar(cv) {
+		cv.style.touchAction = 'none';
+		const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
+		const perto = (x, y) => passo >= 1 && Math.hypot(X(t) - x, O.y - y) < 30;
+		cv.addEventListener('pointerdown', e => {
+			const [x, y] = pos(e); agarrado = perto(x, y);
+			if (agarrado) { a = 1; cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing'; e.stopPropagation(); e.preventDefault(); }
+		});
+		cv.addEventListener('pointermove', e => {
+			const [x, y] = pos(e);
+			if (!agarrado) { cv.style.cursor = perto(x, y) ? 'grab' : 'default'; return; }
+			const v = (x - O.x) / K;
+			t = p.constrain(Math.abs(v - Math.round(v)) < 0.06 ? Math.round(v) : Math.round(v * 10) / 10, 0.6, 1.2);
+		});
+		const fim = () => { agarrado = false; cv.style.cursor = 'default'; };
+		cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim);
+		['touchstart', 'touchmove', 'mousedown'].forEach(tp => cv.addEventListener(tp, e => { if (agarrado || tp !== 'mousedown') e.stopPropagation(); }, { passive: true }));
+	}
+
+	/* ---------- desenho ---------- */
+	function rot(s, x, y, cor = COR.texto, tam = 22, ah = p.CENTER, estilo = p.BOLD) {
+		p.stroke(255); p.strokeWeight(6); p.strokeJoin(p.ROUND);
+		p.fill(...cor); p.textSize(tam); p.textStyle(estilo);
+		p.textAlign(ah, p.CENTER); p.text(s, x, y);
+	}
+	function setaTopo(x0, x1, yy, cor, peso = 2) {
+		p.stroke(...cor); p.strokeWeight(peso); p.line(x0, yy, x1, yy);
+		p.noStroke(); p.fill(...cor); p.triangle(x1 + 3, yy, x1 - 3, yy - 3.5, x1 - 3, yy + 3.5);
+	}
+	function nomeVetor(l, x, y, cor, tam = 24) {
+		rot(l, x, y, cor, tam, p.CENTER, p.BOLDITALIC);
+		const w = p.textWidth(l);
+		setaTopo(x - w * 0.55, x + w * 0.55, y - tam * 0.62, cor);
+	}
+	function seta(x1, y1, x2, y2, cor, peso = 4, ponta = 16) {
+		p.stroke(...cor); p.strokeWeight(peso); p.line(x1, y1, x2, y2);
+		if (Math.hypot(x2 - x1, y2 - y1) < 4) return;
+		const ang = Math.atan2(y2 - y1, x2 - x1);
+		p.push(); p.translate(x2, y2); p.rotate(ang);
+		p.noStroke(); p.fill(...cor); p.triangle(0, 0, -ponta, -ponta * 0.4, -ponta, ponta * 0.4); p.pop();
+	}
+	// texto com marcação: [AB] = vetor AB (com seta por cima)
+	function txt(s, x, y, cor = COR.texto, tam = 20, est = p.NORMAL) {
+		p.textSize(tam); p.textAlign(p.LEFT, p.CENTER);
+		for (const pc of s.split(/(\[[A-Z]+\])/)) {
+			if (!pc) continue;
+			const vec = pc[0] === '[', t2 = vec ? pc.slice(1, -1) : pc;
+			p.noStroke(); p.fill(...cor); p.textStyle(vec ? (est === p.BOLD ? p.BOLDITALIC : p.ITALIC) : est); p.text(t2, x, y);
+			const w = p.textWidth(t2);
+			if (vec) setaTopo(x + 1, x + w - 1, y - tam * 0.62, cor, 1.5);
+			x += w;
+		}
+		return x;
+	}
+	function bola(x, y, cor, d = 12) { p.stroke(255); p.strokeWeight(2); p.fill(...cor); p.circle(X(x), Y(y), d); }
+
+	function grelha() {
+		p.strokeWeight(1); p.stroke(...COR.grelha);
+		for (let i = Math.ceil(XMIN); i <= XMAX; i++) p.line(X(i), Y(YMIN), X(i), Y(YMAX));
+		for (let j = Math.ceil(YMIN); j <= YMAX; j++) p.line(X(XMIN), Y(j), X(XMAX), Y(j));
+		p.stroke(...COR.eixo); p.strokeWeight(1.6);
+		p.line(X(XMIN), O.y, X(XMAX), O.y); p.line(O.x, Y(YMIN), O.x, Y(YMAX));
+		p.noStroke(); p.fill(...COR.eixo); p.textSize(14); p.textStyle(p.NORMAL); p.textAlign(p.CENTER, p.TOP);
+		for (let i = Math.ceil(XMIN); i <= XMAX; i++) if (i) p.text(i, X(i), O.y + 5);
+		p.textAlign(p.RIGHT, p.CENTER);
+		for (let j = Math.ceil(YMIN); j <= YMAX; j++) if (j) p.text(j, O.x - 6, Y(j) + 8);
+		rot('x', X(XMAX) - 8, O.y - 14, COR.eixo, 18, p.CENTER, p.ITALIC);
+		rot('y', O.x + 14, Y(YMAX) + 10, COR.eixo, 18, p.CENTER, p.ITALIC);
+	}
+
+	p.draw = function () {
+		const sol = cxSol.checked();
+		if (a < 1) a = Math.min(1, a + p.deltaTime / 1000 / 1.4);
+		const e = suave(a);
+		const f = n => passo > n ? 1 : passo === n ? e : 0;       // progresso do passo n
+		p.background(255);
+		grelha();
+
+		// no passo 4 os vetores dos passos anteriores ficam esbatidos
+		const esbater = fn => { p.drawingContext.globalAlpha = passo >= 4 ? 0.35 : 1; fn(); p.drawingContext.globalAlpha = 1; };
+		const A = { x: 0, y: 3 * t }, B = { x: -2 * t, y: -2 * t }, C = { x: t, y: 0 }, D = { x: 0, y: -2 * t / 3 };
+
+		// passo 4: triângulo e reta AP
+		if (passo >= 4) {
+			const g = f(4);
+			p.fill(...COR.tri, 22 * g); p.stroke(...COR.tri, 255 * g); p.strokeWeight(2.5);
+			p.triangle(X(A.x), Y(A.y), X(B.x), Y(B.y), X(C.x), Y(C.y));
+			p.stroke(...COR.texto, 120 * g); p.strokeWeight(1.5);
+			p.line(X(0), Y(YMAX), X(0), Y(YMIN));
+		}
+
+		// passo 3: B, ângulo de 135° e ‖PB‖ = 2√2 t
+		if (passo >= 3) {
+			const g = f(3), ang = -135 * g * Math.PI / 180, len = 2 * R2 * t * Math.max(g, 0.05);
+			const bx = len * Math.cos(ang), by = len * Math.sin(ang);
+			p.fill(...COR.neg, 40); p.stroke(...COR.neg); p.strokeWeight(2);
+			if (g > 0.01) p.arc(O.x, O.y, 64, 64, 0, -ang, p.PIE);
+			if (g > 0.6 && passo < 4) rot('135°', O.x + 44 * Math.cos(ang / 2) + 18, O.y - 44 * Math.sin(ang / 2) + 4, COR.neg, 18, p.LEFT, p.BOLD);
+			esbater(() => seta(O.x, O.y, X(bx), Y(by), COR.b, passo === 3 ? 4 : 3));
+			if (g > 0.95) {
+				if (passo < 4) nomeVetor('PB', X(bx / 2) + 22, Y(by / 2) + 14, COR.b, 22);
+				bola(B.x, B.y, COR.texto, 11);
+				rot('B', X(B.x) - 12, Y(B.y) + 14, COR.texto, 22, p.RIGHT, p.BOLDITALIC);
+				rot('(−2t, −2t)', X(B.x) + 2, Y(B.y) + 24, COR.texto, 16, p.LEFT, p.NORMAL);
+			}
+		}
+
+		// passo 2: A no eixo Oy, PA ⊥ PC, ‖PA‖ = 3‖PC‖
+		if (passo >= 2) {
+			const g = f(2), ay = 3 * t * Math.max(g, 0.03);
+			const q = 16;
+			p.noFill(); p.stroke(...COR.zero); p.strokeWeight(2.5);
+			p.beginShape(); p.vertex(O.x + q, O.y); p.vertex(O.x + q, O.y - q); p.vertex(O.x, O.y - q); p.endShape();
+			esbater(() => seta(O.x, O.y, X(0), Y(ay), COR.v, passo === 2 ? 4 : 3));
+			if (g > 0.95) {
+				if (passo < 4) nomeVetor('PA', X(0) - 26, Y(ay / 2) - 6, COR.v, 22);
+				bola(A.x, A.y, COR.texto, 11);
+				rot('A', X(0) + 14, Y(A.y) - 2, COR.texto, 22, p.LEFT, p.BOLDITALIC);
+				rot('(0, 3t)', X(0) + 30, Y(A.y), COR.texto, 16, p.LEFT, p.NORMAL);
+			}
+		}
+
+		// passo 1: P na origem e C no semieixo positivo Ox
+		if (passo >= 1) {
+			const g = f(1), cx = t * Math.max(g, 0.03);
+			esbater(() => seta(O.x, O.y, X(cx), O.y, COR.u, passo === 1 ? 4 : 3, 14));
+			if (g > 0.95) {
+				if (passo < 4) nomeVetor('PC', X(t / 2) + 6, O.y - 22, COR.u, 22);
+				p.noFill(); p.stroke(...COR.u, 110); p.strokeWeight(2); p.circle(X(t), O.y, 26);
+				bola(t, 0, COR.texto, 11);
+				rot('C', X(t) + 8, O.y - 18, COR.texto, 22, p.LEFT, p.BOLDITALIC);
+				rot('(t, 0)', X(t) + 24, O.y - 16, COR.texto, 16, p.LEFT, p.NORMAL);
+			}
+			bola(0, 0, COR.texto, 12);
+			rot('P', O.x - 12, O.y - 16, COR.texto, 22, p.RIGHT, p.BOLDITALIC);
+		}
+
+		// passo 4: D, AD e PD
+		if (passo >= 4) {
+			const g = f(4);
+			if (g > 0.5) {
+				const h = (g - 0.5) * 2;
+				// AD (à direita da reta) e PD (à esquerda), como vetores
+				p.push(); p.drawingContext.globalAlpha = h;
+				seta(X(0) + 16, Y(A.y), X(0) + 16, Y(D.y), COR.pos, 3, 13);
+				seta(X(0) - 12, O.y, X(0) - 12, Y(D.y), COR.zero, 3, 10);
+				nomeVetor('AD', X(0) + 40, Y(A.y * 0.55), COR.pos, 20);
+				rot('11t/3', X(0) + 22, Y(A.y * 0.55) + 24, COR.pos, 16, p.LEFT, p.NORMAL);
+				rot('2t/3', X(0) - 20, Y(D.y / 2) + 2, COR.zero, 16, p.RIGHT, p.BOLD);
+				bola(D.x, D.y, COR.texto, 11);
+				rot('D', X(0) + 26, Y(D.y) + 12, COR.texto, 22, p.LEFT, p.BOLDITALIC);
+				rot('(0, −2t/3)', X(0) + 44, Y(D.y) + 14, COR.texto, 16, p.LEFT, p.NORMAL);
+				p.pop();
+			}
+		}
+
+		// painel à direita: o passo atual a cheio, os anteriores esbatidos
+		const x0 = 470, LH = 31;
+		let y = 30;
+		if (passo === 0) {
+			txt('Usa os botões «Passo 1» … «Passo 4».', x0, y, COR.cinza, 20);
+		}
+		const cor = n => passo === n ? COR.texto : COR.cinza;
+		const tit = (n, s) => { txt(n + ') ' + s, x0, y, passo === n ? COR.u : COR.cinza, 21, p.BOLD); y += LH; };
+		if (passo >= 1) {
+			tit(1, 'Referencial com origem em P');
+			txt('P = (0, 0),   C = (t, 0),   ‖[PC]‖ = t', x0 + 18, y, cor(1)); y += LH;
+			txt('t = ' + UT.fmt(t, Number.isInteger(t) ? 0 : 1) + '  (arrasta C: a escala não muda k)', x0 + 18, y, cor(1), 17); y += LH + 6;
+		}
+		if (passo >= 2) {
+			tit(2, 'O ponto A');
+			txt('[PA] · [PC] = 0  ⇒  PA ⊥ PC  ⇒  A no eixo Oy', x0 + 18, y, cor(2)); y += LH;
+			txt('‖[PA]‖ = 3‖[PC]‖ = 3t  ⇒  A = (0, 3t)', x0 + 18, y, cor(2)); y += LH + 6;
+		}
+		if (passo >= 3) {
+			tit(3, 'O ponto B');
+			txt('[PB] · [PC] = −(√2/2)‖[PB]‖‖[PC]‖  ⇒  ∠BPC = 135°', x0 + 18, y, cor(3)); y += LH;
+			txt('−(√2/2)‖[PB]‖ t = −2t²  ⇒  ‖[PB]‖ = 2√2 t', x0 + 18, y, cor(3)); y += LH;
+			txt('B = (−2t, −2t)  (3.º quadrante: P no interior)', x0 + 18, y, cor(3)); y += LH + 6;
+		}
+		if (passo >= 4) {
+			tit(4, 'O ponto D = AP ∩ [BC]');
+			txt('[BC]: (−2t, −2t) + u(3t, 2t);  x = 0 ⇒ u = 2/3', x0 + 18, y, cor(4)); y += LH;
+			txt('D = (0, −2t/3)', x0 + 18, y, cor(4)); y += LH;
+			let xx = txt('AD = 3t + 2t/3 = ', x0 + 18, y, cor(4));
+			xx = txt('11t/3', xx, y, COR.pos, 20, p.BOLD);
+			xx = txt(',   PD = ', xx, y, cor(4));
+			txt('2t/3', xx, y, COR.zero, 20, p.BOLD); y += LH + 6;
+		}
+		if (sol) {
+			p.noStroke(); p.fill(254, 243, 199); p.rect(x0 - 10, y - 20, W - x0, 2 * LH + 10, 8);
+			txt('[AD] = k [PD]  (mesmo sentido)', x0, y + 2, COR.texto, 20); y += LH;
+			txt('k = AD / PD = (11t/3) / (2t/3) = 11/2  → (A)', x0, y + 2, COR.texto, 21, p.BOLD);
+		}
+	};
+};
