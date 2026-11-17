@@ -24,24 +24,22 @@ function iniciarSketches() {
 	});
 
 	// animação escondida ao abrir o problema (data-esconder): o aluno tenta primeiro e só depois a vê
-	// (pedido do utilizador, 2026-11-17, problemas do Produto escalar); volta a esconder-se ao sair do slide
-	document.querySelectorAll('section[data-esconder] .animacao').forEach(an => {
-		const capa = document.createElement('div');
-		capa.className = 'capa-anim';
-		capa.innerHTML = '<p>Tenta resolver primeiro!</p><button type="button">Mostrar a animação</button>';
-		capa.querySelector('button').addEventListener('click', e => { e.stopPropagation(); an.classList.remove('oculta'); });
-		an.appendChild(capa);
-		// botão para voltar a esconder (canto superior direito da animação)
-		const esc = document.createElement('button');
-		esc.type = 'button'; esc.className = 'esconder-anim'; esc.textContent = 'Esconder a animação';
-		esc.addEventListener('click', e => { e.stopPropagation(); an.classList.add('oculta'); });
-		an.appendChild(esc);
-		an.classList.add('oculta');
+	// (pedido do utilizador, 2026-11-17, problemas do Produto escalar). Escondida, o enunciado ocupa o slide todo;
+	// o botão no topo mostra-a (texto encosta à esquerda, animação à direita). Volta a esconder-se ao sair do slide.
+	const esconder = (sec, sim) => {
+		sec.classList.toggle('so-texto', sim);
+		sec.querySelector('.botao-anim').textContent = sim ? '▶ Mostrar a animação' : '✕ Esconder a animação';
+	};
+	document.querySelectorAll('section[data-esconder]').forEach(sec => {
+		const bt = document.createElement('button');
+		bt.type = 'button'; bt.className = 'botao-anim';
+		bt.addEventListener('click', e => { e.stopPropagation(); esconder(sec, !sec.classList.contains('so-texto')); });
+		sec.appendChild(bt);
+		esconder(sec, true);
 	});
 
 	const ativar = ({ currentSlide, previousSlide }) => {
-		if (previousSlide && previousSlide.hasAttribute('data-esconder'))
-			previousSlide.querySelector('.animacao').classList.add('oculta');
+		if (previousSlide && previousSlide.hasAttribute('data-esconder')) esconder(previousSlide, true);
 		const ant = previousSlide && previousSlide.dataset.sketch;
 		const atual = currentSlide && currentSlide.dataset.sketch;
 		if (ant && instancias[ant]) instancias[ant].noLoop();

@@ -94,20 +94,20 @@
 
 .animacao { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .animacao .tela canvas { border: 1px solid #cbd5e1; border-radius: 8px; display: block; }
-/* animação escondida até o aluno pedir (section[data-esconder]; js/main.js) */
-.animacao { position: relative; }
-.animacao .capa-anim { display: none; }
-.animacao.oculta > .tela, .animacao.oculta > .controlos { visibility: hidden; }
-.animacao.oculta .capa-anim { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
-	position: absolute; inset: 0; border: 3px dashed #cbd5e1; border-radius: 12px; background: #f8fafc; }
-.animacao .capa-anim p { margin: 0; font-size: 0.8em; color: #64748b; }
-.animacao .capa-anim button { font: inherit; font-size: 0.75em; padding: 10px 26px; border-radius: 10px; cursor: pointer;
-	border: 2px solid #1d4ed8; background: #1d4ed8; color: #fff; font-weight: 600; }
-.animacao .capa-anim button:hover { background: #1e40af; }
-.animacao .esconder-anim { position: absolute; top: -40px; right: 130px; z-index: 2; font: inherit; font-size: 0.5em; padding: 4px 12px;
-	border-radius: 8px; border: 1.5px solid #94a3b8; background: rgba(255, 255, 255, 0.9); color: #475569; cursor: pointer; }
-.animacao .esconder-anim:hover { border-color: #1d4ed8; color: #1d4ed8; }
-.animacao.oculta .esconder-anim { display: none; }
+/* animação escondida até o aluno pedir (section[data-esconder] + .so-texto; js/main.js):
+   escondida, o enunciado ocupa a largura toda e com letra maior; mostrada, volta às duas colunas */
+.reveal section.so-texto .problema { grid-template-columns: 1fr; }
+.reveal section.so-texto .animacao { display: none; }
+.reveal section.so-texto .enunciado { font-size: 0.95em; }
+.reveal section.so-texto .enunciado p { margin-bottom: 20px; }
+.reveal section.so-texto .fig-enunciado { zoom: 1.5; }
+.reveal section[data-esconder]:not(.so-texto) .animacao { animation: entrar-anim 0.35s ease-out; }
+@keyframes entrar-anim { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+.reveal .botao-anim { position: absolute; top: -4px; right: 170px; z-index: 2; font: inherit; font-size: 0.5em; font-weight: 600;
+	padding: 5px 16px; border-radius: 8px; cursor: pointer; border: 2px solid #1d4ed8; background: #1d4ed8; color: #fff; }
+.reveal .botao-anim:hover { background: #1e40af; border-color: #1e40af; }
+.reveal section:not(.so-texto) > .botao-anim { background: #fff; color: #475569; border-color: #94a3b8; }
+.reveal section:not(.so-texto) > .botao-anim:hover { color: #1d4ed8; border-color: #1d4ed8; }
 
 /* ---------- controlos p5 ---------- */
 .controlos {
