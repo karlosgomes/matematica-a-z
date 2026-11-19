@@ -4,6 +4,8 @@
    Encostada a [AD], toca em T(12/5, 16/5): TP = (2/5)(4, −3) ⊥ AD = (3, 4) e ‖TP‖ = 2.
    Encostada a [BC], toca em T'(78/5, 16/5): T'Q = (2/5)(−4, −3) ⊥ BC = (−3, 4). PQ = 10.
    Arrasta-se a roda na horizontal (rola: o raio marcado roda); botões para encostar a cada lado e ▶ para rolar.
+   Duas soluções (uma de cada vez): pelo vetor normal (TP = (2/5)n) e pelas áreas do triângulo [AEP],
+   com E(3/2, 2) em [AD]: Área = ½·EP·2 = ½·AE·PT = ½·(5/2)·2 ⇒ EP = 5/2.
    ===================================================================== */
 SKETCHES['pe-p3'] = function (p, controlos) {
 	const W = 920, H = 600;
@@ -13,7 +15,7 @@ SKETCHES['pe-p3'] = function (p, controlos) {
 		lado: [123, 31, 162], zero: [239, 108, 0], texto: [30, 41, 59], cinza: [100, 116, 139]
 	};
 	const st = { x: 9, alvo: null, rolar: false, sentido: 1 };
-	let agarrado = false, cxRef, cxSol, btRolar;
+	let agarrado = false, cxRef, cxSol, cxAreas, btRolar;
 
 	const X = x => O.x + x * K, Y = y => O.y - y * K;
 
@@ -27,7 +29,9 @@ SKETCHES['pe-p3'] = function (p, controlos) {
 		UT.quebra(p, controlos);
 		cxRef = UT.caixa(p, controlos, 'Referencial', false);
 		cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
-		cxSol.changed(() => { if (cxSol.checked()) { cxRef.checked(true); st.rolar = false; st.alvo = XP; } });
+		cxAreas = UT.caixa(p, controlos, 'Solução pelas áreas', false);
+		cxSol.changed(() => { if (cxSol.checked()) { cxAreas.checked(false); cxRef.checked(true); st.rolar = false; st.alvo = XP; } });
+		cxAreas.changed(() => { if (cxAreas.checked()) { cxSol.checked(false); cxRef.checked(true); st.rolar = false; st.alvo = XP; } });
 	};
 
 	function arrastar(cv) {
@@ -95,7 +99,7 @@ SKETCHES['pe-p3'] = function (p, controlos) {
 			if (Math.abs(st.alvo - st.x) < 0.003) { st.x = st.alvo; st.alvo = null; }
 		}
 		btRolar.html(st.rolar ? '❚❚ Parar' : '▶ Rolar');
-		const ref = cxRef.checked(), sol = cxSol.checked(), x = st.x;
+		const ref = cxRef.checked(), sol = cxSol.checked(), areas = cxAreas.checked(), x = st.x;
 		const naP = Math.abs(x - XP) < 0.02, naQ = Math.abs(x - XQ) < 0.02;
 		p.background(255);
 
@@ -123,6 +127,18 @@ SKETCHES['pe-p3'] = function (p, controlos) {
 		p.noStroke(); p.fill(...COR.pq); p.circle(X(XP), Y(R), 9); p.circle(X(XQ), Y(R), 9);
 		rot('P', X(XP) - 4, Y(R) + 20, COR.pq, 22); rot('Q', X(XQ) + 4, Y(R) + 20, COR.pq, 22);
 
+		// solução pelas áreas: triângulo [AEP] e a sua altura relativa a [EP]
+		if (areas && naP) {
+			p.fill(46, 125, 50, 45); p.stroke(...COR.n); p.strokeWeight(2.5);
+			p.triangle(X(0), Y(0), X(1.5), Y(2), X(XP), Y(R));
+			p.drawingContext.setLineDash([7, 6]); p.stroke(...COR.cinza); p.strokeWeight(2);
+			p.line(X(0), Y(0), X(0), Y(2)); p.line(X(0), Y(2), X(1.5), Y(2)); p.drawingContext.setLineDash([]);
+			anguloReto([0, 2], [1, 0], [0, -1], COR.zero);
+			rot('2', X(0) - 14, Y(1), COR.cinza, 18, p.RIGHT);
+			p.noStroke(); p.fill(...COR.texto); p.circle(X(1.5), Y(2), 8);
+			rot('E', X(1.5) - 6, Y(2) - 20, COR.texto, 22, p.RIGHT);
+		}
+
 		// roda (o raio marcado roda quando ela rola)
 		const ang = -x / R;
 		p.fill(21, 101, 192, 25); p.stroke(...COR.roda); p.strokeWeight(3); p.circle(X(x), Y(R), 2 * R * K);
@@ -136,11 +152,12 @@ SKETCHES['pe-p3'] = function (p, controlos) {
 			const nu = naP ? [4 / 5, -3 / 5] : [-4 / 5, -3 / 5], lu = naP ? [-3 / 5, -4 / 5] : [3 / 5, -4 / 5];
 			p.stroke(...COR.lado); p.strokeWeight(5);
 			naP ? p.line(X(0), Y(0), X(3), Y(4)) : p.line(X(18), Y(0), X(15), Y(4));
-			seta(X(T[0]), Y(T[1]), X(C0[0]), Y(C0[1]), COR.n);
+			if (areas) { p.stroke(...COR.n); p.strokeWeight(3.5); p.line(X(T[0]), Y(T[1]), X(C0[0]), Y(C0[1])); }
+			else seta(X(T[0]), Y(T[1]), X(C0[0]), Y(C0[1]), COR.n);
 			anguloReto(T, nu, lu, COR.zero);
 			p.noStroke(); p.fill(...COR.texto); p.circle(X(T[0]), Y(T[1]), 8);
 			rot(naP ? 'T' : "T'", X(T[0]) + (naP ? -14 : 14), Y(T[1]) - 8, COR.texto, 22, naP ? p.RIGHT : p.LEFT);
-			rot(naP ? '‖TP‖ = 2' : "‖T'Q‖ = 2", X((T[0] + C0[0]) / 2) + (naP ? 10 : -10), Y((T[1] + C0[1]) / 2) - 18, COR.n, 18, naP ? p.LEFT : p.RIGHT, p.BOLD);
+			rot(areas ? (naP ? 'PT = 2' : "QT' = 2") : naP ? '‖TP‖ = 2' : "‖T'Q‖ = 2", X((T[0] + C0[0]) / 2) + (naP ? 10 : -10), Y((T[1] + C0[1]) / 2) - 18, COR.n, 18, naP ? p.LEFT : p.RIGHT, p.BOLD);
 		}
 
 		// vértices
@@ -165,6 +182,15 @@ SKETCHES['pe-p3'] = function (p, controlos) {
 			linha([['2  ', COR.cinza, p.BOLD], V('AD'), [' = (3, 4);  ', null], V('n', COR.n), [' = (4, −3) ⊥ ', null], V('AD'), [' porque (4, −3) · (3, 4) = 12 − 12 = 0', null]], 28, y); y += 31;
 			linha([['3  ', COR.cinza, p.BOLD], ['T: ponto de contacto com [AD]; o raio ', null], V('TP', COR.n), [' é ⊥ a [AD], com ‖', null], V('TP', COR.n), ['‖ = 2 e ‖', null], V('n', COR.n), ['‖ = 5  ⇒  ', null], V('TP', COR.n), [' = (2/5)', null], V('n', COR.n)], 28, y); y += 31;
 			linha([['4  ', COR.cinza, p.BOLD], ['T = A + k', null], V('AD'), [' = (3k, 4k),  P = T + (8/5, −6/5);  4k − 6/5 = 2 ⇒ k = 4/5:  ', null], ['T(12/5, 16/5),  P(4, 2)', COR.pq, p.BOLD]], 28, y); y += 31;
+			linha([['5  ', COR.cinza, p.BOLD], ['por simetria (reta x = 9):  ', null], ['Q(14, 2)', COR.pq, p.BOLD], ['   ⇒   ', null], ['PQ = 14 − 4 = 10', COR.pq, p.BOLD]], 28, y);
+		}
+		if (areas) {
+			p.noStroke(); p.fill(255, 240); p.stroke(226, 232, 240); p.strokeWeight(1.5); p.rect(14, H - 212, W - 28, 200, 10);
+			let y = H - 192;
+			linha([['1  ', COR.cinza, p.BOLD], ['altura √(5² − 3²) = 4, raio 2 ⇒ centro em y = 2;  E = ponto de [AD] a meia altura ⇒ AE = 5/2, E(3/2, 2)', null]], 28, y); y += 31;
+			linha([['2  ', COR.cinza, p.BOLD], ['triângulo [AEP] com base [EP] (em y = 2) e altura 2:   Área = ½ × EP × 2 = EP', null]], 28, y); y += 31;
+			linha([['3  ', COR.cinza, p.BOLD], ['o mesmo triângulo com base [AE] e altura PT = 2 (raio ⊥ [AD]):   Área = ½ × 5/2 × 2 = 5/2', null]], 28, y); y += 31;
+			linha([['4  ', COR.cinza, p.BOLD], ['EP = 5/2  ⇒  ', null], ['P(3/2 + 5/2, 2) = P(4, 2)', COR.pq, p.BOLD], ['   — sem equações de retas nem vetores', COR.cinza]], 28, y); y += 31;
 			linha([['5  ', COR.cinza, p.BOLD], ['por simetria (reta x = 9):  ', null], ['Q(14, 2)', COR.pq, p.BOLD], ['   ⇒   ', null], ['PQ = 14 − 4 = 10', COR.pq, p.BOLD]], 28, y);
 		}
 	};
