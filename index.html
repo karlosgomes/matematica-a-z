@@ -188,7 +188,7 @@
 								<a href="#/trig-p10a">10.1</a> · <a href="#/trig-p10b">10.2</a></li>
 							<li><a href="#/trig-p11">A roda gigante — $h(t) = 9 - 8\cos\left(\frac{\pi t}{12}\right)$</a></li>
 							<li><a href="#/trig-p12">A esfera suspensa da mola — $d(t) = 60 + 8\cos(3\pi t)$</a></li>
-							<!-- <li><a href="#/trig-p13">...</a></li> -->
+							<li><a href="#/trig-p13">O teclado do telefone — a soma de dois tons</a></li>
 						</ol>
 					</div>
 				</section>
@@ -587,6 +587,34 @@
 								<a href="https://karlosgomes.github.io/apps-matematica/oscilador-harmonico/#horizontal&amp;m=1&amp;k=88.83&amp;L=0.6&amp;x0=0.08&amp;v0=0&amp;w=2"
 								target="_blank">Oscilador harmónico</a> (na horizontal, em metros: equilíbrio a $0{,}6$ m da parede,
 								$x_0 = 0{,}08$ m, $v_0 = 0$, $\omega = \sqrt{k/m} \approx 3\pi$).</p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+
+				<!-- ------------ Problema 13 ------------ -->
+				<section id="trig-p13" class="sans" data-sketch="trig-p13">
+					<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+					<h4>Problema 13 — O teclado do telefone</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Num telefone de teclas, cada tecla produz um som que é a soma de dois tons, descritos por
+								$y = \sin(2\pi \ell t)$ e $y = \sin(2\pi h t)$, em que $\ell$ e $h$ são a frequência baixa e a
+								frequência alta (em hertz) indicadas na figura ($t$ em segundos). Por exemplo, a tecla 7 corresponde
+								a $\ell = 852$ e $h = 1209$, e o som emitido é</p>
+							<p style="text-align:center">$s(t) = \sin(2\pi \cdot 852\, t) + \sin(2\pi \cdot 1209\, t).$</p>
+							<ul class="condicoes">
+								<li><span class="alinea">13.1.</span> Determina o período de cada um dos dois tons que formam o som da tecla 7.</li>
+								<li><span class="alinea">13.2.</span> Mostra que $\frac13$ s é período da função $s$, isto é, que
+									$s\left(t + \frac13\right) = s(t)$ para todo o $t$.</li>
+								<li><span class="alinea">13.3.</span> Escreve a função que descreve o som da tecla $*$ e mostra que
+									$1$ s é período dessa função.</li>
+							</ul>
+							<p class="dica">Carrega numa tecla da figura (ou nas teclas 0–9, * e # do computador) para ouvir o som;
+								por baixo está o gráfico da soma dos dois tons. Os botões 13.1 … 13.3 preparam a figura para cada alínea.</p>
 						</div>
 						<div class="animacao">
 							<div class="tela"></div>
@@ -1000,6 +1028,7 @@
 	<script src="sketches/trigonometria/p10.js"></script>
 	<script src="sketches/trigonometria/p11.js"></script>
 	<script src="sketches/trigonometria/p12.js"></script>
+	<script src="sketches/trigonometria/p13.js"></script>
 	<script src="sketches/produto-escalar/definicao.js"></script>
 	<script src="sketches/produto-escalar/angulo.js"></script>
 	<script src="sketches/produto-escalar/retas.js"></script>
