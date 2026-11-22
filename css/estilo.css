@@ -141,6 +141,11 @@
 .enunciado ul.condicoes li { margin: 8px 0; padding: 6px 10px; border-radius: 8px; }
 .enunciado ul.condicoes li.outra { opacity: 0.35; }
 .enunciado ul.condicoes li.atual { background: #eff6ff; border-left: 4px solid #1d4ed8; }
+/* alíneas em blocos (quando não cabem numa lista: p. ex. escolha múltipla), destacadas pelos botões 10.1… */
+.enunciado .item-al { margin: 4px 0; padding: 2px 10px; border-radius: 8px; border-left: 4px solid transparent; }
+.enunciado .item-al > p { margin: 6px 0; }
+.enunciado .item-al.outra { opacity: 0.35; }
+.enunciado .item-al.atual { background: #eff6ff; border-left-color: #1d4ed8; }
 .enunciado .ideia { font-size: 0.9em; color: #334155; }
 .enunciado .dica { font-size: 0.75em; color: #64748b; }
 .enunciado .fig-enunciado { display: block; margin: 0.3em auto; max-width: 100%; height: auto; }

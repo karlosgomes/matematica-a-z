@@ -4,8 +4,11 @@
    Ângulos: (a, b) = 60°, (b, c) = 90°, (a, c) = 135°
    Coordenadas concretas que verificam a tabela:
        b = (√2, 0, 0),  c = (0, √2, 0),  a = (1/√2, −1, 1/√2)
-   AB² = 2 + 2 − 2·1 = 2,  BC² = 2 + 2 − 0 = 4,  AC² = 2 + 2 + 2√2 = 4 + 2√2
-   ⇒ AB < BC < AC  → (D)
+   10.1 sem a lei dos cossenos (pedido do utilizador, 2026-11-22): ‖a‖ = ‖b‖ = ‖c‖, logo [OAB], [OBC], [OAC]
+   são isósceles com os mesmos lados iguais; o lado oposto a O cresce com o ângulo em O:
+   (a, b) agudo < (b, c) reto < (a, c) obtuso  ⇒  AB < BC < AC  → (D)
+   (AB = √2, BC = 2, AC = √(4 + 2√2) ≈ 2,61 ficam na figura só como verificação)
+   Botões 10.1–10.3 destacam a alínea no enunciado (div.item-al.atual / .outra).
    Figura 3D à mão em perspetiva (como espaco.js): a vista roda arrastando.
    ===================================================================== */
 (function () {
@@ -38,23 +41,31 @@
 		let az = 120, el = 30;
 		let alvo = null;                     // [az, el] para onde a vista roda ao escolher um par
 		let F_ = [1, 0, 0], R_ = [0, 1, 0], U_ = [0, 0, 1];
-		let par = null, cxSol;
+		let al = 0, cxSol, itens = [];
 		const botoes = {};
+		const PAR_DE = { 2: 'bc', 3: 'ac' };
+		const cor = k => PARES[k].s > 0 ? COR.pos : PARES[k].s < 0 ? COR.neg : COR.zero;   // cor do sinal do par
+		const VISTA1 = [120, 30];            // 10.1: a vista inicial
 
 		p.setup = function () {
 			arrastar(p.createCanvas(W, H).elt);
 			p.textFont('Source Sans Pro');
-			p.createSpan('Arrasta para rodar a vista · Ângulo de').parent(controlos).addClass('dica-arrastar');
-			[['ab', 'a e b'], ['bc', 'b e c'], ['ac', 'a e c']].forEach(([k, t]) => {
-				botoes[k] = UT.botao(p, controlos, t, () => { par = par === k ? null : k; marcar(); if (par) alvo = vistaDe(par); });
+			p.createSpan('Arrasta para rodar a vista ·').parent(controlos).addClass('dica-arrastar');
+			[1, 2, 3].forEach(a => {
+				botoes[a] = UT.botao(p, controlos, `10.${a}`, () => escolher(al === a ? 0 : a));
 			});
 			UT.quebra(p, controlos);
 			cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
-			marcar();
+			itens = [...controlos.closest('section').querySelectorAll('.item-al')];
+			escolher(0);
 		};
-		// o par escolhido fica com o botão azul; os outros ficam claros
-		function marcar() {
-			Object.entries(botoes).forEach(([k, b]) => k === par ? b.removeClass('atalho') : b.addClass('atalho'));
+		// a alínea escolhida: botão azul (os outros claros) e destaque no enunciado
+		function escolher(a) {
+			al = a;
+			Object.entries(botoes).forEach(([k, b]) => +k === al ? b.removeClass('atalho') : b.addClass('atalho'));
+			itens.forEach((el, i) => { el.classList.toggle('atual', al === i + 1); el.classList.toggle('outra', al !== 0 && al !== i + 1); });
+			if (PAR_DE[al]) alvo = vistaDe(PAR_DE[al]);
+			else if (al === 1) alvo = VISTA1;
 		}
 
 		// vista perpendicular ao plano dos dois vetores do par (o ângulo aparece em verdadeira grandeza)
@@ -193,6 +204,35 @@
 			return pr(P(th / 2).map(x => x * 0.62));
 		}
 
+		// 10.1: os três triângulos isósceles [OAB], [OBC], [OAC] lado a lado, em verdadeira grandeza
+		function leque() {
+			const R = 78, y0 = H - 58;                       // comprimento dos lados iguais (√2); y do vértice O
+			const T = [['ab', 'A', 'B', 'AB', 'agudo'], ['bc', 'B', 'C', 'BC', 'reto'], ['ac', 'A', 'C', 'AC', 'obtuso']];
+			const larg = T.map(([k]) => 2 * R * Math.sin(Math.acos(dot3(unit(VET[PARES[k].u]), unit(VET[PARES[k].v]))) / 2));
+			const gap = 34, total = larg.reduce((x, y) => x + y) + 2 * gap;
+			p.stroke(203, 213, 225); p.strokeWeight(1.5); p.fill(255, 235);
+			p.rect(W - 12 - total - 36, y0 - R - 40, total + 24, R + 40 + 46, 8);
+			let x = W - 12 - total - 24;
+			T.forEach(([k, X, Y, nome, tipo], i) => {
+				const q = PARES[k], th = Math.acos(dot3(unit(VET[q.u]), unit(VET[q.v]))), cs = cor(k);
+				const ox = x + larg[i] / 2, h = R * Math.cos(th / 2);
+				const P1 = [ox - larg[i] / 2, y0 - h], P2 = [ox + larg[i] / 2, y0 - h];
+				// ângulo em O
+				p.noStroke(); p.fill(...cs, 60);
+				p.arc(ox, y0, 52, 52, -Math.PI / 2 - th / 2, -Math.PI / 2 + th / 2, p.PIE);
+				// lados iguais (cores dos vetores) e o lado oposto
+				p.strokeWeight(3); p.stroke(...COR[q.u]); p.line(ox, y0, ...P1);
+				p.stroke(...COR[q.v]); p.line(ox, y0, ...P2);
+				p.stroke(...COR.texto); p.strokeWeight(4); p.line(...P1, ...P2);
+				rot(nome, ox, y0 - h - 16, COR.texto, 18, 255, p.BOLD);
+				rot(X, P1[0] - 9, P1[1] + 2, COR.texto, 16, 255, p.BOLDITALIC);
+				rot(Y, P2[0] + 9, P2[1] + 2, COR.texto, 16, 255, p.BOLDITALIC);
+				rot('O', ox, y0 + 13, COR.texto, 15, 255, p.ITALIC);
+				rot(tipo, ox, y0 + 30, cs, 17, 255, p.BOLD);
+				x += larg[i] + gap;
+			});
+		}
+
 		/* ---------------- desenho ---------------- */
 		p.draw = function () {
 			if (alvo) {
@@ -207,7 +247,7 @@
 			const sol = cxSol.checked();
 			const O = [0, 0, 0];
 			const PT = { A: VA, B: VB, C: VC };
-			const sel = par ? PARES[par] : null;
+			const sel = PAR_DE[al] ? PARES[PAR_DE[al]] : null;
 			const QG = pr(mul(add(add(VA, VB), VC), 1 / 3));     // centro do triângulo, no ecrã
 
 			eixos();
@@ -237,6 +277,12 @@
 				const L = angulo(VET[sel.u], VET[sel.v], cs);
 				if (sol) rot(sel.ang, L.x, L.y, cs, 20, 255, p.BOLD);
 			}
+			// 10.1: os três ângulos em O (raios diferentes para não se sobreporem)
+			if (al === 1) {
+				[['ab', 0.5], ['bc', 0.42], ['ac', 0.34]].forEach(([k, rr]) => {
+					const L = angulo(VET[PARES[k].u], VET[PARES[k].v], cor(k), rr);
+				});
+			}
 
 			// pontos A, B, C (nome para fora do triângulo)
 			['A', 'B', 'C'].forEach(n => {
@@ -247,8 +293,8 @@
 			});
 			rot('O', Q0.x - 4, Q0.y + 22, COR.texto, 22, 255, p.ITALIC);
 
-			// comprimentos dos lados (com a solução)
-			if (sol) {
+			// comprimentos dos lados (com a solução da 10.1, só como verificação)
+			if (sol && al === 1) {
 				const lado = (X, Y, Z, t) => {
 					// ponto do lado mais afastado (no ecrã) do terceiro vértice e de O
 					const QZ = pr(PT[Z]);
@@ -271,12 +317,18 @@
 				};
 				lado('A', 'B', 'C', 'AB = √2');
 				lado('B', 'C', 'A', 'BC = 2');
-				lado('A', 'C', 'B', 'AC = √(4 + 2√2) ≈ 2,61');
+				lado('A', 'C', 'B', 'AC ≈ 2,61');
 			}
 
 			// lembrete: a diagonal da tabela dá as normas
 			const N = COR.texto;
 			const topo = [[['‖', N], v('a', COR.a), ['‖ = ‖', N], v('b', COR.b), ['‖ = ‖', N], v('c', COR.c), ['‖ = √2', N]]];
+			const linhaPar = k => {
+				const q = PARES[k], cs = cor(k);
+				return [v(q.u, COR[q.u]), [' · ', N], v(q.v, COR[q.v]), [' = ' + q.txt, cs, p.BOLD],
+					[q.s > 0 ? '   (> 0: agudo)' : q.s < 0 ? '   (< 0: obtuso)' : '   (= 0: reto)', cs]];
+			};
+			if (al === 1) ['ab', 'bc', 'ac'].forEach(k => topo.push(linhaPar(k)));
 			if (sel) {
 				const cs = sel.s > 0 ? COR.pos : sel.s < 0 ? COR.neg : COR.zero;
 				topo.push([v(sel.u, COR[sel.u]), [' · ', N], v(sel.v, COR[sel.v]), [' = ' + sel.txt, cs, p.BOLD],
@@ -284,16 +336,21 @@
 			}
 			caixa(topo, 12, 12, 34, 22);
 
-			if (sol) {
+			if (sol && al) {
 				const V = COR.pos, a = v('a', COR.a), b = v('b', COR.b), c = v('c', COR.c);
-				caixa([
-					[['AB² = ‖', N], b, [' − ', N], a, ['‖² = 2 + 2 − 2 × 1 = 2', N]],
-					[['BC² = ‖', N], c, [' − ', N], b, ['‖² = 2 + 2 − 2 × 0 = 4', N]],
-					[['AC² = ‖', N], c, [' − ', N], a, ['‖² = 2 + 2 + 2√2 = 4 + 2√2', N]],
-					[['AB < BC < AC   → (D)', V, p.BOLD]],
-					[b, [' · ', N], c, [' = 0  ⇒  ', N], b, [' ⊥ ', N], c],
-					[['cos θ = −√2 / (√2 × √2) = −√2/2  ⇒  θ = 135°', N]]
-				], W - 12, H - 12 - 6 * 34 - 12, 34, 21, true);
+				const L = {
+					1: [[['‖', N], a, ['‖ = ‖', N], b, ['‖ = ‖', N], c, ['‖  ⇒  [OAB], [OBC], [OAC]', N]],
+						[['isósceles com os mesmos lados iguais:', N]],
+						[['maior ângulo em O  ⇒  maior lado oposto', N]],
+						[['agudo (', N], a, [', ', N], b, [') < reto (', N], b, [', ', N], c, [') < obtuso (', N], a, [', ', N], c, [')', N]],
+						[['⇒  AB < BC < AC   → (D)', V, p.BOLD]]],
+					2: [[b, [' · ', N], c, [' = 0  ⇒  ', N], b, [' ⊥ ', N], c, ['  (ângulo reto)', N]]],
+					3: [[['cos θ = ', N], a, [' · ', N], c, [' / (‖', N], a, ['‖ × ‖', N], c, ['‖)', N]],
+						[['       = −√2 / (√2 × √2) = −√2/2', N]],
+						[['⇒  θ = 135°', V, p.BOLD]]]
+				}[al];
+				caixa(L, W - 12, al === 1 ? 12 : H - 12 - L.length * 34 - 12, 34, 21, true);
+				if (al === 1) leque();
 			}
 		};
 	};
