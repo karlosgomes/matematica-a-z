@@ -14,6 +14,8 @@ SKETCHES['pe-p6'] = function (p, controlos) {
 	};
 	const st = { h: 1.2, alvo: null };
 	let agarrado = false, cxDiag, cxSol;
+	let al = 0, itens = [];
+	const botoes = {};
 
 	const X = x => O.x + x * K, Y = y => O.y - y * K;
 
@@ -21,12 +23,22 @@ SKETCHES['pe-p6'] = function (p, controlos) {
 		arrastar(p.createCanvas(W, H).elt);
 		p.textFont('Source Sans Pro');
 		p.createSpan('Arrasta o lado [AD] para cima ou para baixo ·').parent(controlos).addClass('dica-arrastar');
-		UT.botao(p, controlos, 'Início', () => { st.alvo = 1.2; }, 'atalho');
+		botoes[1] = UT.botao(p, controlos, '6.1', () => escolher(al === 1 ? 0 : 1), 'atalho');
+		botoes[2] = UT.botao(p, controlos, '6.2', () => escolher(al === 2 ? 0 : 2), 'atalho');
+		UT.botao(p, controlos, 'Início', () => { escolher(0); st.alvo = 1.2; }, 'atalho');
 		UT.quebra(p, controlos);
 		cxDiag = UT.caixa(p, controlos, 'Diagonais', false);
 		cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
 		cxSol.changed(() => { if (cxSol.checked()) st.alvo = 2; });
+		itens = [...controlos.closest('section').querySelectorAll('.item-al')];
 	};
+	// alínea escolhida: botão azul e destaque no enunciado (2026-11-22); 6.1 a soma, 6.2 as diagonais
+	function escolher(a) {
+		al = a;
+		Object.entries(botoes).forEach(([k, b]) => +k === al ? b.removeClass('atalho') : b.addClass('atalho'));
+		itens.forEach((el, i) => { el.classList.toggle('atual', al === i + 1); el.classList.toggle('outra', al !== 0 && al !== i + 1); });
+		if (al) { cxDiag.checked(al === 2); st.alvo = 2; }
+	}
 
 	// arrastar o lado [AD] (ponteiro convertido com o retângulo do canvas, que o Reveal escala)
 	function arrastar(cv) {
@@ -176,12 +188,19 @@ SKETCHES['pe-p6'] = function (p, controlos) {
 
 		// solução
 		if (sol) {
-			p.noStroke(); p.fill(255, 240); p.stroke(226, 232, 240); p.strokeWeight(1.5); p.rect(14, H - 152, 560, 140, 10);
-			let y = H - 132;
-			linha([V('AB'), [' + ', null], V('AC'), [' = (−1, −h) + (3, −h) = (2, −2h)', null]], 28, y); y += 32;
-			linha([['4 + 4h² = 20   ⇒   ', null], ['h = 2', COR.pos, p.BOLD], ['        ', null], V('BD', COR.bd), [' = (3, 2)  ⇒  ‖', null], V('BD', COR.bd), ['‖ = ', null], ['√13  (C)', COR.pos, p.BOLD]], 28, y); y += 32;
-			linha([V('AC', COR.v), [' · ', null], V('BD', COR.bd), [' = 9 − 4 = 5;   cos θ = 5 / (√13 × √13) = ', null], ['5/13', COR.pos, p.BOLD]], 28, y); y += 32;
-			linha([['5/13 ≈ 0,385 ≠ 0   ⇒   as diagonais não são perpendiculares', null]], 28, y);
+			// só as linhas da alínea escolhida (todas, sem alínea)
+			const L = [];
+			if (al !== 2) {
+				L.push([V('AB'), [' + ', null], V('AC'), [' = (−1, −h) + (3, −h) = (2, −2h)', null]]);
+				L.push([['4 + 4h² = 20   ⇒   ', null], ['h = 2', COR.pos, p.BOLD], ['        ', null], V('BD', COR.bd), [' = (3, 2)  ⇒  ‖', null], V('BD', COR.bd), ['‖ = ', null], ['√13  (C)', COR.pos, p.BOLD]]);
+			}
+			if (al !== 1) {
+				if (al === 2) L.push([['h = 2:   ', null], V('AC', COR.v), [' = (3, −2),   ', null], V('BD', COR.bd), [' = (3, 2),   ‖', null], V('AC', COR.v), ['‖ = ‖', null], V('BD', COR.bd), ['‖ = √13', null]]);
+				L.push([V('AC', COR.v), [' · ', null], V('BD', COR.bd), [' = 9 − 4 = 5;   cos θ = 5 / (√13 × √13) = ', null], ['5/13', COR.pos, p.BOLD]]);
+				L.push([['5/13 ≈ 0,385 ≠ 0   ⇒   as diagonais não são perpendiculares', null]]);
+			}
+			p.noStroke(); p.fill(255, 240); p.stroke(226, 232, 240); p.strokeWeight(1.5); p.rect(14, H - 12 - (12 + 32 * L.length), 560, 12 + 32 * L.length, 10);
+			L.forEach((l, k) => linha(l, 28, H - 12 - (12 + 32 * L.length) + 20 + 32 * k));
 		}
 	};
 };

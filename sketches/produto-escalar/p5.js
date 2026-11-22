@@ -20,6 +20,8 @@ SKETCHES['pe-p5'] = function (p, controlos) {
 	// origem do representante de BC que se desloca (e o alvo da animação)
 	const rep = { x: P.B[0], y: P.B[1] }, alvo = { x: P.B[0], y: P.B[1] };
 	let agarrado = false, desvio = [0, 0], cxGrelha, cxRef, cxSol;
+	let al = 0, itens = [];
+	const botoes = {};
 
 	const X = x => O.x + x * K, Y = y => O.y - y * K;
 	const em = (q, eps = 0.02) => Math.hypot(rep.x - q[0], rep.y - q[1]) < eps;
@@ -28,15 +30,23 @@ SKETCHES['pe-p5'] = function (p, controlos) {
 		arrastar(p.createCanvas(W, H).elt);
 		p.textFont('Source Sans Pro');
 		p.createSpan('Arrasta o vetor BC ·').parent(controlos).addClass('dica-arrastar');
-		UT.botao(p, controlos, 'Soma (5.1)', () => ir(P.E), 'atalho');
-		UT.botao(p, controlos, 'Ângulo (5.2)', () => ir(P.A), 'atalho');
-		UT.botao(p, controlos, 'Início', () => ir(P.B), 'atalho');
+		botoes[1] = UT.botao(p, controlos, '5.1 · soma', () => escolher(al === 1 ? 0 : 1), 'atalho');
+		botoes[2] = UT.botao(p, controlos, '5.2 · ângulo', () => escolher(al === 2 ? 0 : 2), 'atalho');
+		UT.botao(p, controlos, 'Início', () => escolher(0), 'atalho');
 		UT.quebra(p, controlos);
 		cxGrelha = UT.caixa(p, controlos, 'Quadrícula de triângulos', false);
 		cxRef = UT.caixa(p, controlos, 'Referencial', false);
 		cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
+		itens = [...controlos.closest('section').querySelectorAll('.item-al')];
 	};
 	function ir(q) { alvo.x = q[0]; alvo.y = q[1]; }
+	// alínea escolhida: botão azul, destaque no enunciado e BC na posição da alínea (2026-11-22)
+	function escolher(a) {
+		al = a;
+		Object.entries(botoes).forEach(([k, b]) => +k === al ? b.removeClass('atalho') : b.addClass('atalho'));
+		itens.forEach((el, i) => { el.classList.toggle('atual', al === i + 1); el.classList.toggle('outra', al !== 0 && al !== i + 1); });
+		ir(al === 1 ? P.E : al === 2 ? P.A : P.B);
+	}
 	// nó mais próximo da quadrícula de triângulos (i·(1, 0) + j·(1/2, √3/2))
 	function no(x, y) {
 		const j = p.constrain(Math.round(y / h3), -2, 2), i = p.constrain(Math.round(x - 0.5 * j), -3, 3);
@@ -202,12 +212,19 @@ SKETCHES['pe-p5'] = function (p, controlos) {
 
 		// solução
 		if (cxSol.checked()) {
-			p.noStroke(); p.fill(255, 240); p.stroke(226, 232, 240); p.strokeWeight(1.5); p.rect(14, 10, 640, 140, 10);
-			let y = 30;
-			linha([vAE, [' = (3/2, −√3/2)      ', COR.u], vBC, [' = (1/2, −√3/2)', COR.v]], 28, y); y += 32;
-			linha([vAE, [' + ', null], vBC, [' = (2, −√3)    ⇒   ‖', null], vAE, [' + ', null], vBC, ['‖ = √(4 + 3) = ', null], ['√7   (B)', COR.soma, p.BOLD]], 28, y); y += 32;
-			linha([vAE, [' · ', null], vBC, [' = 3/4 + 3/4 = ', null], ['3/2', COR.pos, p.BOLD], ['      ‖', null], vAE, ['‖ = √3,  ‖', null], vBC, ['‖ = 1', null]], 28, y); y += 32;
-			linha([['cos θ = (3/2) / (√3 × 1) = √3/2   ⇒   ', null], ['θ = 30°', COR.pos, p.BOLD]], 28, y);
+			// só as linhas da alínea escolhida (todas, sem alínea)
+			const L = [];
+			if (al !== 2) {
+				L.push([vAE, [' = (3/2, −√3/2)      ', COR.u], vBC, [' = (1/2, −√3/2)', COR.v]]);
+				L.push([vAE, [' + ', null], vBC, [' = (2, −√3)    ⇒   ‖', null], vAE, [' + ', null], vBC, ['‖ = √(4 + 3) = ', null], ['√7   (B)', COR.soma, p.BOLD]]);
+			}
+			if (al !== 1) {
+				if (al === 2) L.push([vAE, [' = (3/2, −√3/2)      ', COR.u], vBC, [' = (1/2, −√3/2)', COR.v]]);
+				L.push([vAE, [' · ', null], vBC, [' = 3/4 + 3/4 = ', null], ['3/2', COR.pos, p.BOLD], ['      ‖', null], vAE, ['‖ = √3,  ‖', null], vBC, ['‖ = 1', null]]);
+				L.push([['cos θ = (3/2) / (√3 × 1) = √3/2   ⇒   ', null], ['θ = 30°', COR.pos, p.BOLD]]);
+			}
+			p.noStroke(); p.fill(255, 240); p.stroke(226, 232, 240); p.strokeWeight(1.5); p.rect(14, 10, 640, 12 + 32 * L.length, 10);
+			L.forEach((l, i) => linha(l, 28, 30 + 32 * i));
 		}
 	};
 };
