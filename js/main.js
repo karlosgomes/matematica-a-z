@@ -33,9 +33,16 @@ function iniciarSketches() {
 	// animação escondida ao abrir o problema (data-esconder): o aluno tenta primeiro e só depois a vê
 	// (pedido do utilizador, 2026-11-17, problemas do Produto escalar). Escondida, o enunciado ocupa o slide todo;
 	// o botão no topo mostra-a (texto encosta à esquerda, animação à direita). Volta a esconder-se ao sair do slide.
+	// Ao esconder, a animação volta ao estado inicial e o enunciado fica sem destaques de alíneas
+	// (pedido do utilizador, 2026-11-22); ao mostrar, o sketch recriado volta a correr.
 	const esconder = (sec, sim) => {
 		sec.classList.toggle('so-texto', sim);
 		sec.querySelector('.botao-anim').textContent = sim ? '▶ Mostrar a animação' : '✕ Esconder a animação';
+		const id = sec.dataset.sketch;
+		if (sim) {
+			sec.querySelectorAll('.enunciado .atual, .enunciado .outra').forEach(el => el.classList.remove('atual', 'outra'));
+			if (id && instancias[id]) criarSketch(sec);
+		} else if (id && instancias[id] && sec === Reveal.getCurrentSlide()) instancias[id].loop();
 	};
 	document.querySelectorAll('section[data-esconder]').forEach(sec => {
 		const bt = document.createElement('button');
@@ -48,8 +55,7 @@ function iniciarSketches() {
 	const ativar = ({ currentSlide, previousSlide }) => {
 		// ao sair de um problema: animação escondida e posta no estado inicial (pedido do utilizador, 2026-11-17)
 		if (previousSlide && previousSlide.hasAttribute('data-esconder')) {
-			esconder(previousSlide, true);
-			if (previousSlide.dataset.sketch && instancias[previousSlide.dataset.sketch]) criarSketch(previousSlide);
+			esconder(previousSlide, true);       // também recria o sketch (estado inicial)
 		}
 		const ant = previousSlide && previousSlide.dataset.sketch;
 		const atual = currentSlide && currentSlide.dataset.sketch;
