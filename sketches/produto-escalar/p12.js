@@ -27,7 +27,7 @@
 		let az = -90, el = 20, h = 3.2;
 		let alvo = null, alvoH = null;
 		let F_ = [1, 0, 0], R_ = [0, 1, 0], U_ = [0, 0, 1];
-		let cxRef, cxSol;
+		let cxRef, cxSol, cxCheio;
 		const pts = () => ({ A: [-R, 0, 0], B: [R, 0, 0], C: [1.5, 2, h], D: [-1.5, 2, h], H: [-1.5, 2, 0] });
 
 		p.setup = function () {
@@ -36,6 +36,7 @@
 			p.createSpan('Arrasta para rodar · arrasta C ou D para mudar a altura ·').parent(controlos).addClass('dica-arrastar');
 			UT.botao(p, controlos, 'Vista inicial', () => { alvo = [-90, 20]; }, 'atalho');
 			UT.quebra(p, controlos);
+			cxCheio = UT.caixa(p, controlos, 'Preencher as figuras', true);
 			cxRef = UT.caixa(p, controlos, 'Referencial', false);
 			cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
 			cxSol.changed(() => { if (cxSol.checked()) { cxRef.checked(true); alvoH = H21; } });
@@ -177,12 +178,15 @@
 					else tracejado(q0, q1, COR.cil, 1.3);
 				}
 			};
-			// eixos (origem no centro de C1)
-			if (ref) [[[1, 0, 0], 'x', 3.4, 5.2], [[0, 1, 0], 'y', 3.4, 5.2], [[0, 0, 1], 'z', h + 0.2, h + 1.6]].forEach(([e, nome, a, b]) => {
-				seta(mul(e, a), mul(e, b), COR.eixo, 1.8);
+			// eixos (origem no centro de C1), desde a origem: a parte dentro do cilindro a tracejado, a de fora a cheio
+			// (pedido do utilizador, 2026-11-24: as linhas do referencial têm de se ver)
+			if (ref) [[[1, 0, 0], 'x', R, 4.8], [[0, 1, 0], 'y', R, 4.8], [[0, 0, 1], 'z', h, h + 1.6]].forEach(([e, nome, a, b]) => {
+				tracejado([0, 0, 0], mul(e, a), COR.cinza, 1.6);
+				seta(mul(e, a), mul(e, b), COR.cinza, 2);
 				const T = pr(mul(e, b + 0.4));
 				rot(nome, T.x, T.y, COR.cinza, 22, 255, p.ITALIC);
 			});
+			if (ref) { const O = pr([0, 0, 0]); p.noStroke(); p.fill(...COR.cinza); p.circle(O.x, O.y, 7); }
 			circ(0, baixoVe);
 			circ(h, cimaVe);
 			// geratrizes do contorno (tangentes vistas do olho)
@@ -193,8 +197,7 @@
 			}
 			// preenchimentos: trapézio [ABCD] e triângulo [ABH]
 			const enche = (ks, cor, alfa) => { p.noStroke(); p.fill(...cor, alfa); p.beginShape(); ks.forEach(k => { const q = pr(P[k]); p.vertex(q.x, q.y); }); p.endShape(p.CLOSE); };
-			enche(['A', 'B', 'C', 'D'], COR.trap, 34);
-			enche(['A', 'B', 'H'], COR.tri, 40);
+			if (cxCheio.checked()) { enche(['A', 'B', 'C', 'D'], COR.trap, 34); enche(['A', 'B', 'H'], COR.tri, 40); }
 			// lados: «baixo»/«cima» = sobre uma base; «lat» = sobre a superfície lateral (ângulo); «int» = interior
 			const phiD = Math.atan2(2, -1.5);
 			const LADOS = [['A', 'B', 'baixo', COR.trap], ['B', 'C', 'int', COR.trap], ['C', 'D', 'cima', COR.trap], ['D', 'A', 'int', COR.trap],
@@ -247,7 +250,7 @@
 					[['altura do trapézio = dist. de D ao eixo Ox = √(4 + h²)', N]],
 					[['(5 + 3)/2 × √(4 + h²) = 4 × 5  ⇔  √(4 + h²) = 5', N]],
 					[['⇔  h = √21   → (D)', V, p.BOLD]]
-				], W - 12, H - 12 - 8 * 31 - 12, 31, 18, true);
+				], W - 12, 12, 31, 18, true);                  // em cima, à direita: o eixo x (à direita do cilindro) fica à vista
 			}
 		};
 	};
