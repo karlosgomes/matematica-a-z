@@ -1,15 +1,11 @@
 /* =====================================================================
-   Produto escalar · Problema 16 — Tabela de produtos escalares
-   ‖a‖ = ‖b‖ = ‖c‖ = √2,  a·b = 1,  b·c = 0,  a·c = −√2
-   Ângulos: (a, b) = 60°, (b, c) = 90°, (a, c) = 135°
-   Coordenadas concretas que verificam a tabela:
-       b = (√2, 0, 0),  c = (0, √2, 0),  a = (1/√2, −1, 1/√2)
-   16.1 sem a lei dos cossenos (pedido do utilizador, 2026-11-22): ‖a‖ = ‖b‖ = ‖c‖, logo [OAB], [OBC], [OAC]
-   são isósceles com os mesmos lados iguais; o lado oposto a O cresce com o ângulo em O:
-   (a, b) agudo < (b, c) reto < (a, c) obtuso  ⇒  AB < BC < AC  → (D)
-   (AB = √2, BC = 2, AC = √(4 + 2√2) ≈ 2,61 ficam na figura só como verificação)
-   Botões 16.1–16.3 destacam a alínea no enunciado (div.item-al.atual / .outra).
-   Figura 3D à mão em perspetiva (como espaco.js): a vista roda arrastando.
+   Produto escalar · Problema 16 — Área de um triângulo num cubo
+   (Suneung 2022, opção Geometria, item 27; ~/MAT_A_26_27/geometria/coreia/coreia_exames.tex, n.º 34)
+   Cubo [ABCDEFGH] de aresta 4, M ponto médio de [AD]; área de [MEG].
+   Referencial com origem em E: E(0,0,0), F(4,0,0), G(4,4,0), H(0,4,0), A(0,0,4), B(4,0,4), C(4,4,4), D(0,4,4), M(0,2,4).
+   EM = (0,2,4), EG = (4,4,0), EM·EG = 8, ‖EM‖ = √20, ‖EG‖ = √32, cos θ = 1/√10, sen θ = 3/√10,
+   Área = ½·√20·√32·3/√10 = 12  → (D).
+   Figura 3D à mão em perspetiva (como p10.js): a vista roda arrastando; arestas escondidas a tracejado.
    ===================================================================== */
 (function () {
 	const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
@@ -17,66 +13,41 @@
 	const mul = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
 	const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 	const unit = a => mul(a, 1 / Math.hypot(...a));
-	const r2 = Math.SQRT2;
 
-	const VA = [1 / r2, -1, 1 / r2], VB = [r2, 0, 0], VC = [0, r2, 0];
+	const P = { E: [0, 0, 0], F: [4, 0, 0], G: [4, 4, 0], H: [0, 4, 0], A: [0, 0, 4], B: [4, 0, 4], C: [4, 4, 4], D: [0, 4, 4], M: [0, 2, 4] };
+	const ARESTAS = [['A', 'B'], ['B', 'C'], ['C', 'D'], ['D', 'A'], ['E', 'F'], ['F', 'G'], ['G', 'H'], ['H', 'E'], ['A', 'E'], ['B', 'F'], ['C', 'G'], ['D', 'H']];
+	// faces (vértices e normal exterior): uma aresta está escondida se as duas faces dela estiverem viradas para trás
+	const FACES = [[['A', 'B', 'C', 'D'], [0, 0, 1]], [['E', 'F', 'G', 'H'], [0, 0, -1]], [['A', 'B', 'F', 'E'], [0, -1, 0]],
+		[['D', 'C', 'G', 'H'], [0, 1, 0]], [['A', 'D', 'H', 'E'], [-1, 0, 0]], [['B', 'C', 'G', 'F'], [1, 0, 0]]];
 
 	SKETCHES['pe-p16'] = function (p, controlos) {
 		const W = 920, H = 600;
-		const G = { cx: 330, cy: 320, k: 170 };
-		const CEN = [0.5, 0.1, 0.2];
+		const G = { cx: 330, cy: 330, k: 64 };
+		const CEN = [2, 2, 2];
 		const COR = {
-			texto: [30, 41, 59], cinza: [100, 116, 139], eixo: [148, 163, 184], tri: [100, 116, 139],
-			a: [21, 101, 192], b: [123, 31, 162], c: [0, 131, 143],
-			pos: [46, 125, 50], zero: [239, 108, 0], neg: [211, 47, 47]
+			texto: [30, 41, 59], cinza: [100, 116, 139], eixo: [148, 163, 184], cubo: [71, 85, 105],
+			em: [21, 101, 192], eg: [123, 31, 162], tri: [234, 88, 12], pos: [46, 125, 50]
 		};
-		const VET = { a: VA, b: VB, c: VC };
-		// pares: produto escalar (texto), sinal, ângulo
-		const PARES = {
-			ab: { u: 'a', v: 'b', txt: '1', s: 1, ang: '60°' },
-			bc: { u: 'b', v: 'c', txt: '0', s: 0, ang: '90°' },
-			ac: { u: 'a', v: 'c', txt: '−√2', s: -1, ang: '135°' }
-		};
-
-		let az = 120, el = 30;
-		let alvo = null;                     // [az, el] para onde a vista roda ao escolher um par
+		let az = -76, el = 18;
+		let alvo = null;
 		let F_ = [1, 0, 0], R_ = [0, 1, 0], U_ = [0, 0, 1];
-		let al = 0, cxSol, itens = [];
-		const botoes = {};
-		const PAR_DE = { 2: 'bc', 3: 'ac' };
-		const cor = k => PARES[k].s > 0 ? COR.pos : PARES[k].s < 0 ? COR.neg : COR.zero;   // cor do sinal do par
-		const VISTA1 = [120, 30];            // 16.1: a vista inicial
+		let cxRef, cxVet, cxSol;
+
+		// nome de vetor com o arpão por cima, em HTML (para a legenda da caixa), como em p1.js
+		const vec = l => '<span style="display:inline-block;position:relative;font-style:italic">' + l +
+			'<span style="position:absolute;left:-0.05em;right:-0.15em;top:-0.62em;font-size:0.7em;font-style:normal;text-align:center;transform:scaleX(' + (l.length > 1 ? 2.2 : 1) + ')">⇀</span></span>';
 
 		p.setup = function () {
 			arrastar(p.createCanvas(W, H).elt);
 			p.textFont('Source Sans Pro');
-			p.createSpan('Arrasta para rodar a vista ·').parent(controlos).addClass('dica-arrastar');
-			[1, 2, 3].forEach(a => {
-				botoes[a] = UT.botao(p, controlos, `16.${a}`, () => escolher(al === a ? 0 : a));
-			});
+			p.createSpan('Arrasta para rodar o cubo ·').parent(controlos).addClass('dica-arrastar');
+			UT.botao(p, controlos, 'Vista inicial', () => { alvo = [-76, 18]; }, 'atalho');
 			UT.quebra(p, controlos);
+			cxRef = UT.caixa(p, controlos, 'Referencial', false);
+			cxVet = UT.caixa(p, controlos, 'Vetores ' + vec('EM') + ' e ' + vec('EG'), false);
 			cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
-			itens = [...controlos.closest('section').querySelectorAll('.item-al')];
-			escolher(0);
+			cxSol.changed(() => { if (cxSol.checked()) { cxRef.checked(true); cxVet.checked(true); } });
 		};
-		// a alínea escolhida: botão azul (os outros claros) e destaque no enunciado
-		function escolher(a) {
-			al = a;
-			Object.entries(botoes).forEach(([k, b]) => +k === al ? b.removeClass('atalho') : b.addClass('atalho'));
-			itens.forEach((el, i) => { el.classList.toggle('atual', al === i + 1); el.classList.toggle('outra', al !== 0 && al !== i + 1); });
-			if (PAR_DE[al]) alvo = vistaDe(PAR_DE[al]);
-			else if (al === 1) alvo = VISTA1;
-		}
-
-		// vista perpendicular ao plano dos dois vetores do par (o ângulo aparece em verdadeira grandeza)
-		function vistaDe(k) {
-			const u = VET[PARES[k].u], w = VET[PARES[k].v];
-			let n = unit([u[1] * w[2] - u[2] * w[1], u[2] * w[0] - u[0] * w[2], u[0] * w[1] - u[1] * w[0]]);
-			if (n[2] < 0) n = mul(n, -1);
-			const e = Math.min(Math.asin(n[2]) * 180 / Math.PI, 72);
-			const a = Math.hypot(n[0], n[1]) < 1e-6 ? az : Math.atan2(n[1], n[0]) * 180 / Math.PI;
-			return [a, e];
-		}
 
 		function arrastar(cv) {
 			let ultimo = null;
@@ -171,72 +142,25 @@
 		}
 		const v = (s, cor) => [s, cor, p.BOLDITALIC, true];
 
-		function eixos() {
-			[[[1, 0, 0], 'x'], [[0, 1, 0], 'y'], [[0, 0, 1], 'z']].forEach(([e, nome]) => {
-				seta(mul(e, -1.1), mul(e, 2.3), COR.eixo, 1.6);
-				const T = pr(mul(e, 2.5));
-				rot(nome, T.x, T.y, COR.cinza, 22, 255, p.ITALIC);
-			});
-		}
 
-		// ângulo entre os vetores u e w (a partir de O): arco, ou quadrado se reto
-		function angulo(u, w, cor, rr = 0.42) {
+		// ângulo θ entre EM e EG (em E)
+		function angulo(u, w, cor, rr = 1.1) {
 			const eu = unit(u), ew0 = unit(w);
-			const cs = dot3(eu, ew0), th = Math.acos(Math.max(-1, Math.min(1, cs)));
-			const ep = unit(sub(ew0, mul(eu, cs)));          // perpendicular a u, no plano de u e w
-			const P = s => add(mul(eu, rr * Math.cos(s)), mul(ep, rr * Math.sin(s)));
-			if (Math.abs(cs) < 1e-9) {
-				const q = rr * 0.7;
-				const c1 = mul(eu, q), c2 = add(mul(eu, q), mul(ew0, q)), c3 = mul(ew0, q);
-				const Q = [[0, 0, 0], c1, c2, c3].map(pr);
-				p.noStroke(); p.fill(...cor, 50); p.beginShape(); Q.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
-				seg(c1, c2, cor, 2.5); seg(c2, c3, cor, 2.5);
-			} else {
-				const n = 40, pts = [];
-				for (let i = 0; i <= n; i++) pts.push(pr(P(th * i / n)));
-				const O = pr([0, 0, 0]);
-				p.noStroke(); p.fill(...cor, 50);
-				p.beginShape(); p.vertex(O.x, O.y); pts.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
-				p.noFill(); p.stroke(...cor); p.strokeWeight(2.5);
-				p.beginShape(); pts.forEach(q => p.vertex(q.x, q.y)); p.endShape();
-			}
-			// ponto (no ecrã) na bissetriz, um pouco fora do arco, para o texto
-			return pr(P(th / 2).map(x => x * 0.62));
+			const cs = dot3(eu, ew0), th = Math.acos(cs);
+			const ep = unit(sub(ew0, mul(eu, cs)));
+			const Pt = s => add(mul(eu, rr * Math.cos(s)), mul(ep, rr * Math.sin(s)));
+			const n = 30, pts = [];
+			for (let i = 0; i <= n; i++) pts.push(pr(Pt(th * i / n)));
+			const O = pr([0, 0, 0]);
+			p.noStroke(); p.fill(...cor, 55);
+			p.beginShape(); p.vertex(O.x, O.y); pts.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
+			p.noFill(); p.stroke(...cor); p.strokeWeight(2.5);
+			p.beginShape(); pts.forEach(q => p.vertex(q.x, q.y)); p.endShape();
+			return pr(Pt(th / 2).map(x => x * 1.35));
 		}
 
-		// 16.1: os três triângulos isósceles [OAB], [OBC], [OAC] lado a lado, em verdadeira grandeza
-		function leque() {
-			const R = 78, y0 = H - 58;                       // comprimento dos lados iguais (√2); y do vértice O
-			const T = [['ab', 'A', 'B', 'AB', 'agudo'], ['bc', 'B', 'C', 'BC', 'reto'], ['ac', 'A', 'C', 'AC', 'obtuso']];
-			const larg = T.map(([k]) => 2 * R * Math.sin(Math.acos(dot3(unit(VET[PARES[k].u]), unit(VET[PARES[k].v]))) / 2));
-			const gap = 34, total = larg.reduce((x, y) => x + y) + 2 * gap;
-			p.stroke(203, 213, 225); p.strokeWeight(1.5); p.fill(255, 235);
-			p.rect(W - 12 - total - 36, y0 - R - 40, total + 24, R + 40 + 46, 8);
-			let x = W - 12 - total - 24;
-			T.forEach(([k, X, Y, nome, tipo], i) => {
-				const q = PARES[k], th = Math.acos(dot3(unit(VET[q.u]), unit(VET[q.v]))), cs = cor(k);
-				const ox = x + larg[i] / 2, h = R * Math.cos(th / 2);
-				const P1 = [ox - larg[i] / 2, y0 - h], P2 = [ox + larg[i] / 2, y0 - h];
-				// ângulo em O
-				p.noStroke(); p.fill(...cs, 60);
-				p.arc(ox, y0, 52, 52, -Math.PI / 2 - th / 2, -Math.PI / 2 + th / 2, p.PIE);
-				// lados iguais (cores dos vetores) e o lado oposto
-				p.strokeWeight(3); p.stroke(...COR[q.u]); p.line(ox, y0, ...P1);
-				p.stroke(...COR[q.v]); p.line(ox, y0, ...P2);
-				p.stroke(...COR.texto); p.strokeWeight(4); p.line(...P1, ...P2);
-				rot(nome, ox, y0 - h - 16, COR.texto, 18, 255, p.BOLD);
-				rot(X, P1[0] - 9, P1[1] + 2, COR.texto, 16, 255, p.BOLDITALIC);
-				rot(Y, P2[0] + 9, P2[1] + 2, COR.texto, 16, 255, p.BOLDITALIC);
-				rot('O', ox, y0 + 13, COR.texto, 15, 255, p.ITALIC);
-				rot(tipo, ox, y0 + 30, cs, 17, 255, p.BOLD);
-				x += larg[i] + gap;
-			});
-		}
-
-		/* ---------------- desenho ---------------- */
 		p.draw = function () {
 			if (alvo) {
-				// rodar a vista suavemente até ao alvo (pelo caminho mais curto em az)
 				let d = alvo[0] - az; d -= 360 * Math.round(d / 360);
 				const f = Math.min(1, p.deltaTime / 1000 * 4);
 				az += d * f; el += (alvo[1] - el) * f;
@@ -244,113 +168,83 @@
 			}
 			camara();
 			p.background(255);
-			const sol = cxSol.checked();
-			const O = [0, 0, 0];
-			const PT = { A: VA, B: VB, C: VC };
-			const sel = PAR_DE[al] ? PARES[PAR_DE[al]] : null;
-			const QG = pr(mul(add(add(VA, VB), VC), 1 / 3));     // centro do triângulo, no ecrã
+			const ref = cxRef.checked(), vet = cxVet.checked(), sol = cxSol.checked();
+			const olho = add(CEN, mul(F_, 19));
+			const visivel = FACES.map(([vs, n]) => {
+				const c = mul(vs.reduce((s, k) => add(s, P[k]), [0, 0, 0]), 1 / 4);
+				return dot3(n, sub(olho, c)) > 0;
+			});
+			const escondida = (a, b) => !FACES.some(([vs], i) => visivel[i] && vs.includes(a) && vs.includes(b));
 
-			eixos();
-
-			// triângulo [ABC]
-			const T3 = [VA, VB, VC].map(pr);
-			p.noStroke(); p.fill(...COR.tri, 28);
+			// eixos (com origem em E)
+			if (ref) [[[1, 0, 0], 'x'], [[0, 1, 0], 'y'], [[0, 0, 1], 'z']].forEach(([e, nome]) => {
+				seta(mul(e, 4), mul(e, 6.3), COR.eixo, 1.8);
+				const T = pr(mul(e, 6.7));
+				rot(nome, T.x, T.y, COR.cinza, 22, 255, p.ITALIC);
+			});
+			// triângulo [MEG]
+			const T3 = ['M', 'E', 'G'].map(k => pr(P[k]));
+			p.noStroke(); p.fill(...COR.tri, 32);
 			p.beginShape(); T3.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
-			[['A', 'B'], ['B', 'C'], ['A', 'C']].forEach(([X, Y]) => seg(PT[X], PT[Y], COR.tri, 2.5, 200));
-
-			// vetores a partir de O (esbatidos os que não estão no par escolhido)
-			const Q0 = pr(O);
-			['a', 'b', 'c'].forEach(n => {
-				const ativo = !sel || sel.u === n || sel.v === n, alfa = ativo ? 255 : 70;
-				seta(O, VET[n], COR[n], ativo && sel ? 4.5 : 3.5, alfa);
-				// nome do vetor a meio, afastado da seta
-				const M = pr(mul(VET[n], 0.55)), E = pr(VET[n]);
-				let dx = E.x - Q0.x, dy = E.y - Q0.y; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
-				// do lado da seta oposto ao centro do triângulo
-				const nx = -dy, ny = dx, s = (QG.x - M.x) * nx + (QG.y - M.y) * ny > 0 ? -1 : 1;
-				rotVet(n, M.x + s * nx * 24, M.y + s * ny * 24, COR[n], 26, alfa);
+			// arestas: escondidas a tracejado, as outras a cheio
+			ARESTAS.forEach(([a, b]) => {
+				const A = pr(P[a]), B = pr(P[b]);
+				p.stroke(...COR.cubo); p.strokeWeight(2);
+				if (escondida(a, b)) { p.drawingContext.setLineDash([7, 6]); p.strokeWeight(1.5); }
+				p.line(A.x, A.y, B.x, B.y); p.drawingContext.setLineDash([]);
 			});
-
-			// ângulo do par escolhido, com a célula da tabela
-			if (sel) {
-				const cs = sel.s > 0 ? COR.pos : sel.s < 0 ? COR.neg : COR.zero;
-				const L = angulo(VET[sel.u], VET[sel.v], cs);
-				if (sol) rot(sel.ang, L.x, L.y, cs, 20, 255, p.BOLD);
-			}
-			// 16.1: os três ângulos em O (raios diferentes para não se sobreporem)
-			if (al === 1) {
-				[['ab', 0.5], ['bc', 0.42], ['ac', 0.34]].forEach(([k, rr]) => {
-					const L = angulo(VET[PARES[k].u], VET[PARES[k].v], cor(k), rr);
+			// lados do triângulo: o triângulo está dentro do cubo (pedido do utilizador, 2026-11-24: não pode parecer por fora).
+			// Um lado sobre uma face vê-se se essa face estiver virada para nós; um lado que atravessa o interior
+			// (como [GM]) fica sempre escondido. Escondido = tracejado e mais fino, como as arestas escondidas.
+			const PLANOS = [[2, 4], [2, 0], [1, 0], [1, 4], [0, 0], [0, 4]];          // pela ordem de FACES: eixo e valor
+			const naFace = (q, i) => q[PLANOS[i][0]] === PLANOS[i][1];
+			[['M', 'E'], ['E', 'G'], ['G', 'M']].forEach(([a, b]) => {
+				if (vet && (b === 'G' && a === 'E' || a === 'M' && b === 'E')) return;
+				const ve = FACES.some((f, i) => visivel[i] && naFace(P[a], i) && naFace(P[b], i));
+				if (ve) seg(P[a], P[b], COR.tri, 3);
+				else {
+					p.drawingContext.setLineDash([8, 6]); seg(P[a], P[b], COR.tri, 2.2); p.drawingContext.setLineDash([]);
+				}
+			});
+			// vetores EM e EG, com o ângulo θ
+			if (vet) {
+				const L = angulo(P.M, P.G, COR.pos);
+				rot('θ', L.x, L.y, COR.pos, 22, 255, p.BOLDITALIC);
+				// os vetores seguem a mesma regra dos lados: a tracejado quando a face onde estão está virada para trás
+				[[P.M, COR.em], [P.G, COR.eg]].forEach(([q, cor]) => {
+					const ve = FACES.some((f, i) => visivel[i] && naFace(P.E, i) && naFace(q, i));
+					if (!ve) p.drawingContext.setLineDash([9, 6]);
+					seta(P.E, q, cor, ve ? 4 : 3);
+					p.drawingContext.setLineDash([]);
 				});
+				const m1 = pr(mul(P.M, 0.55)), m2 = pr(mul(P.G, 0.6));
+				rotVet('EM', m1.x - 30, m1.y, COR.em);
+				rotVet('EG', m2.x, m2.y + 26, COR.eg);
 			}
-
-			// pontos A, B, C (nome para fora do triângulo)
-			['A', 'B', 'C'].forEach(n => {
-				const Q = pr(PT[n]);
-				p.stroke(255); p.strokeWeight(2); p.fill(...COR.texto); p.circle(Q.x, Q.y, 11);
-				let dx = Q.x - QG.x, dy = Q.y - QG.y; const l = Math.hypot(dx, dy) || 1;
-				rot(n, Q.x + dx / l * 22, Q.y + dy / l * 22, COR.texto, 24, 255, p.BOLDITALIC);
+			// vértices
+			const QC = pr(CEN);
+			Object.entries(P).forEach(([k, q]) => {
+				const Q = pr(q);
+				p.stroke(255); p.strokeWeight(2); p.fill(...(k === 'M' ? COR.tri : COR.texto)); p.circle(Q.x, Q.y, k === 'M' ? 11 : 9);
+				let dx = Q.x - QC.x, dy = Q.y - QC.y; const l = Math.hypot(dx, dy) || 1;
+				const lx = Q.x + dx / l * 22, ly = Q.y + dy / l * 22;
+				rot(k, lx, ly, k === 'M' ? COR.tri : COR.texto, 22, 255, p.BOLDITALIC);
+				if (ref && 'EMG'.includes(k)) rot(`(${q.join(', ')})`, lx, ly + 20, COR.cinza, 16, 255, p.NORMAL);
 			});
-			rot('O', Q0.x - 4, Q0.y + 22, COR.texto, 22, 255, p.ITALIC);
 
-			// comprimentos dos lados (com a solução da 16.1, só como verificação)
-			if (sol && al === 1) {
-				const lado = (X, Y, Z, t) => {
-					// ponto do lado mais afastado (no ecrã) do terceiro vértice e de O
-					const QZ = pr(PT[Z]);
-					let M = null, md = -1;
-					[0.5, 0.38, 0.62, 0.28, 0.72].forEach(f => {
-						const q = pr(add(mul(PT[X], 1 - f), mul(PT[Y], f)));
-						const d = Math.min(Math.hypot(q.x - QZ.x, q.y - QZ.y), Math.hypot(q.x - Q0.x, q.y - Q0.y));
-						if (d > md + 25) { md = d; M = q; }
-					});
-					// texto sobre o lado, na direção do lado (sempre direito)
-					const P1 = pr(PT[X]), P2 = pr(PT[Y]);
-					let ang = Math.atan2(P2.y - P1.y, P2.x - P1.x);
-					if (ang > Math.PI / 2) ang -= Math.PI; if (ang < -Math.PI / 2) ang += Math.PI;
-					p.push(); p.translate(M.x, M.y); p.rotate(ang);
-					p.textSize(18); p.textStyle(p.BOLD);
-					const w = p.textWidth(t);
-					p.noStroke(); p.fill(255, 235); p.rect(-w / 2 - 5, -12, w + 10, 24, 5);
-					rot(t, 0, 0, COR.texto, 18, 255, p.BOLD);
-					p.pop();
-				};
-				lado('A', 'B', 'C', 'AB = √2');
-				lado('B', 'C', 'A', 'BC = 2');
-				lado('A', 'C', 'B', 'AC ≈ 2,61');
-			}
-
-			// lembrete: a diagonal da tabela dá as normas
-			const N = COR.texto;
-			const topo = [[['‖', N], v('a', COR.a), ['‖ = ‖', N], v('b', COR.b), ['‖ = ‖', N], v('c', COR.c), ['‖ = √2', N]]];
-			const linhaPar = k => {
-				const q = PARES[k], cs = cor(k);
-				return [v(q.u, COR[q.u]), [' · ', N], v(q.v, COR[q.v]), [' = ' + q.txt, cs, p.BOLD],
-					[q.s > 0 ? '   (> 0: agudo)' : q.s < 0 ? '   (< 0: obtuso)' : '   (= 0: reto)', cs]];
-			};
-			if (al === 1) ['ab', 'bc', 'ac'].forEach(k => topo.push(linhaPar(k)));
-			if (sel) {
-				const cs = sel.s > 0 ? COR.pos : sel.s < 0 ? COR.neg : COR.zero;
-				topo.push([v(sel.u, COR[sel.u]), [' · ', N], v(sel.v, COR[sel.v]), [' = ' + sel.txt, cs, p.BOLD],
-					[sel.s > 0 ? '   (> 0: agudo)' : sel.s < 0 ? '   (< 0: obtuso)' : '   (= 0: reto)', cs]]);
-			}
-			caixa(topo, 12, 12, 34, 22);
-
-			if (sol && al) {
-				const V = COR.pos, a = v('a', COR.a), b = v('b', COR.b), c = v('c', COR.c);
-				const L = {
-					1: [[['‖', N], a, ['‖ = ‖', N], b, ['‖ = ‖', N], c, ['‖  ⇒  [OAB], [OBC], [OAC]', N]],
-						[['isósceles com os mesmos lados iguais:', N]],
-						[['maior ângulo em O  ⇒  maior lado oposto', N]],
-						[['agudo (', N], a, [', ', N], b, [') < reto (', N], b, [', ', N], c, [') < obtuso (', N], a, [', ', N], c, [')', N]],
-						[['⇒  AB < BC < AC   → (D)', V, p.BOLD]]],
-					2: [[b, [' · ', N], c, [' = 0  ⇒  ', N], b, [' ⊥ ', N], c, ['  (ângulo reto)', N]]],
-					3: [[['cos θ = ', N], a, [' · ', N], c, [' / (‖', N], a, ['‖ × ‖', N], c, ['‖)', N]],
-						[['       = −√2 / (√2 × √2) = −√2/2', N]],
-						[['⇒  θ = 135°', V, p.BOLD]]]
-				}[al];
-				caixa(L, W - 12, al === 1 ? 12 : H - 12 - L.length * 34 - 12, 34, 21, true);
-				if (al === 1) leque();
+			// solução
+			if (sol) {
+				const N = COR.texto, V = COR.pos, em = v('EM', COR.em), eg = v('EG', COR.eg);
+				caixa([
+					[['E(0, 0, 0),  M(0, 2, 4),  G(4, 4, 0)', N]],
+					[em, [' = (0, 2, 4),   ', N], eg, [' = (4, 4, 0)', N]],
+					[em, [' · ', N], eg, [' = 0 + 8 + 0 = 8', N]],
+					[['‖', N], em, ['‖ = √20,   ‖', N], eg, ['‖ = √32', N]],
+					[['cos θ = 8 / (√20 × √32) = 1/√10', N]],
+					[['sen θ = √(1 − 1/10) = 3/√10', N]],
+					[['Área = ½ × √20 × √32 × 3/√10 = 12', V, p.BOLD]],
+					[['→ (D)', V, p.BOLD]]
+				], W - 12, 12, 34, 20, true);
 			}
 		};
 	};

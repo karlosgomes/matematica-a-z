@@ -1,93 +1,97 @@
 /* =====================================================================
-   Produto escalar · Problema 12 — dois pontos a um terço dos lados (Itália, Esame di Stato 2025, quesito 1)
-   A(0, 5,5), B(−4, 0) fixos; arrasta-se C. B' = A + ⅓AB, C' = A + ⅓AC, M = ponto médio de [BC].
-   Íman quando MB' = MC' (C roda em torno de A até AC = AB).
-   Solução com u = AB, v = AC: MB' = −⅙u − ½v, MC' = −½u − ⅙v,  MC'² − MB'² = (2/9)(‖u‖² − ‖v‖²).
+   Produto escalar · Problema 12 — o centro do quadrado sobre a hipotenusa (Itália, Esame di Stato 2023, quesito 1)
+   A(0, 0), B(b, 0), C(0, c); arrastam-se B (no eixo Ox) e C (no eixo Oy).
+   Quadrado [BCDE] do lado oposto a A: w = (c, b) ⊥ BC = (−b, c), com a mesma norma; D = C + w, E = B + w.
+   Centro O = M + ½w = ((b + c)/2, (b + c)/2): está à mesma distância dos eixos (as retas AB e AC).
    ===================================================================== */
 SKETCHES['pe-p12'] = function (p, controlos) {
-	const T = PLANO(p, { O: { x: 285, y: 470 }, K: 46 });
-	const C = T.COR, A = [0, 5.5], B = [-4, 0];
-	const AB = Math.hypot(B[0] - A[0], B[1] - A[1]);
-	const st = { C: [5, 0.8], alvo: null };
-	let cxVet, cxSol;
-
-	const igualar = c => { const d = [c[0] - A[0], c[1] - A[1]], n = Math.hypot(...d); return [A[0] + AB * d[0] / n, A[1] + AB * d[1] / n]; };
+	const T = PLANO(p, { O: { x: 95, y: 530 }, K: 44 });
+	const C = T.COR;
+	const st = { b: 4, c: 2.4 };
+	let cxRef, cxBis, cxSol;
 
 	p.setup = function () {
 		const cv = p.createCanvas(T.W, T.H).elt;
 		p.textFont('Source Sans Pro');
-		T.arrastar(cv, [{
-			perto: (x, y) => T.perto(st.C, x, y),
-			inicio: () => { st.alvo = null; },
-			mover: (x, y) => {
-				let c = [p.constrain(x, 0.6, 5.8), p.constrain(y, -1.6, 4.6)];
-				if (Math.abs(dist(c) - AB) < 0.1) c = igualar(c);      // íman: AC = AB (e MB' = MC')
-				st.C = c;
-			}
-		}]);
-		p.createSpan('Arrasta o ponto C ·').parent(controlos).addClass('dica-arrastar');
-		UT.botao(p, controlos, "MB' = MC'", () => { st.alvo = igualar(st.C); }, 'atalho');
+		const ajusta = v => { v = p.constrain(v, 1, 5.2); return Math.abs(v - Math.round(v)) < 0.08 ? Math.round(v) : v; };
+		T.arrastar(cv, [
+			{ perto: (x, y) => T.perto([st.b, 0], x, y), mover: x => { st.b = ajusta(x); }, cursor: 'ew-resize' },
+			{ perto: (x, y) => T.perto([0, st.c], x, y), mover: (x, y) => { st.c = ajusta(y); }, cursor: 'ns-resize' }
+		]);
+		p.createSpan('Arrasta os pontos B e C ·').parent(controlos).addClass('dica-arrastar');
+		UT.botao(p, controlos, 'Início', () => { st.b = 4; st.c = 2.4; }, 'atalho');
 		UT.quebra(p, controlos);
-		cxVet = UT.caixa(p, controlos, 'Vetores u e v', false);
+		cxRef = UT.caixa(p, controlos, 'Referencial', false);
+		cxBis = UT.caixa(p, controlos, 'Bissetriz do ângulo A', false);
 		cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
-		cxSol.changed(() => { if (cxSol.checked()) cxVet.checked(true); });
+		cxSol.changed(() => { if (cxSol.checked()) cxRef.checked(true); });
 	};
-	const dist = c => Math.hypot(c[0] - A[0], c[1] - A[1]);
-	const lerp = (a, b, t) => [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])];
 
 	p.draw = function () {
-		if (st.alvo) {
-			let a, b, o1, o2;
-			[a, o1] = T.suave(st.C[0], st.alvo[0], p.deltaTime); [b, o2] = T.suave(st.C[1], st.alvo[1], p.deltaTime);
-			st.C = [a, b]; if (o1 && o2) { st.C = st.alvo; st.alvo = null; }
-		}
-		const Cc = st.C, sol = cxSol.checked();
-		const B1 = lerp(A, B, 1 / 3), C1 = lerp(A, Cc, 1 / 3), M = lerp(B, Cc, 0.5);
-		const mb = Math.hypot(B1[0] - M[0], B1[1] - M[1]), mc = Math.hypot(C1[0] - M[0], C1[1] - M[1]);
-		const ac = dist(Cc), igual = Math.abs(ac - AB) < 1e-6;
+		const b = st.b, c = st.c, sol = cxSol.checked(), ref = cxRef.checked();
+		const A = [0, 0], B = [b, 0], Cc = [0, c], w = [c, b];
+		const D = [Cc[0] + w[0], Cc[1] + w[1]], E = [B[0] + w[0], B[1] + w[1]];
+		const M = [b / 2, c / 2], O = [(b + c) / 2, (b + c) / 2];
+		const Hh = [O[0], 0], Kk = [0, O[1]];
 		p.background(255);
 
-		p.fill(...C.fig, 18); p.stroke(...C.texto); p.strokeWeight(2.2); p.strokeJoin(p.ROUND);
+		if (ref) T.grelha(-0.6, 11, -0.6, 11.4, true, true);
+		else { T.seg([0, 0], [11, 0], C.cinza, 1.4, null, 110); T.seg([0, 0], [0, 11.2], C.cinza, 1.4, null, 110); }
+		if (cxBis.checked()) T.seg([0, 0], [10.6, 10.6], C.cinza, 1.6, [8, 7]);
+
+		// quadrado e triângulo
+		p.fill(...C.soma, 26); p.stroke(...C.soma); p.strokeWeight(2.2); p.strokeJoin(p.ROUND);
+		p.beginShape(); [B, Cc, D, E].forEach(v => p.vertex(...T.S(v))); p.endShape(p.CLOSE);
+		p.fill(...C.fig, 30); p.stroke(...C.texto); p.strokeWeight(2.6);
 		p.triangle(...T.S(A), ...T.S(B), ...T.S(Cc));
-		if (cxVet.checked()) {
-			T.seta(A, B, C.u, 3.6); T.seta(A, Cc, C.v, 3.6);
-			const sb = T.S(lerp(A, B, 0.62)), sc = T.S(lerp(A, Cc, 0.62));
-			T.nomeVetor('u', sb[0] - 22, sb[1] - 8, C.u, 22); T.nomeVetor('v', sc[0] + 22, sc[1] - 8, C.v, 22);
+		T.reto(A, B, Cc, C.texto, 14);
+		// diagonais do quadrado, esbatidas
+		T.seg(B, D, C.soma, 1.2, [4, 5], 150); T.seg(Cc, E, C.soma, 1.2, [4, 5], 150);
+
+		// distâncias de O às retas AB e AC
+		T.seg(O, Hh, C.u, 2.4, [7, 6]); T.seg(O, Kk, C.v, 2.4, [7, 6]);
+		T.reto(Hh, O, [Hh[0] + 1, 0], C.u, 11); T.reto(Kk, O, [0, Kk[1] + 1], C.v, 11);
+
+		if (sol) {
+			T.seta(B, E, C.reta, 3.4);
+			T.seta(M, O, C.reta, 3.4);
+			const se = T.S([(B[0] + E[0]) / 2, (B[1] + E[1]) / 2]);
+			T.nomeVetor('w', se[0] + 20, se[1] + 6, C.reta, 22);
+			const so = T.S([(M[0] + O[0]) / 2, (M[1] + O[1]) / 2]);
+			T.nomeVetor('w', so[0] - 8, so[1] - 18, C.reta, 20, '½');
+			T.ponto(M, 'M', -10, 14, C.texto, false, 20);
 		}
-		T.seg(M, B1, C.soma, 3); T.seg(M, C1, C.reta, 3);
-		if (igual) {                                                  // marcas AB = AC e MB' = MC'
-			[[A, B], [A, Cc]].forEach(([u, v]) => {
-				const m = T.S(lerp(u, v, 0.82)), d = [T.X(v[0]) - T.X(u[0]), T.Y(v[1]) - T.Y(u[1])], n = Math.hypot(...d);
-				p.stroke(...C.pos); p.strokeWeight(2.4); p.line(m[0] - 7 * d[1] / n, m[1] + 7 * d[0] / n, m[0] + 7 * d[1] / n, m[1] - 7 * d[0] / n);
-			});
-		}
-		T.ponto(A, 'A', 0, -22);
-		T.ponto(B, 'B', -12, 14);
-		T.ponto(B1, "B'", -12, -6, C.soma, false, 21);
-		T.ponto(C1, "C'", 12, -6, C.reta, false, 21);
-		T.ponto(M, 'M', 0, 22, C.texto, false, 21);
-		T.ponto(Cc, 'C', 12, 14, C.texto, true);
+		T.ponto(A, 'A', -12, 14);
+		T.ponto(D, 'D', -10, -16, C.soma);
+		T.ponto(E, 'E', 12, 0, C.soma);
+		T.ponto(Hh, 'H', 0, 22, C.u, false, 21);
+		T.ponto(Kk, 'K', -16, 0, C.v, false, 21);
+		T.ponto(O, 'O', 14, -14, C.texto);
+		T.ponto(B, 'B', 4, 24, C.texto, true);
+		T.ponto(Cc, 'C', -16, 0, C.texto, true);
+		T.rot('b', T.X(b / 2), T.Y(0) + 20, C.cinza, 19, p.CENTER, p.ITALIC);
+		T.rot('c', T.X(0) - 14, T.Y(c / 2), C.cinza, 19, p.CENTER, p.ITALIC);
 
 		// leitura
-		const x0 = 572;
+		const x0 = 585;
 		T.painel(x0 - 14, 12, T.W - x0 + 2, 116);
-		T.linha([["MB' ≈ " + UT.fmt(mb, 2), C.soma, p.BOLD], ["     MC' ≈ " + UT.fmt(mc, 2), C.reta, p.BOLD]], x0, 38);
-		T.linha([['AB ≈ ' + UT.fmt(AB, 2), null], ['     AC ≈ ' + UT.fmt(ac, 2), igual ? C.pos : C.texto, igual ? p.BOLD : p.NORMAL]], x0, 72);
-		T.linha(igual ? [["MB' = MC'  e  AB = AC ✓", C.pos, p.BOLD]] : [["MB' ≠ MC'", C.cinza]], x0, 106);
+		T.linha([['b = ' + UT.fmt(b, 2) + '    c = ' + UT.fmt(c, 2), C.cinza]], x0, 38);
+		T.linha([['OH ≈ ' + UT.fmt(O[1], 2), C.u, p.BOLD], ['     OK ≈ ' + UT.fmt(O[0], 2), C.v, p.BOLD]], x0, 72);
+		T.linha([['OH = OK ✓', C.pos, p.BOLD]], x0, 106);
 
 		if (!sol) return;
-		const u2 = AB * AB, v2 = ac * ac;
 		T.painel(x0 - 14, 144, T.W - x0 + 2, 444);
-		let y = 170;
-		const L1 = (pecas, tam = 19, dy = 33) => { T.linha(pecas, x0, y, tam); y += dy; };
-		const nu = (k = '') => [[k + '‖', null], T.V('u', C.u), ['‖²', null]], nv = () => [['‖', null], T.V('v', C.v), ['‖²', null]];
-		L1([T.V('u', C.u), [' = ', null], T.V('AB'), [',  ', null], T.V('v', C.v), [' = ', null], T.V('AC'), [',  ', null], T.V('AM'), [' = ½(', null], T.V('u', C.u), [' + ', null], T.V('v', C.v), [')', null]], 18, 38);
-		L1([T.V("MB'", C.soma), [' = ⅓', null], T.V('u', C.u), [' − ', null], T.V('AM'), [' = −⅙', null], T.V('u', C.u), [' − ½', null], T.V('v', C.v)]);
-		L1([T.V("MC'", C.reta), [' = ⅓', null], T.V('v', C.v), [' − ', null], T.V('AM'), [' = −½', null], T.V('u', C.u), [' − ⅙', null], T.V('v', C.v)], 19, 40);
-		L1([["MB'² = ", C.soma], ...nu('1/36'), [' + ', null], T.V('u', C.u), ['·', null], T.V('v', C.v), ['/6 + ¼', null], ...nv()]);
-		L1([["MC'² = ", C.reta], ...nu('¼'), [' + ', null], T.V('u', C.u), ['·', null], T.V('v', C.v), ['/6 + (1/36)', null], ...nv()], 19, 40);
-		L1([["MC'² − MB'² = (2/9)(", null], ...nu(), [' − ', null], ...nv(), [')', null]]);
-		L1([['agora: (2/9)(' + UT.fmt(u2, 1) + ' − ' + UT.fmt(v2, 1) + ') ≈ ' + UT.fmt(2 / 9 * (u2 - v2), 2), C.cinza]], 17, 42);
-		L1([["MB' = MC' ⇒ ", null], ['‖', null], T.V('u', C.u), ['‖ = ‖', null], T.V('v', C.v), ['‖ ⇒ ', null], ['AB = AC', C.pos, p.BOLD]], 21);
+		let y = 172;
+		const L1 = (pecas, tam = 19, dy = 34) => { T.linha(pecas, x0, y, tam); y += dy; };
+		L1([['A(0, 0),  B(b, 0),  C(0, c)', null]]);
+		L1([T.V('BC'), [' = (−b, c);   ', null], T.V('w', C.reta), [' = (c, b)', C.reta]]);
+		L1([T.V('w', C.reta), [' · ', null], T.V('BC'), [' = −bc + bc = 0', null]]);
+		L1([['‖', null], T.V('w', C.reta), ['‖ = ‖', null], T.V('BC'), ['‖ = √(b² + c²)', null]], 19, 42);
+		L1([['M(b/2, c/2), ponto médio de [BC]', null]]);
+		L1([['O = M + ½', null], T.V('w', C.reta)]);
+		L1([['O = ((b + c)/2, (b + c)/2)', null, p.BOLD]], 19, 42);
+		L1([['OH = ordenada de O = (b + c)/2', C.u]]);
+		L1([['OK = abcissa de O = (b + c)/2', C.v]], 19, 38);
+		L1([['O está à mesma distância de AB e AC', C.pos, p.BOLD]], 19);
 	};
 };

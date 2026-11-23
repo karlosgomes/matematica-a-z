@@ -1,107 +1,93 @@
 /* =====================================================================
-   Produto escalar · Problema 11 — os pontos médios dos lados de um losango (Itália, Esame di Stato 2019, suplementar, q. 3)
-   Losango A(−a, 0), B(0, −b), C(a, 0), D(0, b); arrastam-se os vértices (A/C mudam a, B/D mudam b).
-   Caixa «Losango»: desligada, os quatro vértices ficam livres (quadrilátero qualquer → [MNPQ] só paralelogramo).
-   Solução: MN = ½AC = QP (paralelogramo), MQ = ½BD, AC · BD = ‖AD‖² − ‖AB‖² = 0 ⇒ MN · MQ = 0.
+   Produto escalar · Problema 11 — dois pontos a um terço dos lados (Itália, Esame di Stato 2025, quesito 1)
+   A(0, 5,5), B(−4, 0) fixos; arrasta-se C. B' = A + ⅓AB, C' = A + ⅓AC, M = ponto médio de [BC].
+   Íman quando MB' = MC' (C roda em torno de A até AC = AB).
+   Solução com u = AB, v = AC: MB' = −⅙u − ½v, MC' = −½u − ⅙v,  MC'² − MB'² = (2/9)(‖u‖² − ‖v‖²).
    ===================================================================== */
 SKETCHES['pe-p11'] = function (p, controlos) {
-	const T = PLANO(p, { O: { x: 275, y: 300 }, K: 48 });
-	const C = T.COR, NOMES = ['A', 'B', 'C', 'D'];
-	// losango rodado de 20° (para não ficar com os lados de [MNPQ] paralelos aos bordos)
-	const RO = 20 * Math.PI / 180, E1 = [Math.cos(RO), Math.sin(RO)], E2 = [-Math.sin(RO), Math.cos(RO)];
-	const comb = (s, e) => [s * e[0], s * e[1]];
-	function losango(a, b) { return [comb(-a, E1), comb(-b, E2), comb(a, E1), comb(b, E2)]; }
-	const semi = () => [Math.hypot(st.V[2][0] - st.V[0][0], st.V[2][1] - st.V[0][1]) / 2, Math.hypot(st.V[3][0] - st.V[1][0], st.V[3][1] - st.V[1][1]) / 2];
-	const st = { V: losango(4, 2.6) };
-	let cxLos, cxDiag, cxSol;
+	const T = PLANO(p, { O: { x: 285, y: 470 }, K: 46 });
+	const C = T.COR, A = [0, 5.5], B = [-4, 0];
+	const AB = Math.hypot(B[0] - A[0], B[1] - A[1]);
+	const st = { C: [5, 0.8], alvo: null };
+	let cxVet, cxSol;
 
+	const igualar = c => { const d = [c[0] - A[0], c[1] - A[1]], n = Math.hypot(...d); return [A[0] + AB * d[0] / n, A[1] + AB * d[1] / n]; };
 
 	p.setup = function () {
 		const cv = p.createCanvas(T.W, T.H).elt;
 		p.textFont('Source Sans Pro');
-		T.arrastar(cv, [0, 1, 2, 3].map(i => ({
-			perto: (x, y) => T.perto(st.V[i], x, y),
+		T.arrastar(cv, [{
+			perto: (x, y) => T.perto(st.C, x, y),
+			inicio: () => { st.alvo = null; },
 			mover: (x, y) => {
-				x = p.constrain(x, -5.3, 5.3); y = p.constrain(y, -5.4, 5.4);
-				if (cxLos.checked()) {
-					const [a, b] = semi();
-					st.V = i % 2 === 0 ? losango(p.constrain(Math.abs(x * E1[0] + y * E1[1]), 0.8, 5), b) : losango(a, p.constrain(Math.abs(x * E2[0] + y * E2[1]), 0.8, 4.6));
-				} else st.V[i] = [x, y];
+				let c = [p.constrain(x, 0.6, 5.8), p.constrain(y, -1.6, 4.6)];
+				if (Math.abs(dist(c) - AB) < 0.1) c = igualar(c);      // íman: AC = AB (e MB' = MC')
+				st.C = c;
 			}
-		})));
-		p.createSpan('Arrasta os vértices ·').parent(controlos).addClass('dica-arrastar');
-		UT.botao(p, controlos, 'Início', () => { cxLos.checked(true); st.V = losango(4, 2.6); }, 'atalho');
+		}]);
+		p.createSpan('Arrasta o ponto C ·').parent(controlos).addClass('dica-arrastar');
+		UT.botao(p, controlos, "MB' = MC'", () => { st.alvo = igualar(st.C); }, 'atalho');
 		UT.quebra(p, controlos);
-		cxLos = UT.caixa(p, controlos, 'Losango', true);
-		cxLos.changed(() => {
-			if (cxLos.checked()) {
-				const [a, b] = semi(); st.V = losango(p.constrain(a, 0.8, 5), p.constrain(b, 0.8, 4.6));
-			}
-		});
-		cxDiag = UT.caixa(p, controlos, 'Diagonais', false);
+		cxVet = UT.caixa(p, controlos, 'Vetores u e v', false);
 		cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
-		cxSol.changed(() => { if (cxSol.checked()) { cxDiag.checked(true); if (!cxLos.checked()) { cxLos.checked(true); st.V = losango(4, 2.6); } } });
+		cxSol.changed(() => { if (cxSol.checked()) cxVet.checked(true); });
 	};
-
-	const med = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
-	const sub = (a, b) => [a[0] - b[0], a[1] - b[1]];
-	const dot = (a, b) => a[0] * b[0] + a[1] * b[1];
+	const dist = c => Math.hypot(c[0] - A[0], c[1] - A[1]);
+	const lerp = (a, b, t) => [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])];
 
 	p.draw = function () {
-		const [A, B, Cc, D] = st.V, sol = cxSol.checked();
-		const M = med(A, B), N = med(B, Cc), P = med(Cc, D), Q = med(D, A);
-		const mn = sub(N, M), mq = sub(Q, M), ac = sub(Cc, A), bd = sub(D, B);
-		const cosM = dot(mn, mq) / (Math.hypot(...mn) * Math.hypot(...mq));
-		const ang = Math.acos(p.constrain(cosM, -1, 1)) * 180 / Math.PI, reto = Math.abs(cosM) < 2e-3;
-		const pe = dot(ac, bd);
+		if (st.alvo) {
+			let a, b, o1, o2;
+			[a, o1] = T.suave(st.C[0], st.alvo[0], p.deltaTime); [b, o2] = T.suave(st.C[1], st.alvo[1], p.deltaTime);
+			st.C = [a, b]; if (o1 && o2) { st.C = st.alvo; st.alvo = null; }
+		}
+		const Cc = st.C, sol = cxSol.checked();
+		const B1 = lerp(A, B, 1 / 3), C1 = lerp(A, Cc, 1 / 3), M = lerp(B, Cc, 0.5);
+		const mb = Math.hypot(B1[0] - M[0], B1[1] - M[1]), mc = Math.hypot(C1[0] - M[0], C1[1] - M[1]);
+		const ac = dist(Cc), igual = Math.abs(ac - AB) < 1e-6;
 		p.background(255);
 
-		// losango / quadrilátero
-		p.fill(...C.fig, 18); p.stroke(...C.texto); p.strokeWeight(2.4); p.strokeJoin(p.ROUND);
-		p.beginShape(); st.V.forEach(v => p.vertex(...T.S(v))); p.endShape(p.CLOSE);
-		if (cxLos.checked()) {                                       // marcas de lados iguais
-			[[A, B], [B, Cc], [Cc, D], [D, A]].forEach(([u, v]) => {
-				const m = T.S(med(u, v)), d = sub(T.S(v), T.S(u)), n = Math.hypot(...d);
-				p.stroke(...C.texto); p.strokeWeight(2); p.line(m[0] - 7 * d[1] / n, m[1] + 7 * d[0] / n, m[0] + 7 * d[1] / n, m[1] - 7 * d[0] / n);
+		p.fill(...C.fig, 18); p.stroke(...C.texto); p.strokeWeight(2.2); p.strokeJoin(p.ROUND);
+		p.triangle(...T.S(A), ...T.S(B), ...T.S(Cc));
+		if (cxVet.checked()) {
+			T.seta(A, B, C.u, 3.6); T.seta(A, Cc, C.v, 3.6);
+			const sb = T.S(lerp(A, B, 0.62)), sc = T.S(lerp(A, Cc, 0.62));
+			T.nomeVetor('u', sb[0] - 22, sb[1] - 8, C.u, 22); T.nomeVetor('v', sc[0] + 22, sc[1] - 8, C.v, 22);
+		}
+		T.seg(M, B1, C.soma, 3); T.seg(M, C1, C.reta, 3);
+		if (igual) {                                                  // marcas AB = AC e MB' = MC'
+			[[A, B], [A, Cc]].forEach(([u, v]) => {
+				const m = T.S(lerp(u, v, 0.82)), d = [T.X(v[0]) - T.X(u[0]), T.Y(v[1]) - T.Y(u[1])], n = Math.hypot(...d);
+				p.stroke(...C.pos); p.strokeWeight(2.4); p.line(m[0] - 7 * d[1] / n, m[1] + 7 * d[0] / n, m[0] + 7 * d[1] / n, m[1] - 7 * d[0] / n);
 			});
 		}
-		if (cxDiag.checked()) {
-			T.seg(A, Cc, sol ? C.u : C.cinza, 1.8, [7, 6]); T.seg(B, D, sol ? C.v : C.cinza, 1.8, [7, 6]);
-			if (Math.abs(pe) < 1e-6) T.reto(med(A, Cc), Cc, D, C.zero, 12);
-		}
-		// [MNPQ]
-		p.fill(...C.soma, 40); p.stroke(...C.soma); p.strokeWeight(2.6);
-		p.beginShape(); [M, N, P, Q].forEach(v => p.vertex(...T.S(v))); p.endShape(p.CLOSE);
-		if (reto) T.reto(M, N, Q, C.zero, 16); else T.arco(M, N, Q, C.neg, 26);
-		if (sol) {
-			T.seta(M, N, C.u, 3.6); T.seta(M, Q, C.v, 3.6);
-			const sn = T.S(med(M, N)), sq = T.S(med(M, Q));
-			T.nomeVetor('MN', sn[0] + 26, sn[1] + 18, C.u, 20);
-			T.nomeVetor('MQ', sq[0] - 30, sq[1] + 16, C.v, 20);
-		}
-		// pontos
-		const fora = (q, d = 20) => { const c = med(med(A, Cc), med(B, D)), s = sub(q, c), n = Math.hypot(...s) || 1; return [d * s[0] / n, -d * s[1] / n]; };
-		st.V.forEach((v, i) => { const [dx, dy] = fora(v); T.ponto(v, NOMES[i], dx, dy, C.texto, true); });
-		[[M, 'M'], [N, 'N'], [P, 'P'], [Q, 'Q']].forEach(([v, n]) => { const [dx, dy] = fora(v, 18); T.ponto(v, n, dx, dy, C.soma, false, 21); });
+		T.ponto(A, 'A', 0, -22);
+		T.ponto(B, 'B', -12, 14);
+		T.ponto(B1, "B'", -12, -6, C.soma, false, 21);
+		T.ponto(C1, "C'", 12, -6, C.reta, false, 21);
+		T.ponto(M, 'M', 0, 22, C.texto, false, 21);
+		T.ponto(Cc, 'C', 12, 14, C.texto, true);
 
 		// leitura
-		const x0 = 580;
+		const x0 = 572;
 		T.painel(x0 - 14, 12, T.W - x0 + 2, 116);
-		T.linha([['ângulo em M ≈ ' + UT.fmt(ang, 1) + '°', reto ? C.pos : C.neg, p.BOLD]], x0, 38);
-		T.linha([T.V('AC'), [' · ', null], T.V('BD'), [' ≈ ' + UT.fmt(Math.abs(pe) < 1e-6 ? 0 : pe, 2), null]], x0, 72);
-		T.linha([['[MNPQ]: ', null], reto ? ['retângulo ✓', C.pos, p.BOLD] : ['paralelogramo', C.neg, p.BOLD]], x0, 106);
+		T.linha([["MB' ≈ " + UT.fmt(mb, 2), C.soma, p.BOLD], ["     MC' ≈ " + UT.fmt(mc, 2), C.reta, p.BOLD]], x0, 38);
+		T.linha([['AB ≈ ' + UT.fmt(AB, 2), null], ['     AC ≈ ' + UT.fmt(ac, 2), igual ? C.pos : C.texto, igual ? p.BOLD : p.NORMAL]], x0, 72);
+		T.linha(igual ? [["MB' = MC'  e  AB = AC ✓", C.pos, p.BOLD]] : [["MB' ≠ MC'", C.cinza]], x0, 106);
 
 		if (!sol) return;
+		const u2 = AB * AB, v2 = ac * ac;
 		T.painel(x0 - 14, 144, T.W - x0 + 2, 444);
-		let y = 172;
+		let y = 170;
 		const L1 = (pecas, tam = 19, dy = 33) => { T.linha(pecas, x0, y, tam); y += dy; };
-		L1([T.V('MN', C.u), [' = ½', null], T.V('AB'), [' + ½', null], T.V('BC'), [' = ½', null], T.V('AC', C.u)]);
-		L1([T.V('QP'), [' = ½', null], T.V('AD'), [' + ½', null], T.V('DC'), [' = ½', null], T.V('AC', C.u)]);
-		L1([T.V('MN', C.u), [' = ', null], T.V('QP'), [': paralelogramo', null]], 19, 40);
-		L1([T.V('MQ', C.v), [' = ½', null], T.V('BA'), [' + ½', null], T.V('AD'), [' = ½', null], T.V('BD', C.v)], 19, 40);
-		L1([T.V('AC', C.u), [' = ', null], T.V('AD'), [' + ', null], T.V('AB'), [' ,  ', null], T.V('BD', C.v), [' = ', null], T.V('AD'), [' − ', null], T.V('AB')]);
-		L1([T.V('AC', C.u), [' · ', null], T.V('BD', C.v), [' = AD² − AB² = 0', null]], 19, 40);
-		L1([T.V('MN', C.u), [' · ', null], T.V('MQ', C.v), [' = ¼ ', null], T.V('AC', C.u), [' · ', null], T.V('BD', C.v), [' = 0', null]]);
-		L1([['[MNPQ] é um ', null], ['retângulo', C.pos, p.BOLD]], 21);
+		const nu = (k = '') => [[k + '‖', null], T.V('u', C.u), ['‖²', null]], nv = () => [['‖', null], T.V('v', C.v), ['‖²', null]];
+		L1([T.V('u', C.u), [' = ', null], T.V('AB'), [',  ', null], T.V('v', C.v), [' = ', null], T.V('AC'), [',  ', null], T.V('AM'), [' = ½(', null], T.V('u', C.u), [' + ', null], T.V('v', C.v), [')', null]], 18, 38);
+		L1([T.V("MB'", C.soma), [' = ⅓', null], T.V('u', C.u), [' − ', null], T.V('AM'), [' = −⅙', null], T.V('u', C.u), [' − ½', null], T.V('v', C.v)]);
+		L1([T.V("MC'", C.reta), [' = ⅓', null], T.V('v', C.v), [' − ', null], T.V('AM'), [' = −½', null], T.V('u', C.u), [' − ⅙', null], T.V('v', C.v)], 19, 40);
+		L1([["MB'² = ", C.soma], ...nu('1/36'), [' + ', null], T.V('u', C.u), ['·', null], T.V('v', C.v), ['/6 + ¼', null], ...nv()]);
+		L1([["MC'² = ", C.reta], ...nu('¼'), [' + ', null], T.V('u', C.u), ['·', null], T.V('v', C.v), ['/6 + (1/36)', null], ...nv()], 19, 40);
+		L1([["MC'² − MB'² = (2/9)(", null], ...nu(), [' − ', null], ...nv(), [')', null]]);
+		L1([['agora: (2/9)(' + UT.fmt(u2, 1) + ' − ' + UT.fmt(v2, 1) + ') ≈ ' + UT.fmt(2 / 9 * (u2 - v2), 2), C.cinza]], 17, 42);
+		L1([["MB' = MC' ⇒ ", null], ['‖', null], T.V('u', C.u), ['‖ = ‖', null], T.V('v', C.v), ['‖ ⇒ ', null], ['AB = AC', C.pos, p.BOLD]], 21);
 	};
 };
