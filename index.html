@@ -785,6 +785,7 @@
 							<li><a href="#/pe-p9">Reta no espaço e o plano $xOy$</a></li>
 							<li><a href="#/pe-p10">Tabela de produtos escalares</a></li>
 							<li><a href="#/pe-p11">Um triângulo dentro do cubo</a></li>
+							<li><a href="#/pe-p12">Um trapézio dentro do cilindro</a></li>
 						</ol>
 						<p class="dica">Problemas adaptados de exames.</p>
 					</div>
@@ -1049,6 +1050,38 @@
 						</div>
 					</div>
 				</section>
+
+				<!-- ------------ Problema 12 ------------ -->
+				<section id="pe-p12" class="sans" data-esconder data-sketch="pe-p12">
+					<a class="voltar" href="#/pe-problemas">↩ problemas</a>
+					<h4>Problema 12 — Um trapézio dentro do cilindro</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Na figura está representado um cilindro cujas bases são limitadas por duas circunferências $C_1$ e $C_2$, ambas de diâmetro $5$. Na circunferência $C_1$ estão os pontos $A$ e $B$, com $\overline{AB} = 5$, e na circunferência $C_2$ estão os pontos $C$ e $D$, com $\overline{CD} = 3$ e $\overline{AD} = \overline{BC}$. Seja $H$ o pé da perpendicular traçada de $D$ para o plano que contém $C_1$.</p>
+							<svg class="fig-enunciado" viewBox="-24 0 254 300" width="220" aria-label="Cilindro com as bases C1 e C2, o trapézio [ABCD] e o ponto H">
+								<g fill="none" stroke="#1e293b" stroke-width="2">
+									<path d="M10.0,240 A100.0,32.0 0 0,0 210.0,240"/>
+									<ellipse cx="110" cy="60.0" rx="100.0" ry="32.0"/>
+									<path d="M10.0,240 L10.0,60.0 M210.0,240 L210.0,60.0"/>
+								</g>
+								<path d="M10.0,240 A100.0,32.0 0 0,1 210.0,240" fill="none" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="6 5"/>
+								<path d="M10.0,240 L210.0,240 L170.0,34.4 L50.0,34.4 Z" fill="rgba(234,88,12,.12)" stroke="none"/>
+								<path d="M170.0,34.4 L50.0,34.4" fill="none" stroke="#ea580c" stroke-width="2.6"/>
+								<path d="M50.0,34.4 L10.0,240 L210.0,240 L170.0,34.4" fill="none" stroke="#ea580c" stroke-width="2" stroke-dasharray="6 5"/>
+								<path d="M50.0,34.4 L50.0,214.4 M10.0,240 L50.0,214.4 L210.0,240" fill="none" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="6 5"/>
+								<g fill="#1e293b"><circle cx="10.0" cy="240" r="3"/><circle cx="210.0" cy="240" r="3"/><circle cx="170.0" cy="34.4" r="3"/><circle cx="50.0" cy="34.4" r="3"/><circle cx="50.0" cy="214.4" r="3"/></g>
+								<g font-family="Source Sans Pro, sans-serif" font-size="17" fill="#1e293b" text-anchor="middle" font-weight="600" font-style="italic"><text x="-4.0" y="244">A</text><text x="224.0" y="244">B</text><text x="182.0" y="26.4">C</text><text x="38.0" y="26.4">D</text><text x="60.0" y="208.4">H</text>
+									<text x="2" y="290">C<tspan font-size="12" dy="4">1</tspan></text><text x="-6" y="40">C<tspan font-size="12" dy="4">2</tspan></text></g>
+							</svg>
+							<p>A área do quadrilátero $[ABCD]$ é o quádruplo da área do triângulo $[ABH]$. Qual é a altura do cilindro?</p>
+							<p class="opcoes"><span><b>(A)</b> $3\sqrt{2}$</span><span><b>(B)</b> $\sqrt{19}$</span><span><b>(C)</b> $2\sqrt{5}$</span><span><b>(D)</b> $\sqrt{21}$</span><span><b>(E)</b> $\sqrt{22}$</span></p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
 			</section>
 
 			<!-- Novo problema: copiar o bloco <section> acima, mudar id/data-sketch (trig-p2, ...),
@@ -1097,6 +1130,7 @@
 	<script src="sketches/produto-escalar/p9.js"></script>
 	<script src="sketches/produto-escalar/p10.js"></script>
 	<script src="sketches/produto-escalar/p11.js"></script>
+	<script src="sketches/produto-escalar/p12.js"></script>
 
 	<script>
 		Reveal.initialize({
