@@ -1,251 +1,107 @@
 /* =====================================================================
-   Produto escalar · Problema 11 — Área de um triângulo num cubo
-   (Suneung 2022, opção Geometria, item 27; ~/MAT_A_26_27/geometria/coreia/coreia_exames.tex, n.º 34)
-   Cubo [ABCDEFGH] de aresta 4, M ponto médio de [AD]; área de [MEG].
-   Referencial com origem em E: E(0,0,0), F(4,0,0), G(4,4,0), H(0,4,0), A(0,0,4), B(4,0,4), C(4,4,4), D(0,4,4), M(0,2,4).
-   EM = (0,2,4), EG = (4,4,0), EM·EG = 8, ‖EM‖ = √20, ‖EG‖ = √32, cos θ = 1/√10, sen θ = 3/√10,
-   Área = ½·√20·√32·3/√10 = 12  → (D).
-   Figura 3D à mão em perspetiva (como p10.js): a vista roda arrastando; arestas escondidas a tracejado.
+   Produto escalar · Problema 11 — os pontos médios dos lados de um losango (Itália, Esame di Stato 2019, suplementar, q. 3)
+   Losango A(−a, 0), B(0, −b), C(a, 0), D(0, b); arrastam-se os vértices (A/C mudam a, B/D mudam b).
+   Caixa «Losango»: desligada, os quatro vértices ficam livres (quadrilátero qualquer → [MNPQ] só paralelogramo).
+   Solução: MN = ½AC = QP (paralelogramo), MQ = ½BD, AC · BD = ‖AD‖² − ‖AB‖² = 0 ⇒ MN · MQ = 0.
    ===================================================================== */
-(function () {
-	const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
-	const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-	const mul = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
-	const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-	const unit = a => mul(a, 1 / Math.hypot(...a));
-
-	const P = { E: [0, 0, 0], F: [4, 0, 0], G: [4, 4, 0], H: [0, 4, 0], A: [0, 0, 4], B: [4, 0, 4], C: [4, 4, 4], D: [0, 4, 4], M: [0, 2, 4] };
-	const ARESTAS = [['A', 'B'], ['B', 'C'], ['C', 'D'], ['D', 'A'], ['E', 'F'], ['F', 'G'], ['G', 'H'], ['H', 'E'], ['A', 'E'], ['B', 'F'], ['C', 'G'], ['D', 'H']];
-	// faces (vértices e normal exterior): uma aresta está escondida se as duas faces dela estiverem viradas para trás
-	const FACES = [[['A', 'B', 'C', 'D'], [0, 0, 1]], [['E', 'F', 'G', 'H'], [0, 0, -1]], [['A', 'B', 'F', 'E'], [0, -1, 0]],
-		[['D', 'C', 'G', 'H'], [0, 1, 0]], [['A', 'D', 'H', 'E'], [-1, 0, 0]], [['B', 'C', 'G', 'F'], [1, 0, 0]]];
-
-	SKETCHES['pe-p11'] = function (p, controlos) {
-		const W = 920, H = 600;
-		const G = { cx: 330, cy: 330, k: 64 };
-		const CEN = [2, 2, 2];
-		const COR = {
-			texto: [30, 41, 59], cinza: [100, 116, 139], eixo: [148, 163, 184], cubo: [71, 85, 105],
-			em: [21, 101, 192], eg: [123, 31, 162], tri: [234, 88, 12], pos: [46, 125, 50]
-		};
-		let az = -76, el = 18;
-		let alvo = null;
-		let F_ = [1, 0, 0], R_ = [0, 1, 0], U_ = [0, 0, 1];
-		let cxRef, cxVet, cxSol;
-
-		// nome de vetor com o arpão por cima, em HTML (para a legenda da caixa), como em p1.js
-		const vec = l => '<span style="display:inline-block;position:relative;font-style:italic">' + l +
-			'<span style="position:absolute;left:-0.05em;right:-0.15em;top:-0.62em;font-size:0.7em;font-style:normal;text-align:center;transform:scaleX(' + (l.length > 1 ? 2.2 : 1) + ')">⇀</span></span>';
-
-		p.setup = function () {
-			arrastar(p.createCanvas(W, H).elt);
-			p.textFont('Source Sans Pro');
-			p.createSpan('Arrasta para rodar o cubo ·').parent(controlos).addClass('dica-arrastar');
-			UT.botao(p, controlos, 'Vista inicial', () => { alvo = [-76, 18]; }, 'atalho');
-			UT.quebra(p, controlos);
-			cxRef = UT.caixa(p, controlos, 'Referencial', false);
-			cxVet = UT.caixa(p, controlos, 'Vetores ' + vec('EM') + ' e ' + vec('EG'), false);
-			cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
-			cxSol.changed(() => { if (cxSol.checked()) { cxRef.checked(true); cxVet.checked(true); } });
-		};
-
-		function arrastar(cv) {
-			let ultimo = null;
-			cv.style.cursor = 'grab'; cv.style.touchAction = 'none';
-			cv.addEventListener('pointerdown', e => {
-				alvo = null;
-				ultimo = [e.clientX, e.clientY]; cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing';
-				e.stopPropagation();
-			});
-			cv.addEventListener('pointermove', e => {
-				if (!ultimo) return;
-				const esc = (window.Reveal && Reveal.getScale && Reveal.getScale()) || 1;
-				const dx = (e.clientX - ultimo[0]) / esc, dy = (e.clientY - ultimo[1]) / esc;
-				ultimo = [e.clientX, e.clientY];
-				az -= dx * 0.4; if (az > 180) az -= 360; if (az < -180) az += 360;
-				el = p.constrain(el + dy * 0.4, -60, 80);
-			});
-			const fim = () => { ultimo = null; cv.style.cursor = 'grab'; };
-			cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim);
-			['touchstart', 'touchmove', 'mousedown'].forEach(t => cv.addEventListener(t, e => e.stopPropagation(), { passive: true }));
-		}
-
-		/* ---------------- projeção (perspetiva) ---------------- */
-		function camara() {
-			const a = az * Math.PI / 180, e = el * Math.PI / 180;
-			F_ = [Math.cos(e) * Math.cos(a), Math.cos(e) * Math.sin(a), Math.sin(e)];
-			R_ = [-Math.sin(a), Math.cos(a), 0];
-			U_ = [-Math.sin(e) * Math.cos(a), -Math.sin(e) * Math.sin(a), Math.cos(e)];
-		}
-		const DIST = 19;
-		const pr = v => {
-			const w = sub(v, CEN), z = DIST - dot3(w, F_), s = G.k * DIST / Math.max(z, 0.5);
-			return { x: G.cx + s * dot3(w, R_), y: G.cy - s * dot3(w, U_) };
-		};
-
-		/* ---------------- desenho de base ---------------- */
-		function seg(a, b, cor, peso, alfa = 255) {
-			const A = pr(a), B = pr(b);
-			p.stroke(...cor, alfa); p.strokeWeight(peso); p.strokeCap(p.ROUND); p.line(A.x, A.y, B.x, B.y);
-		}
-		function seta(a, b, cor, peso = 3.5, alfa = 255) {
-			const A = pr(a), B = pr(b);
-			const dx = B.x - A.x, dy = B.y - A.y, l = Math.hypot(dx, dy);
-			const h = 16, recuo = l > h ? h * 0.8 / l : 0;
-			seg(a, add(a, mul(sub(b, a), 1 - recuo)), cor, peso, alfa);
-			if (l < 6) return;
-			const ux = dx / l, uy = dy / l;
-			p.noStroke(); p.fill(...cor, alfa);
-			p.triangle(B.x, B.y, B.x - h * ux - h * 0.42 * uy, B.y - h * uy + h * 0.42 * ux,
-				B.x - h * ux + h * 0.42 * uy, B.y - h * uy - h * 0.42 * ux);
-		}
-		function rot(t, x, y, cor = COR.texto, tam = 22, alfa = 255, estilo = p.BOLD, ah = p.CENTER) {
-			p.stroke(255, alfa); p.strokeWeight(6); p.strokeJoin(p.ROUND);
-			p.fill(...cor, alfa); p.textSize(tam); p.textStyle(estilo);
-			p.textAlign(ah, p.CENTER); p.text(t, x, y);
-		}
-		function setinha(x, w, y, cor, tam, alfa = 255) {
-			const yy = y - tam * 0.86, x1 = x + w + 2;
-			p.stroke(...cor, alfa); p.strokeWeight(Math.max(1.5, tam / 13)); p.line(x - 1, yy, x1, yy);
-			p.noStroke(); p.fill(...cor, alfa);
-			p.triangle(x1 + 3, yy, x1 - 4 - 1, yy - 5, x1 - 4, yy);
-		}
-		// nome de vetor (letra com seta por cima) centrado em (x, y)
-		function rotVet(t, x, y, cor, tam = 26, alfa = 255) {
-			rot(t, x, y, cor, tam, alfa, p.BOLDITALIC);
-			p.textSize(tam); p.textStyle(p.BOLDITALIC);
-			const w = p.textWidth(t);
-			// base do texto ≈ y + 0.3·tam (texto centrado na vertical)
-			setinha(x - w / 2, w, y + tam * 0.3, cor, tam, alfa);
-		}
-		// texto às peças: [texto, cor, estilo, vetor?]; devolve a largura
-		function frase(partes, x, y, tam = 22, so = false, alfa = 255) {
-			p.textSize(tam); p.textAlign(p.LEFT, p.BASELINE);
-			const x0 = x;
-			partes.forEach(([t, cor, est, vet]) => {
-				p.textStyle(est || (vet ? p.BOLDITALIC : p.NORMAL));
-				const w = p.textWidth(t);
-				if (!so) {
-					p.noStroke(); p.fill(...(cor || COR.texto), alfa); p.text(t, x, y);
-					if (vet) setinha(x, w, y, cor || COR.texto, tam, alfa);
-				}
-				x += w;
-			});
-			return x - x0;
-		}
-		function caixa(linhas, x0, y0, dy = 34, tam = 22, alinhaDir = false) {
-			const wmax = Math.max(...linhas.map(l => frase(l, 0, 0, tam, true)));
-			const bx = alinhaDir ? x0 - wmax - 24 : x0;
-			p.stroke(203, 213, 225); p.strokeWeight(1.5); p.fill(255, 235);
-			p.rect(bx, y0, wmax + 24, linhas.length * dy + 12, 8);
-			linhas.forEach((l, i) => frase(l, bx + 12, y0 + 6 + dy * 0.78 + i * dy, tam));
-		}
-		const v = (s, cor) => [s, cor, p.BOLDITALIC, true];
+SKETCHES['pe-p11'] = function (p, controlos) {
+	const T = PLANO(p, { O: { x: 275, y: 300 }, K: 48 });
+	const C = T.COR, NOMES = ['A', 'B', 'C', 'D'];
+	// losango rodado de 20° (para não ficar com os lados de [MNPQ] paralelos aos bordos)
+	const RO = 20 * Math.PI / 180, E1 = [Math.cos(RO), Math.sin(RO)], E2 = [-Math.sin(RO), Math.cos(RO)];
+	const comb = (s, e) => [s * e[0], s * e[1]];
+	function losango(a, b) { return [comb(-a, E1), comb(-b, E2), comb(a, E1), comb(b, E2)]; }
+	const semi = () => [Math.hypot(st.V[2][0] - st.V[0][0], st.V[2][1] - st.V[0][1]) / 2, Math.hypot(st.V[3][0] - st.V[1][0], st.V[3][1] - st.V[1][1]) / 2];
+	const st = { V: losango(4, 2.6) };
+	let cxLos, cxDiag, cxSol;
 
 
-		// ângulo θ entre EM e EG (em E)
-		function angulo(u, w, cor, rr = 1.1) {
-			const eu = unit(u), ew0 = unit(w);
-			const cs = dot3(eu, ew0), th = Math.acos(cs);
-			const ep = unit(sub(ew0, mul(eu, cs)));
-			const Pt = s => add(mul(eu, rr * Math.cos(s)), mul(ep, rr * Math.sin(s)));
-			const n = 30, pts = [];
-			for (let i = 0; i <= n; i++) pts.push(pr(Pt(th * i / n)));
-			const O = pr([0, 0, 0]);
-			p.noStroke(); p.fill(...cor, 55);
-			p.beginShape(); p.vertex(O.x, O.y); pts.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
-			p.noFill(); p.stroke(...cor); p.strokeWeight(2.5);
-			p.beginShape(); pts.forEach(q => p.vertex(q.x, q.y)); p.endShape();
-			return pr(Pt(th / 2).map(x => x * 1.35));
-		}
-
-		p.draw = function () {
-			if (alvo) {
-				let d = alvo[0] - az; d -= 360 * Math.round(d / 360);
-				const f = Math.min(1, p.deltaTime / 1000 * 4);
-				az += d * f; el += (alvo[1] - el) * f;
-				if (Math.abs(d) < 0.1 && Math.abs(alvo[1] - el) < 0.1) alvo = null;
+	p.setup = function () {
+		const cv = p.createCanvas(T.W, T.H).elt;
+		p.textFont('Source Sans Pro');
+		T.arrastar(cv, [0, 1, 2, 3].map(i => ({
+			perto: (x, y) => T.perto(st.V[i], x, y),
+			mover: (x, y) => {
+				x = p.constrain(x, -5.3, 5.3); y = p.constrain(y, -5.4, 5.4);
+				if (cxLos.checked()) {
+					const [a, b] = semi();
+					st.V = i % 2 === 0 ? losango(p.constrain(Math.abs(x * E1[0] + y * E1[1]), 0.8, 5), b) : losango(a, p.constrain(Math.abs(x * E2[0] + y * E2[1]), 0.8, 4.6));
+				} else st.V[i] = [x, y];
 			}
-			camara();
-			p.background(255);
-			const ref = cxRef.checked(), vet = cxVet.checked(), sol = cxSol.checked();
-			const olho = add(CEN, mul(F_, 19));
-			const visivel = FACES.map(([vs, n]) => {
-				const c = mul(vs.reduce((s, k) => add(s, P[k]), [0, 0, 0]), 1 / 4);
-				return dot3(n, sub(olho, c)) > 0;
-			});
-			const escondida = (a, b) => !FACES.some(([vs], i) => visivel[i] && vs.includes(a) && vs.includes(b));
-
-			// eixos (com origem em E)
-			if (ref) [[[1, 0, 0], 'x'], [[0, 1, 0], 'y'], [[0, 0, 1], 'z']].forEach(([e, nome]) => {
-				seta(mul(e, 4), mul(e, 6.3), COR.eixo, 1.8);
-				const T = pr(mul(e, 6.7));
-				rot(nome, T.x, T.y, COR.cinza, 22, 255, p.ITALIC);
-			});
-			// triângulo [MEG]
-			const T3 = ['M', 'E', 'G'].map(k => pr(P[k]));
-			p.noStroke(); p.fill(...COR.tri, 32);
-			p.beginShape(); T3.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
-			// arestas: escondidas a tracejado, as outras a cheio
-			ARESTAS.forEach(([a, b]) => {
-				const A = pr(P[a]), B = pr(P[b]);
-				p.stroke(...COR.cubo); p.strokeWeight(2);
-				if (escondida(a, b)) { p.drawingContext.setLineDash([7, 6]); p.strokeWeight(1.5); }
-				p.line(A.x, A.y, B.x, B.y); p.drawingContext.setLineDash([]);
-			});
-			// lados do triângulo: o triângulo está dentro do cubo (pedido do utilizador, 2026-11-24: não pode parecer por fora).
-			// Um lado sobre uma face vê-se se essa face estiver virada para nós; um lado que atravessa o interior
-			// (como [GM]) fica sempre escondido. Escondido = tracejado e mais fino, como as arestas escondidas.
-			const PLANOS = [[2, 4], [2, 0], [1, 0], [1, 4], [0, 0], [0, 4]];          // pela ordem de FACES: eixo e valor
-			const naFace = (q, i) => q[PLANOS[i][0]] === PLANOS[i][1];
-			[['M', 'E'], ['E', 'G'], ['G', 'M']].forEach(([a, b]) => {
-				if (vet && (b === 'G' && a === 'E' || a === 'M' && b === 'E')) return;
-				const ve = FACES.some((f, i) => visivel[i] && naFace(P[a], i) && naFace(P[b], i));
-				if (ve) seg(P[a], P[b], COR.tri, 3);
-				else {
-					p.drawingContext.setLineDash([8, 6]); seg(P[a], P[b], COR.tri, 2.2); p.drawingContext.setLineDash([]);
-				}
-			});
-			// vetores EM e EG, com o ângulo θ
-			if (vet) {
-				const L = angulo(P.M, P.G, COR.pos);
-				rot('θ', L.x, L.y, COR.pos, 22, 255, p.BOLDITALIC);
-				// os vetores seguem a mesma regra dos lados: a tracejado quando a face onde estão está virada para trás
-				[[P.M, COR.em], [P.G, COR.eg]].forEach(([q, cor]) => {
-					const ve = FACES.some((f, i) => visivel[i] && naFace(P.E, i) && naFace(q, i));
-					if (!ve) p.drawingContext.setLineDash([9, 6]);
-					seta(P.E, q, cor, ve ? 4 : 3);
-					p.drawingContext.setLineDash([]);
-				});
-				const m1 = pr(mul(P.M, 0.55)), m2 = pr(mul(P.G, 0.6));
-				rotVet('EM', m1.x - 30, m1.y, COR.em);
-				rotVet('EG', m2.x, m2.y + 26, COR.eg);
+		})));
+		p.createSpan('Arrasta os vértices ·').parent(controlos).addClass('dica-arrastar');
+		UT.botao(p, controlos, 'Início', () => { cxLos.checked(true); st.V = losango(4, 2.6); }, 'atalho');
+		UT.quebra(p, controlos);
+		cxLos = UT.caixa(p, controlos, 'Losango', true);
+		cxLos.changed(() => {
+			if (cxLos.checked()) {
+				const [a, b] = semi(); st.V = losango(p.constrain(a, 0.8, 5), p.constrain(b, 0.8, 4.6));
 			}
-			// vértices
-			const QC = pr(CEN);
-			Object.entries(P).forEach(([k, q]) => {
-				const Q = pr(q);
-				p.stroke(255); p.strokeWeight(2); p.fill(...(k === 'M' ? COR.tri : COR.texto)); p.circle(Q.x, Q.y, k === 'M' ? 11 : 9);
-				let dx = Q.x - QC.x, dy = Q.y - QC.y; const l = Math.hypot(dx, dy) || 1;
-				const lx = Q.x + dx / l * 22, ly = Q.y + dy / l * 22;
-				rot(k, lx, ly, k === 'M' ? COR.tri : COR.texto, 22, 255, p.BOLDITALIC);
-				if (ref && 'EMG'.includes(k)) rot(`(${q.join(', ')})`, lx, ly + 20, COR.cinza, 16, 255, p.NORMAL);
-			});
-
-			// solução
-			if (sol) {
-				const N = COR.texto, V = COR.pos, em = v('EM', COR.em), eg = v('EG', COR.eg);
-				caixa([
-					[['E(0, 0, 0),  M(0, 2, 4),  G(4, 4, 0)', N]],
-					[em, [' = (0, 2, 4),   ', N], eg, [' = (4, 4, 0)', N]],
-					[em, [' · ', N], eg, [' = 0 + 8 + 0 = 8', N]],
-					[['‖', N], em, ['‖ = √20,   ‖', N], eg, ['‖ = √32', N]],
-					[['cos θ = 8 / (√20 × √32) = 1/√10', N]],
-					[['sen θ = √(1 − 1/10) = 3/√10', N]],
-					[['Área = ½ × √20 × √32 × 3/√10 = 12', V, p.BOLD]],
-					[['→ (D)', V, p.BOLD]]
-				], W - 12, 12, 34, 20, true);
-			}
-		};
+		});
+		cxDiag = UT.caixa(p, controlos, 'Diagonais', false);
+		cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
+		cxSol.changed(() => { if (cxSol.checked()) { cxDiag.checked(true); if (!cxLos.checked()) { cxLos.checked(true); st.V = losango(4, 2.6); } } });
 	};
-})();
+
+	const med = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+	const sub = (a, b) => [a[0] - b[0], a[1] - b[1]];
+	const dot = (a, b) => a[0] * b[0] + a[1] * b[1];
+
+	p.draw = function () {
+		const [A, B, Cc, D] = st.V, sol = cxSol.checked();
+		const M = med(A, B), N = med(B, Cc), P = med(Cc, D), Q = med(D, A);
+		const mn = sub(N, M), mq = sub(Q, M), ac = sub(Cc, A), bd = sub(D, B);
+		const cosM = dot(mn, mq) / (Math.hypot(...mn) * Math.hypot(...mq));
+		const ang = Math.acos(p.constrain(cosM, -1, 1)) * 180 / Math.PI, reto = Math.abs(cosM) < 2e-3;
+		const pe = dot(ac, bd);
+		p.background(255);
+
+		// losango / quadrilátero
+		p.fill(...C.fig, 18); p.stroke(...C.texto); p.strokeWeight(2.4); p.strokeJoin(p.ROUND);
+		p.beginShape(); st.V.forEach(v => p.vertex(...T.S(v))); p.endShape(p.CLOSE);
+		if (cxLos.checked()) {                                       // marcas de lados iguais
+			[[A, B], [B, Cc], [Cc, D], [D, A]].forEach(([u, v]) => {
+				const m = T.S(med(u, v)), d = sub(T.S(v), T.S(u)), n = Math.hypot(...d);
+				p.stroke(...C.texto); p.strokeWeight(2); p.line(m[0] - 7 * d[1] / n, m[1] + 7 * d[0] / n, m[0] + 7 * d[1] / n, m[1] - 7 * d[0] / n);
+			});
+		}
+		if (cxDiag.checked()) {
+			T.seg(A, Cc, sol ? C.u : C.cinza, 1.8, [7, 6]); T.seg(B, D, sol ? C.v : C.cinza, 1.8, [7, 6]);
+			if (Math.abs(pe) < 1e-6) T.reto(med(A, Cc), Cc, D, C.zero, 12);
+		}
+		// [MNPQ]
+		p.fill(...C.soma, 40); p.stroke(...C.soma); p.strokeWeight(2.6);
+		p.beginShape(); [M, N, P, Q].forEach(v => p.vertex(...T.S(v))); p.endShape(p.CLOSE);
+		if (reto) T.reto(M, N, Q, C.zero, 16); else T.arco(M, N, Q, C.neg, 26);
+		if (sol) {
+			T.seta(M, N, C.u, 3.6); T.seta(M, Q, C.v, 3.6);
+			const sn = T.S(med(M, N)), sq = T.S(med(M, Q));
+			T.nomeVetor('MN', sn[0] + 26, sn[1] + 18, C.u, 20);
+			T.nomeVetor('MQ', sq[0] - 30, sq[1] + 16, C.v, 20);
+		}
+		// pontos
+		const fora = (q, d = 20) => { const c = med(med(A, Cc), med(B, D)), s = sub(q, c), n = Math.hypot(...s) || 1; return [d * s[0] / n, -d * s[1] / n]; };
+		st.V.forEach((v, i) => { const [dx, dy] = fora(v); T.ponto(v, NOMES[i], dx, dy, C.texto, true); });
+		[[M, 'M'], [N, 'N'], [P, 'P'], [Q, 'Q']].forEach(([v, n]) => { const [dx, dy] = fora(v, 18); T.ponto(v, n, dx, dy, C.soma, false, 21); });
+
+		// leitura
+		const x0 = 580;
+		T.painel(x0 - 14, 12, T.W - x0 + 2, 116);
+		T.linha([['ângulo em M ≈ ' + UT.fmt(ang, 1) + '°', reto ? C.pos : C.neg, p.BOLD]], x0, 38);
+		T.linha([T.V('AC'), [' · ', null], T.V('BD'), [' ≈ ' + UT.fmt(Math.abs(pe) < 1e-6 ? 0 : pe, 2), null]], x0, 72);
+		T.linha([['[MNPQ]: ', null], reto ? ['retângulo ✓', C.pos, p.BOLD] : ['paralelogramo', C.neg, p.BOLD]], x0, 106);
+
+		if (!sol) return;
+		T.painel(x0 - 14, 144, T.W - x0 + 2, 444);
+		let y = 172;
+		const L1 = (pecas, tam = 19, dy = 33) => { T.linha(pecas, x0, y, tam); y += dy; };
+		L1([T.V('MN', C.u), [' = ½', null], T.V('AB'), [' + ½', null], T.V('BC'), [' = ½', null], T.V('AC', C.u)]);
+		L1([T.V('QP'), [' = ½', null], T.V('AD'), [' + ½', null], T.V('DC'), [' = ½', null], T.V('AC', C.u)]);
+		L1([T.V('MN', C.u), [' = ', null], T.V('QP'), [': paralelogramo', null]], 19, 40);
+		L1([T.V('MQ', C.v), [' = ½', null], T.V('BA'), [' + ½', null], T.V('AD'), [' = ½', null], T.V('BD', C.v)], 19, 40);
+		L1([T.V('AC', C.u), [' = ', null], T.V('AD'), [' + ', null], T.V('AB'), [' ,  ', null], T.V('BD', C.v), [' = ', null], T.V('AD'), [' − ', null], T.V('AB')]);
+		L1([T.V('AC', C.u), [' · ', null], T.V('BD', C.v), [' = AD² − AB² = 0', null]], 19, 40);
+		L1([T.V('MN', C.u), [' · ', null], T.V('MQ', C.v), [' = ¼ ', null], T.V('AC', C.u), [' · ', null], T.V('BD', C.v), [' = 0', null]]);
+		L1([['[MNPQ] é um ', null], ['retângulo', C.pos, p.BOLD]], 21);
+	};
+};
