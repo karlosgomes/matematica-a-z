@@ -162,8 +162,8 @@
 .enunciado table.reducao tr.atual td:first-child { box-shadow: inset 4px 0 #ea580c; }
 
 /* ---------- escolha múltipla e tabela de produtos escalares (problemas do Produto escalar) ---------- */
-.enunciado p.opcoes { margin: -6px 0 20px 1.6em; display: flex; flex-wrap: wrap; gap: 6px 30px; }
-.enunciado p.opcoes.duas { display: grid; grid-template-columns: auto auto; justify-content: start; }
+.enunciado p.opcoes { margin: -6px 0 20px 1.6em; display: flex; flex-wrap: wrap; gap: 6px 30px; align-items: baseline; }   /* baseline: opções com frações alinhadas com as outras */
+.enunciado p.opcoes.duas { display: grid; grid-template-columns: auto auto; justify-content: start; align-items: baseline; }
 .enunciado p.opcoes span { white-space: nowrap; }
 .enunciado p.opcoes b { color: #475569; margin-right: 8px; }
 .compacto .enunciado { font-size: 0.78em; }

@@ -33,6 +33,10 @@
 		let F_ = [1, 0, 0], R_ = [0, 1, 0], U_ = [0, 0, 1];
 		let cxRef, cxVet, cxSol;
 
+		// nome de vetor com o arpão por cima, em HTML (para a legenda da caixa), como em p1.js
+		const vec = l => '<span style="display:inline-block;position:relative;font-style:italic">' + l +
+			'<span style="position:absolute;left:-0.05em;right:-0.15em;top:-0.62em;font-size:0.7em;font-style:normal;text-align:center;transform:scaleX(' + (l.length > 1 ? 2.2 : 1) + ')">⇀</span></span>';
+
 		p.setup = function () {
 			arrastar(p.createCanvas(W, H).elt);
 			p.textFont('Source Sans Pro');
@@ -40,7 +44,7 @@
 			UT.botao(p, controlos, 'Vista inicial', () => { alvo = [-76, 18]; }, 'atalho');
 			UT.quebra(p, controlos);
 			cxRef = UT.caixa(p, controlos, 'Referencial', false);
-			cxVet = UT.caixa(p, controlos, 'Vetores ⇀EM e ⇀EG', false);
+			cxVet = UT.caixa(p, controlos, 'Vetores ' + vec('EM') + ' e ' + vec('EG'), false);
 			cxSol = UT.caixa(p, controlos, 'Mostrar a solução', false);
 			cxSol.changed(() => { if (cxSol.checked()) { cxRef.checked(true); cxVet.checked(true); } });
 		};
