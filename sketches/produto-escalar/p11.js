@@ -210,8 +210,13 @@
 			if (vet) {
 				const L = angulo(P.M, P.G, COR.pos);
 				rot('θ', L.x, L.y, COR.pos, 22, 255, p.BOLDITALIC);
-				seta(P.E, P.M, COR.em, 4);
-				seta(P.E, P.G, COR.eg, 4);
+				// os vetores seguem a mesma regra dos lados: a tracejado quando a face onde estão está virada para trás
+				[[P.M, COR.em], [P.G, COR.eg]].forEach(([q, cor]) => {
+					const ve = FACES.some((f, i) => visivel[i] && naFace(P.E, i) && naFace(q, i));
+					if (!ve) p.drawingContext.setLineDash([9, 6]);
+					seta(P.E, q, cor, ve ? 4 : 3);
+					p.drawingContext.setLineDash([]);
+				});
 				const m1 = pr(mul(P.M, 0.55)), m2 = pr(mul(P.G, 0.6));
 				rotVet('EM', m1.x - 30, m1.y, COR.em);
 				rotVet('EG', m2.x, m2.y + 26, COR.eg);
