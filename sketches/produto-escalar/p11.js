@@ -184,7 +184,7 @@
 			});
 			// triângulo [MEG]
 			const T3 = ['M', 'E', 'G'].map(k => pr(P[k]));
-			p.noStroke(); p.fill(...COR.tri, 45);
+			p.noStroke(); p.fill(...COR.tri, 32);
 			p.beginShape(); T3.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
 			// arestas: escondidas a tracejado, as outras a cheio
 			ARESTAS.forEach(([a, b]) => {
@@ -193,10 +193,18 @@
 				if (escondida(a, b)) { p.drawingContext.setLineDash([7, 6]); p.strokeWeight(1.5); }
 				p.line(A.x, A.y, B.x, B.y); p.drawingContext.setLineDash([]);
 			});
-			// lados do triângulo
+			// lados do triângulo: o triângulo está dentro do cubo (pedido do utilizador, 2026-11-24: não pode parecer por fora).
+			// Um lado sobre uma face vê-se se essa face estiver virada para nós; um lado que atravessa o interior
+			// (como [GM]) fica sempre escondido. Escondido = tracejado e mais fino, como as arestas escondidas.
+			const PLANOS = [[2, 4], [2, 0], [1, 0], [1, 4], [0, 0], [0, 4]];          // pela ordem de FACES: eixo e valor
+			const naFace = (q, i) => q[PLANOS[i][0]] === PLANOS[i][1];
 			[['M', 'E'], ['E', 'G'], ['G', 'M']].forEach(([a, b]) => {
 				if (vet && (b === 'G' && a === 'E' || a === 'M' && b === 'E')) return;
-				seg(P[a], P[b], COR.tri, 3);
+				const ve = FACES.some((f, i) => visivel[i] && naFace(P[a], i) && naFace(P[b], i));
+				if (ve) seg(P[a], P[b], COR.tri, 3);
+				else {
+					p.drawingContext.setLineDash([8, 6]); seg(P[a], P[b], COR.tri, 2.2); p.drawingContext.setLineDash([]);
+				}
 			});
 			// vetores EM e EG, com o ângulo θ
 			if (vet) {
