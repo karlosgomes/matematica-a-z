@@ -126,6 +126,9 @@
 .controlos .quebra { flex-basis: 100%; height: 0; }
 .enunciado p.sub { margin: -8px 0 14px 1.6em; }
 .enunciado .katex { white-space: nowrap; }
+/* o KaTeX aumenta as fórmulas para 1,21em (pensado para texto com serifa); junto da Source Sans Pro ficavam
+   maiores do que o texto (reparo do utilizador, 2026-11-25) */
+.reveal .sans .katex { font-size: 1.05em; }
 
 /* ---------- ajuda na capa ---------- */
 .reveal .capa table.ajuda { margin: 50px auto 0; font-size: 0.62em; color: #475569; border-collapse: collapse; }
