@@ -182,7 +182,10 @@
 .enunciado table.produtos.lago th, .enunciado table.produtos.lago td { padding: 1px 14px; }
 .enunciado table.produtos.lago td:first-child { text-align: left; }
 .enunciado table.produtos.lago td:last-child { text-align: right; }
-.reveal section.so-texto .fig-enunciado.lago { zoom: 1.25; margin: 0; }
+.reveal .lago-plot { flex: none; width: 640px; }
+.reveal .lago-plot svg { display: block; overflow: visible; }
+.enunciado table.produtos.lago tr[data-i] { cursor: default; transition: background 0.12s; }
+.enunciado table.produtos.lago tr.realce td { background: #fee2e2; color: #b91c1c; font-weight: 600; }
 .reveal a.botao-anim { text-decoration: none; display: inline-block; }
 .enunciado table.produtos.mensal { font-size: 0.78em; }
 .enunciado table.produtos.mensal th, .enunciado table.produtos.mensal td { padding: 3px 6px; white-space: nowrap; }
