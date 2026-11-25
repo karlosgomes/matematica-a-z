@@ -29,7 +29,7 @@ Apresentação Reveal.js com problemas de Matemática A (secundário, currículo
 - **Numeração dos problemas desde 1** dentro de cada tópico (não usar o n.º do manual); alíneas 1.1, 1.2, …
 - **Layout de problema/resumo**: `<section class="sans" data-sketch="...">` com `.problema` = grelha de 2 colunas: `.enunciado` à esquerda, `.animacao` (`.tela` + `.controlos`) à direita. Tudo tem de caber no slide (1600×900).
 - Resumo usa também `class="resumo"` (mesma fonte dos problemas, um pouco maior).
-- Links de retorno (`a.voltar`): resumo/listas → `#/indice`; problemas → `#/<prefixo>-problemas`.
+- Links de retorno (`a.voltar`): resumo/listas → `#/indice`; problemas → `#/<prefixo>-problemas`. Desde 2026-11-26 (pedido do utilizador) mais visíveis: 0,66em, negrito, laranja do weblog #EE6A24 (o botão da animação passou para `right: 205px`).
 - **Fontes**: capa e índices em fonte tipo Palatino (`--r-main-font`); resumo e problemas em Source Sans Pro (classe `.sans`). No p5 usar `p.textFont('Source Sans Pro')` (um único nome, sem lista).
 - Tema claro (`white`); cores das animações: cosseno azul `#1d4ed8`, seno vermelho `#dc2626`, tangente verde `#059669`, α violeta.
 

@@ -71,8 +71,10 @@
 .reveal h4 { margin: 0 0 16px; color: #1d4ed8; text-align: left; }
 
 .reveal a.voltar {
-	position: absolute; top: 0; right: 0; font-size: 0.55em; color: #64748b;
+	/* mais visível (pedido do utilizador, 2026-11-26): letra maior, laranja do weblog, a negrito */
+	position: absolute; top: -2px; right: 0; font-size: 0.66em; font-weight: 600; color: #EE6A24;
 }
+.reveal a.voltar:hover { color: #c2410c; text-decoration: underline; }
 
 .problema {
 	display: grid;
@@ -103,7 +105,7 @@
 .reveal section.so-texto .fig-enunciado { zoom: 1.5; }
 .reveal section[data-esconder]:not(.so-texto) .animacao { animation: entrar-anim 0.35s ease-out; }
 @keyframes entrar-anim { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
-.reveal .botao-anim { position: absolute; top: -4px; right: 170px; z-index: 2; font: inherit; font-size: 0.5em; font-weight: 600;
+.reveal .botao-anim { position: absolute; top: -4px; right: 205px; z-index: 2; font: inherit; font-size: 0.5em; font-weight: 600;
 	padding: 5px 16px; border-radius: 8px; cursor: pointer; border: 2px solid #1d4ed8; background: #1d4ed8; color: #fff; }
 .reveal .botao-anim:hover { background: #1e40af; border-color: #1e40af; }
 .reveal section:not(.so-texto) > .botao-anim { background: #fff; color: #475569; border-color: #94a3b8; }
