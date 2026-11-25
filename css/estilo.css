@@ -185,6 +185,11 @@
 .reveal .lago-plot { flex: none; width: 640px; }
 .reveal .lago-plot svg { display: block; overflow: visible; }
 .enunciado table.produtos.lago tr[data-i] { cursor: default; transition: background 0.12s; }
+.reveal a.botao-app { flex: none; display: inline-flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 18px;
+  font-size: 0.62em; font-weight: 600; line-height: 1.25; text-align: center; text-decoration: none; color: #fff; background: #1d4ed8;
+  border-radius: 12px; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18); }
+.reveal a.botao-app:hover { background: #1e40af; }
+.reveal a.botao-app .ico { font-size: 1.8em; line-height: 1; }
 .enunciado table.produtos.lago tr.realce td { background: #fee2e2; color: #b91c1c; font-weight: 600; }
 .reveal a.botao-anim { text-decoration: none; display: inline-block; }
 .enunciado table.produtos.mensal { font-size: 0.78em; }
