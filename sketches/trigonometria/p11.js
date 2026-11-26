@@ -35,15 +35,19 @@ SKETCHES['trig-p11'] = function (p, controlos) {
 		UT.quebra(p, controlos);
 		// alíneas: cada botão põe t no instante que interessa e destaca a alínea no enunciado
 		[[1, 0], [2, 16], [3, T3], [4, 5], [5, 0]].forEach(([a, ti]) =>
-			UT.botao(p, controlos, `11.${a}`, () => { parar(); escolher(alinea === a ? 0 : a); if (alinea) definir(ti); }, 'atalho'));
-		cxCalc = UT.caixa(p, controlos, 'Mostrar cálculos');
+			botoes[a] = UT.botao(p, controlos, `11.${a}`, () => { parar(); escolher(alinea === a ? 0 : a); if (alinea) definir(ti); }, 'atalho'));
+		UT.quebra(p, controlos);
+		cxCalc = UT.caixa(p, controlos, 'Mostrar a solução');   // padrão do Problema 15 (pedido do utilizador, 2026-11-26)
 		itens = [...controlos.closest('section').querySelectorAll('ul.condicoes li')];
 	};
 
 	function parar() { aAnimar = false; btPlay.html('▶ Rodar'); }
 	function definir(v) { t = p.constrain(v, 0, GR.tmax); sl.value(t); }
+	const botoes = {};
+	// a alínea escolhida: botão azul (os outros claros) e destaque no enunciado
 	function escolher(a) {
 		alinea = a;
+		Object.entries(botoes).forEach(([k, b]) => +k === a ? b.removeClass('atalho') : b.addClass('atalho'));
 		itens.forEach((li, i) => { li.classList.toggle('atual', a === i + 1); li.classList.toggle('outra', a !== 0 && a !== i + 1); });
 	}
 
@@ -102,7 +106,7 @@ SKETCHES['trig-p11'] = function (p, controlos) {
 			rot(txt, q.x + (q.x < cx ? 14 : -14), q.y + 20, COR.ines, 17, q.x < cx ? p.LEFT : p.RIGHT, p.NORMAL);
 		};
 		if (alinea === 2) { fantasma(8, 't = 8'); fantasma(16, 't = 16'); }
-		if (alinea === 3) { fantasma(T3, `t ≈ ${UT.fmt(T3, 2)}`); fantasma(24 - T3, `t ≈ ${UT.fmt(24 - T3, 2)}`); }
+		if (alinea === 3) { const s = cxCalc.checked(); fantasma(T3, s ? `t ≈ ${UT.fmt(T3, 2)}` : 't = ?'); fantasma(24 - T3, s ? `t ≈ ${UT.fmt(24 - T3, 2)}` : 't = ?'); }
 		// a altura da Inês: do chão até à cadeira
 		const q = posicao(t);
 		p.stroke(...COR.h); p.strokeWeight(4); p.line(q.x, GY, q.x, q.y);
@@ -129,7 +133,7 @@ SKETCHES['trig-p11'] = function (p, controlos) {
 		// alínea 5: a faixa [1, 17]
 		if (alinea === 5) {
 			p.noStroke(); p.fill(...COR.aux, 30); p.rect(GR.x0, Y(17), GR.x1 - GR.x0, Y(1) - Y(17));
-			rot('h = 17', GR.x1 - 4, Y(17) - 12, COR.aux, 17, p.RIGHT); rot('h = 1', GR.x1 - 4, Y(1) - 12, COR.aux, 17, p.RIGHT);
+			if (cxCalc.checked()) { rot('h = 17', GR.x1 - 4, Y(17) - 12, COR.aux, 17, p.RIGHT); rot('h = 1', GR.x1 - 4, Y(1) - 12, COR.aux, 17, p.RIGHT); }
 		}
 		if (alinea === 3) {
 			for (const ti of [T3, 24 - T3, 24 + T3, 48 - T3]) {
@@ -148,7 +152,7 @@ SKETCHES['trig-p11'] = function (p, controlos) {
 			p.noStroke(); p.fill(...cor); p.circle(GX(ti), Y(h(ti)), 11);
 			rot(txt, GX(ti), Y(h(ti)) + (acima ? -18 : 18), cor, 17, p.CENTER, p.NORMAL);
 		};
-		if (alinea === 1) marca(0, '(0, 1)', COR.ines, false);
+		if (alinea === 1) marca(0, cxCalc.checked() ? '(0, 1)' : 'h(0)', COR.ines, false);
 		if (alinea === 2) { tracejado(GR.x0, Y(13), GR.x1, Y(13), COR.ines, 1.2, [3, 4]); marca(8, 'h(8)'); marca(16, 'h(16)'); }
 		if (alinea === 4 && t + 24 <= GR.tmax) {
 			marca(t, 't', COR.ines, h(t) < 15); marca(t + 24, 't + 24', COR.ines, h(t) < 15);
@@ -175,7 +179,8 @@ SKETCHES['trig-p11'] = function (p, controlos) {
 			p.noStroke(); p.fill(...cor); p.textSize(tam); p.textStyle(est); p.textAlign(p.LEFT, p.CENTER); p.text(txt, 20, y);
 		};
 		linha(`t = ${UT.fmt(t, 1)} s      h(t) = ${UT.fmt(h(t), 1)} m`, 22, COR.h, 21, p.BOLD);
-		if (!cxCalc.checked() || !alinea) return;
+		if (!cxCalc.checked()) return;
+		if (!alinea) { linha('Escolhe uma alínea (11.1 … 11.5).', 48, COR.cinza, 17); return; }
 		const C = {
 			1: ['h(0) = 9 − 8 cos 0 = 9 − 8 = 1', 'No início, a Inês está a 1 m do chão (ponto mais baixo da roda).'],
 			2: ['h(8) = 9 − 8 cos(2π/3) = 13   e   h(16) = 9 − 8 cos(4π/3) = 13',

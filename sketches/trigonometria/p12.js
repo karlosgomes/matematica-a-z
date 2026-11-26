@@ -35,15 +35,19 @@ SKETCHES['trig-p12'] = function (p, controlos) {
 		cxLenta = UT.caixa(p, controlos, 'Câmara lenta (¼×)', true);
 		UT.quebra(p, controlos);
 		[[1, 0], [2, 1 / 3], [3, 5 / 9]].forEach(([a, ti]) =>
-			UT.botao(p, controlos, `12.${a}`, () => { parar(); escolher(alinea === a ? 0 : a); if (alinea) definir(ti); }, 'atalho'));
-		cxCalc = UT.caixa(p, controlos, 'Mostrar cálculos');
+			botoes[a] = UT.botao(p, controlos, `12.${a}`, () => { parar(); escolher(alinea === a ? 0 : a); if (alinea) definir(ti); }, 'atalho'));
+		UT.quebra(p, controlos);
+		cxCalc = UT.caixa(p, controlos, 'Mostrar a solução');   // padrão do Problema 15 (pedido do utilizador, 2026-11-26)
 		itens = [...controlos.closest('section').querySelectorAll('ul.condicoes li')];
 	};
 
 	function parar() { aAnimar = false; btPlay.html('▶ Largar'); }
 	function definir(v) { t = p.constrain(v, 0, GR.tmax); sl.value(t); }
+	const botoes = {};
+	// a alínea escolhida: botão azul (os outros claros) e destaque no enunciado
 	function escolher(a) {
 		alinea = a;
+		Object.entries(botoes).forEach(([k, b]) => +k === a ? b.removeClass('atalho') : b.addClass('atalho'));
 		itens.forEach((li, i) => { li.classList.toggle('atual', a === i + 1); li.classList.toggle('outra', a !== 0 && a !== i + 1); });
 	}
 
@@ -128,11 +132,11 @@ SKETCHES['trig-p12'] = function (p, controlos) {
 		// alínea 2: faixa [52, 68] e o primeiro mínimo de d
 		if (alinea === 2) {
 			p.noStroke(); p.fill(...COR.aux, 28); p.rect(GR.x0, Y(52), GR.x1 - GR.x0, Y(68) - Y(52));
-			rot('máx. 68', GR.x1 - 4, Y(68) + 14, COR.aux, 17, p.RIGHT); rot('mín. 52', GR.x1 - 4, Y(52) - 14, COR.aux, 17, p.RIGHT);
+			if (cxCalc.checked()) { rot('máx. 68', GR.x1 - 4, Y(68) + 14, COR.aux, 17, p.RIGHT); rot('mín. 52', GR.x1 - 4, Y(52) - 14, COR.aux, 17, p.RIGHT); }
 		}
 		// alínea 3: d > 64 em [0, 1]
-		if (alinea === 3) {
-			tracejado(GR.x0, Y(64), GR.x1, Y(64), COR.aux, 2);
+		if (alinea === 3) tracejado(GR.x0, Y(64), GR.x1, Y(64), COR.aux, 2);
+		if (alinea === 3 && cxCalc.checked()) {   // os instantes e os intervalos só com a solução
 			p.noStroke(); p.fill(...COR.aux, 35);
 			p.rect(GX(0), Y(64), GX(1 / 9) - GX(0), Y(72) - Y(64));
 			p.rect(GX(5 / 9), Y(64), GX(7 / 9) - GX(5 / 9), Y(72) - Y(64));
@@ -162,10 +166,10 @@ SKETCHES['trig-p12'] = function (p, controlos) {
 			const yy = Y(46);
 			p.stroke(...COR.aux); p.strokeWeight(2); p.line(GX(0), yy, GX(2 / 3), yy);
 			p.line(GX(0), yy - 6, GX(0), yy + 6); p.line(GX(2 / 3), yy - 6, GX(2 / 3), yy + 6);
-			rot('T = 2/3 s', GX(1 / 3), yy - 12, COR.aux, 16, p.CENTER);
+			rot(cxCalc.checked() ? 'T = 2/3 s' : 'um período', GX(1 / 3), yy - 12, COR.aux, 16, p.CENTER);
 			rot('3 oscilações em 2 s', GX(5 / 3), yy - 12, COR.aux, 16, p.CENTER, p.NORMAL);
 		}
-		if (alinea === 2) { marca(1 / 3, 't = 1/3', true); marca(1, 't = 1', true); }
+		if (alinea === 2 && cxCalc.checked()) { marca(1 / 3, 't = 1/3', true); marca(1, 't = 1', true); }
 	}
 
 	/* ---------------- da esfera ao gráfico ---------------- */
@@ -182,7 +186,8 @@ SKETCHES['trig-p12'] = function (p, controlos) {
 			rot(txt, GR.x0 + 24, y, cor, tam, p.LEFT, est);
 		};
 		linha(`t = ${UT.fmt(t, 2)} s      d(t) = ${UT.fmt(d(t), 1)} cm`, Y(10), COR.d, 21, p.BOLD);
-		if (!cxCalc.checked() || !alinea) return;
+		if (!cxCalc.checked()) return;
+		if (!alinea) { linha('Escolhe uma alínea (12.1 … 12.3).', Y(16), COR.cinza, 17); return; }
 		const C = {
 			1: ['3 oscilações em 2 s  ⇒  T = 2/3 s  ⇒  ω = 2π/T = 3π',
 				'Em t = 0 está no ponto mais baixo: d(0) = 60 + 8 = 68 = 60 + 8 cos 0',

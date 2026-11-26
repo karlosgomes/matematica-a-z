@@ -34,15 +34,19 @@ SKETCHES['trig-p14'] = function (p, controlos) {
 		cxLenta = UT.caixa(p, controlos, 'Câmara lenta (¼×)', true);
 		UT.quebra(p, controlos);
 		[[1, 0], [2, 0], [3, 1 / 3], [4, 1 / 6]].forEach(([a, ti]) =>
-			UT.botao(p, controlos, `14.${a}`, () => { parar(); escolher(alinea === a ? 0 : a); if (alinea) definir(ti); }, 'atalho'));
-		cxCalc = UT.caixa(p, controlos, 'Mostrar cálculos');
+			botoes[a] = UT.botao(p, controlos, `14.${a}`, () => { parar(); escolher(alinea === a ? 0 : a); if (alinea) definir(ti); }, 'atalho'));
+		UT.quebra(p, controlos);
+		cxCalc = UT.caixa(p, controlos, 'Mostrar a solução');   // padrão do Problema 15 (pedido do utilizador, 2026-11-26)
 		itens = [...controlos.closest('section').querySelectorAll('ul.condicoes li')];
 	};
 
 	function parar() { aAnimar = false; btPlay.html('▶ Largar'); }
 	function definir(v) { t = p.constrain(v, 0, GR.tmax); sl.value(t); }
+	const botoes = {};
+	// a alínea escolhida: botão azul (os outros claros) e destaque no enunciado
 	function escolher(a) {
 		alinea = a;
+		Object.entries(botoes).forEach(([k, b]) => +k === a ? b.removeClass('atalho') : b.addClass('atalho'));
 		itens.forEach((li, i) => { li.classList.toggle('atual', a === i + 1); li.classList.toggle('outra', a !== 0 && a !== i + 1); });
 	}
 
@@ -86,7 +90,7 @@ SKETCHES['trig-p14'] = function (p, controlos) {
 		}
 		p.noFill(); p.stroke(...COR.grelha); p.strokeWeight(2);
 		p.arc(PV.x, PV.y, 2 * PV.L, 2 * PV.L, Math.PI / 2 - Math.PI / 9, Math.PI / 2 + Math.PI / 9);
-		if (alinea === 1) {
+		if (alinea === 1 && cxCalc.checked()) {
 			rot('20°', ponta(20)[0] + 14, ponta(20)[1] + 24, COR.aux, 17, p.LEFT);
 			rot('20°', ponta(-20)[0] - 14, ponta(-20)[1] + 24, COR.aux, 17, p.RIGHT);
 		}
@@ -129,15 +133,17 @@ SKETCHES['trig-p14'] = function (p, controlos) {
 
 		if (alinea === 1) {
 			p.noStroke(); p.fill(...COR.aux, 28); p.rect(GR.x0, GY(20), GR.x1 - GR.x0, GY(-20) - GY(20));
-			rot('máx. 20', GR.x1 - 4, GY(20) - 12, COR.aux, 16, p.RIGHT);
-			rot('mín. −20', GR.x1 - 4, GY(-20) + 12, COR.aux, 16, p.RIGHT);
+			if (cxCalc.checked()) {
+				rot('máx. 20', GR.x1 - 4, GY(20) - 12, COR.aux, 16, p.RIGHT);
+				rot('mín. −20', GR.x1 - 4, GY(-20) + 12, COR.aux, 16, p.RIGHT);
+			}
 		}
 		if (alinea === 2) {
 			for (let k = 0; k < 3; k++) {
 				const yy = GY(23), xa = GX(2 * k / 3), xb = GX(2 * (k + 1) / 3);
 				p.stroke(...COR.aux); p.strokeWeight(2); p.line(xa + 2, yy, xb - 2, yy);
 				p.line(xa + 2, yy - 6, xa + 2, yy + 6); p.line(xb - 2, yy - 6, xb - 2, yy + 6);
-				rot(k === 0 ? 'T = 2/3 s' : 'T', (xa + xb) / 2, yy - 11, COR.aux, 16, p.CENTER);
+				rot(k === 0 ? (cxCalc.checked() ? 'T = 2/3 s' : 'um período') : 'T', (xa + xb) / 2, yy - 11, COR.aux, 16, p.CENTER);
 			}
 			rot('3 oscilações em 2 s', GR.x1, 410, COR.aux, 17, p.RIGHT);
 		}
@@ -149,9 +155,9 @@ SKETCHES['trig-p14'] = function (p, controlos) {
 
 		if (alinea === 3) {
 			p.noStroke(); p.fill(...COR.marca); p.circle(GX(1 / 3), GY(-20), 11);
-			rot('(1/3, −20)', GX(1 / 3) + 10, GY(-20) + 13, COR.marca, 16, p.LEFT);
+			rot(cxCalc.checked() ? '(1/3, −20)' : 't = 1/3', GX(1 / 3) + 10, GY(-20) + 13, COR.marca, 16, p.LEFT);
 		}
-		if (alinea === 4) {
+		if (alinea === 4 && cxCalc.checked()) {   // as passagens pela vertical só com a solução
 			ZEROS.forEach(n => {
 				p.noStroke(); p.fill(...COR.marca); p.circle(GX(n / 6), GR.yc, 10);
 				rot(FR[n], GX(n / 6), GR.yc - 16, COR.marca, 15, p.CENTER);
@@ -166,7 +172,8 @@ SKETCHES['trig-p14'] = function (p, controlos) {
 	function textos() {
 		const x = GR.x0 + 10;
 		rot(`t = ${UT.fmt(t, 2)} s      θ(t) = ${UT.fmt(th(t), 1)}°`, x, 410, COR.ang, 21, p.LEFT);
-		if (!cxCalc.checked() || !alinea) return;
+		if (!cxCalc.checked()) return;
+		if (!alinea) { rot('Escolhe uma alínea (14.1 … 14.4).', x, 450, COR.cinza, 17, p.LEFT, p.NORMAL); return; }
 		const C = {
 			1: ['−1 ≤ cos(3πt) ≤ 1  ⇒  −20 ≤ θ(t) ≤ 20',
 				'A amplitude é 20: o maior ângulo com a vertical é 20°.'],
