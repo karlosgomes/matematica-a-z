@@ -193,6 +193,7 @@
 							<li><a href="#/trig-p15">A roda gigante de $50$ metros — quanto tempo acima dos $45$ metros?</a></li>
 							<li><a href="#/trig-p16">Os visitantes do lago — regressão trigonométrica</a></li>
 							<li><a href="#/trig-p17">A agulha da máquina de costura — $h(t) = 12 + 15\cos(\omega t)$</a></li>
+							<li><a href="#/trig-p18">O refletor da bicicleta — $d(t) = 20 + a\cos(bt)$</a></li>
 						</ol>
 					</div>
 				</section>
@@ -724,6 +725,30 @@
 									altera-se? Justifica.</li>
 							</ul>
 							<p class="dica">Os botões 17.1 … 17.4 preparam a figura para cada alínea.</p>
+						</div>
+						<div class="animacao">
+							<div class="tela"></div>
+							<div class="controlos"></div>
+						</div>
+					</div>
+				</section>
+
+				<!-- ------------ Problema 18 ------------ -->
+				<section id="trig-p18" class="sans compacto" data-esconder data-sketch="trig-p18">
+					<a class="voltar" href="#/trig-problemas">↩ problemas</a>
+					<h4>Problema 18 — O refletor da bicicleta</h4>
+					<div class="problema">
+						<div class="enunciado">
+							<p>Na figura está representada a roda da frente da bicicleta do Vicente, na qual foi instalado um refletor.</p>
+							<svg class="fig-enunciado" viewBox="0 0 250 200" width="230" aria-label="Roda da frente da bicicleta com o refletor"><defs><radialGradient id="tp18-bola" cx="35%" cy="35%" r="65%"><stop offset="0" stop-color="#f1f5f9"/><stop offset="1" stop-color="#64748b"/></radialGradient><marker id="tp18-ponta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1e293b"/></marker></defs><g stroke="#475569" stroke-width="0.9"><path d="M110,105 L184.7,98.5"/><path d="M110,105 L179.0,75.7"/><path d="M110,105 L166.6,55.8"/><path d="M110,105 L148.6,40.7"/><path d="M110,105 L126.9,31.9"/><path d="M110,105 L103.5,30.3"/><path d="M110,105 L80.7,36.0"/><path d="M110,105 L60.8,48.4"/><path d="M110,105 L45.7,66.4"/><path d="M110,105 L36.9,88.1"/><path d="M110,105 L35.3,111.5"/><path d="M110,105 L41.0,134.3"/><path d="M110,105 L53.4,154.2"/><path d="M110,105 L71.4,169.3"/><path d="M110,105 L93.1,178.1"/><path d="M110,105 L116.5,179.7"/><path d="M110,105 L139.3,174.0"/><path d="M110,105 L159.2,161.6"/><path d="M110,105 L174.3,143.6"/><path d="M110,105 L183.1,121.9"/></g><circle cx="110" cy="105" r="78" fill="none" stroke="#1e293b" stroke-width="6"/><circle cx="110" cy="105" r="3" fill="#1e293b"/><circle cx="142.5" cy="76.8" r="7" fill="url(#tp18-bola)" stroke="#334155" stroke-width="0.8"/><path d="M190,22 L148.5,70.8" stroke="#1e293b" stroke-width="1.5" marker-end="url(#tp18-ponta)"/><text x="192" y="16" font-family="Source Sans Pro, sans-serif" font-size="15" fill="#1e293b">Refletor</text></svg>
+							<p>O Vicente pedala numa estrada sem curvas, mantendo uma velocidade constante. Num certo instante, inicia-se a
+								contagem do tempo. Sabe-se que, $t$ segundos após esse instante, a distância do refletor ao solo é dada, em
+								centímetros, por</p>
+							<p style="text-align:center">$d(t) = 20 + a\cos(bt), \qquad t \ge 0,$</p>
+							<p>em que $a \in \mathbb{R}$ e $b \in [0, 12]$. O argumento da função cosseno está em radianos.</p>
+							<p>Sabe-se ainda que, no instante inicial, a distância do refletor ao solo é $30$ cm e que, $0{,}15$ segundos após
+								esse instante, essa distância passou a ser $20$ cm.</p>
+							<p>Determina o valor de $a$ e o valor de $b$.</p>
 						</div>
 						<div class="animacao">
 							<div class="tela"></div>
@@ -1296,6 +1321,7 @@
 	<script src="sketches/trigonometria/p15.js"></script>
 	<script src="sketches/trigonometria/p16-plot.js"></script>
 	<script src="sketches/trigonometria/p17.js"></script>
+	<script src="sketches/trigonometria/p18.js"></script>
 	<script src="sketches/produto-escalar/definicao.js"></script>
 	<script src="sketches/produto-escalar/angulo.js"></script>
 	<script src="sketches/produto-escalar/retas.js"></script>
