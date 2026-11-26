@@ -131,6 +131,8 @@
 /* o KaTeX aumenta as fórmulas para 1,21em (pensado para texto com serifa); junto da Source Sans Pro ficavam
    maiores do que o texto (reparo do utilizador, 2026-11-25) */
 .reveal .sans .katex { font-size: 1.05em; }
+/* listas de problemas e índice (letra Palatino): KaTeX do tamanho do texto (pedido do utilizador, 2026-11-26; o KaTeX vem a 1,21em) */
+.reveal .indice .katex { font-size: 1em; }
 
 /* ---------- ajuda na capa ---------- */
 .reveal .capa table.ajuda { margin: 50px auto 0; font-size: 0.62em; color: #475569; border-collapse: collapse; }
