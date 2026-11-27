@@ -2,7 +2,8 @@
    Utilitários 3D dos Problemas 18 e 19 do Produto escalar (2026-11-26):
    perspetiva feita à mão (como p14.js), a vista roda arrastando o fundo, um plano que passa
    na origem desenhado como um paralelogramo translúcido, e as linhas atrás dele a tracejado.
-   Uso: const E = ESPACO3D(p, { W, H, cx, cy, k, n, L, az, el });  E.pr(v), E.seg(a, b, cor, peso), …
+   Uso: const E = ESPACO3D(p, { W, H, cx, cy, k, n, L, az, el, d });
+   d (opcional, 2026-11-27, Problema 20): o plano é n̂ · X = d (n̂ = n unitário), centrado no ponto d·n̂; por omissão d = 0 (passa em O).  E.pr(v), E.seg(a, b, cor, peso), …
    ===================================================================== */
 window.ESPACO3D = function (p, cfg) {
 	const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
@@ -20,7 +21,8 @@ window.ESPACO3D = function (p, cfg) {
 		let e1 = cross(E.n, [0, 0, 1]); if (Math.hypot(...e1) < 1e-6) e1 = [1, 0, 0];
 		E.e1 = unit(e1); E.e2 = unit(cross(E.n, E.e1));
 	};
-	E.plano(cfg.n); E.L = cfg.L;
+	E.plano(cfg.n); E.L = cfg.L; E.d = cfg.d || 0;
+	const centro = () => mul(E.n, E.d);
 	E.camara = () => {
 		const a = E.az * Math.PI / 180, e = E.el * Math.PI / 180;
 		F = [Math.cos(e) * Math.cos(a), Math.cos(e) * Math.sin(a), Math.sin(e)];
@@ -36,9 +38,9 @@ window.ESPACO3D = function (p, cfg) {
 	E.oculto = X => {
 		const O = olho(), d = sub(O, X), den = dot(E.n, d);
 		if (Math.abs(den) < 1e-9) return false;
-		const t = -dot(E.n, X) / den;
+		const t = (E.d - dot(E.n, X)) / den;
 		if (t <= 1e-3 || t >= 1) return false;
-		const Pp = add(X, mul(d, t));
+		const Pp = sub(add(X, mul(d, t)), centro());
 		return Math.abs(dot(Pp, E.e1)) <= E.L && Math.abs(dot(Pp, E.e2)) <= E.L;
 	};
 	E.seg = (a, b, cor, peso = 2, alfa = 255) => {
@@ -65,7 +67,7 @@ window.ESPACO3D = function (p, cfg) {
 		p.triangle(P2.x, P2.y, P2.x - h * ux - h * 0.42 * uy, P2.y - h * uy + h * 0.42 * ux, P2.x - h * ux + h * 0.42 * uy, P2.y - h * uy - h * 0.42 * ux);
 	};
 	E.desenharPlano = (cor, alfa = 55) => {
-		const L = E.L, c = [[1, 1], [-1, 1], [-1, -1], [1, -1]].map(([s, t]) => E.pr(add(mul(E.e1, s * L), mul(E.e2, t * L))));
+		const L = E.L, c = [[1, 1], [-1, 1], [-1, -1], [1, -1]].map(([s, t]) => E.pr(add(centro(), add(mul(E.e1, s * L), mul(E.e2, t * L)))));
 		p.fill(...cor, alfa); p.stroke(...cor, 160); p.strokeWeight(1.5);
 		p.beginShape(); c.forEach(q => p.vertex(q.x, q.y)); p.endShape(p.CLOSE);
 	};
