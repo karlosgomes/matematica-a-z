@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap">
 	<link rel="stylesheet" href="https://karlosgomes.github.io/weblog/site_libs/bootstrap/bootstrap-icons.css">
-	<link rel="stylesheet" href="css/estilo.css?v=20261126e">
+	<link rel="stylesheet" href="css/estilo.css?v=20261127a">
 <!-- GoatCounter: contagem de visitas, sem cookies (não conta em localhost) -->
 <script data-goatcounter="https://karlosgomes.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -813,12 +813,22 @@
 						<p><b>Projeção:</b> se $H$ é a projeção ortogonal da extremidade de $\textcolor{#7b1fa2}{\vec v}$ na reta de $\textcolor{#1565c0}{\vec u}$, então
 							$\textcolor{#1565c0}{\vec u} \cdot \textcolor{#7b1fa2}{\vec v} = \pm\,\|\textcolor{#1565c0}{\vec u}\| \times \overline{OH}$ (sinal $+$ se $\overrightarrow{OH}$ e $\textcolor{#1565c0}{\vec u}$ têm o mesmo sentido).</p>
 						<p class="dica">Apoio: app <a href="https://karlosgomes.github.io/apps-matematica/produto-escalar/#angulo&amp;projecao&amp;texto" target="_blank">Produto escalar</a> (Normas e ângulo, Projeção).</p>
+						<p class="dica"><a href="#/pe-deducao">▶ Porque é que $\vec u \cdot \vec v = \|\vec u\|\,\|\vec v\|\cos\theta$? (dedução animada)</a></p>
 					</div>
 					<div class="animacao">
 						<div class="tela"></div>
 						<div class="controlos"></div>
 					</div>
 				</div>
+			</section>
+
+			<!-- ============ DEDUÇÃO ANIMADA (piloto Manim, 2026-11-27): u·v = ‖u‖‖v‖cos θ pela projeção ============ -->
+			<section id="pe-deducao" class="sans manim-slide" data-manim="videos/pe-deducao" data-passos="7">
+				<a class="voltar" href="#/pe-angulo">↩ resumo</a>
+				<video class="manim" muted playsinline preload="auto"></video>
+				<p class="manim-dica"><span class="manim-passo">passo 1 de 7</span> · → ou toque no vídeo para avançar, ← para recuar</p>
+				<span class="fragment"></span><span class="fragment"></span><span class="fragment"></span>
+				<span class="fragment"></span><span class="fragment"></span><span class="fragment"></span>
 			</section>
 
 			<!-- ============ RESUMO 3: RETAS NO PLANO ============ -->
@@ -1353,6 +1363,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins@4.6.0/customcontrols/plugin.js"></script>
 
 	<script src="js/main.js"></script>
+	<script src="js/manim.js"></script>
 	<!-- sketches: resumo + um ficheiro por problema -->
 	<script src="sketches/trigonometria/resumo.js"></script>
 	<script src="sketches/trigonometria/reducao.js"></script>

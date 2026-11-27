@@ -198,3 +198,10 @@
 .reveal a.botao-anim { text-decoration: none; display: inline-block; }
 .enunciado table.produtos.mensal { font-size: 0.78em; }
 .enunciado table.produtos.mensal th, .enunciado table.produtos.mensal td { padding: 3px 6px; white-space: nowrap; }
+
+/* Deduções animadas com Manim (piloto, 2026-11-27): o vídeo ocupa o diapositivo */
+.reveal section.manim-slide { text-align: center; }
+.reveal section.manim-slide video.manim { display: block; margin: 40px auto 0; width: 1440px; max-width: 100%; aspect-ratio: 16 / 9;
+	background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; }
+.reveal section.manim-slide .manim-dica { font-size: 0.5em; color: #64748b; margin-top: 0.4em; }
+.reveal section.manim-slide .fragment { display: none; }
